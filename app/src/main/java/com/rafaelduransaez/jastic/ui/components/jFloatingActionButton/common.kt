@@ -3,9 +3,15 @@ package com.rafaelduransaez.jastic.ui.components.jFloatingActionButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ShapeDefaults
+import androidx.compose.runtime.Composable
+import com.rafaelduransaez.jastic.ui.components.jIcon.JIcon
 
-fun addCheckPointFloatingButtonModel(onClick: () -> Unit) =
-    JFloatingActionButtonModel(icon = Icons.Default.Add, onClick = onClick)
+@Composable
+fun AddFAB(onAdd: () -> Unit = {}) =
+    JFloatingActionButton(JFloatingActionButtonModel(icon = Icons.Default.Add, onClick = onAdd))
 
-fun likeFloatingButtonModel(onClick: () -> Unit) =
-    JFloatingActionButtonModel(icon = Icons.Default.Favorite, onClick = onClick)
+@Composable
+fun LikeFAB(onLike: () -> Unit = {}) =
+    JFloatingActionButton(JFloatingActionButtonModel(icon = Icons.Default.Favorite, onClick = onLike))

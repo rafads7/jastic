@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Jastic</string>
-    <string name="hello_world">Hello, world!</string>
-    <string name="str_location_permissions_needed">Location Permission needed</string>
-    <string name="str_location_permissions_needed_desc">We need the Location Permission in order to track your position and get to know you are reaching your destination, please.</string>
+    <string name="hello_world">¡Hola, mundo!</string>
+    <string name="str_location_permissions_needed">Permiso de Localización necesario</string>
+    <string name="str_location_permissions_needed_desc">Necesitamos el Permiso de Localización para rastrear tu posición y saber que se está acercando a su destino, por favor.</string>
     <string name="str_ok">OK</string>
     <string name="str_go_to_settings">Go to settings</string>
     <string name="str_notifications_permissions_needed">Notifications Permission needed</string>
@@ -10,5 +11,4 @@
     <string name="str_thanks_for_permissions">Permissions granted! Thank you!</string>
     <string name="str_all_permissions_needed">Permissions needed</string>
     <string name="str_all_permissions_needed_desc">"We need both location and notifications permissions in order to provide the best user expirience possible and be able to track your position and notify you when you reach your destination. Thank you. "</string>
-
 </resources>

@@ -1,0 +1,21 @@
+package com.rafaelduransaez.jastic.ui.components.jText
+
+import androidx.annotation.StringRes
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import com.rafaelduransaez.jastic.R
+
+@Preview
+@Composable
+fun JText(modifier: Modifier = Modifier, @StringRes textId: Int = R.string.app_name) =
+    Text(
+        text = LocalContext.current.getString(textId),
+        modifier = modifier
+    )
+
+@Composable
+fun JText(modifier: Modifier = Modifier, text: String) =
+    Text(modifier = modifier, text = text)
