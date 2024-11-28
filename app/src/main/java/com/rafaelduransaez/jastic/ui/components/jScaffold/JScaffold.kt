@@ -7,16 +7,6 @@ import androidx.compose.runtime.Composable
 import com.rafaelduransaez.jastic.ui.components.jFloatingActionButton.JFloatingActionButton
 import com.rafaelduransaez.jastic.ui.components.jTopAppBar.JTopAppBar
 
-@Composable
-fun JScaffold(model: JScaffoldModel) =
-    Scaffold(
-        topBar = { model.topAppBarModel?.let { JTopAppBar(it) } },
-        floatingActionButton = { model.floatingActionButtonModel?.let { JFloatingActionButton(it) } },
-        snackbarHost = { model.snackbarHostState?.let { SnackbarHost(it) } },
-        modifier = model.modifier.fillMaxSize(),
-        content = model.mainContent
-    )
-
 /*
 @Composable
 fun MyScaffold(

@@ -2,7 +2,6 @@ package com.rafaelduransaez.jastic.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-
 val primaryLight = Color(0xFF2C6A46)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFB0F1C3)
