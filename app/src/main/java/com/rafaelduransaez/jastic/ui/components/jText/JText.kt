@@ -10,9 +10,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.rafaelduransaez.jastic.R
 import com.rafaelduransaez.jastic.ui.theme.JasticTheme
 
-@Preview
 @Composable
-fun JText(modifier: Modifier = Modifier, @StringRes textId: Int = R.string.app_name) =
+fun JText(modifier: Modifier = Modifier, @StringRes textId: Int) =
     Text(
         text = stringResource(textId),
         modifier = modifier

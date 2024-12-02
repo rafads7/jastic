@@ -1,7 +1,12 @@
 package com.rafaelduransaez.jastic.ui.components.jContactPicker
 
 import android.Manifest.permission.READ_CONTACTS
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.rafaelduransaez.jastic.R
 import com.rafaelduransaez.jastic.ui.components.common.Toast
 import com.rafaelduransaez.jastic.ui.components.jFloatingActionButton.LikeFAB
@@ -9,13 +14,8 @@ import com.rafaelduransaez.jastic.ui.utils.permissions.PermissionsRequester
 
 
 @Composable
-fun JContactPicker() {
-    PermissionsRequester(listOf(READ_CONTACTS)) {
-        Toast(R.string.str_go_to_settings)
-        LikeFAB(onLike = {})
-    }
+fun JContactPicker(contentPadding: PaddingValues) {
 
-    //TODO CHECK WHY TWO TOAST IN REQUESTER
 }
 
 /*

@@ -7,7 +7,6 @@ import android.Manifest.permission.POST_NOTIFICATIONS
 import android.Manifest.permission.READ_CONTACTS
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -22,8 +21,8 @@ import com.rafaelduransaez.jastic.ui.components.common.Toast
 import com.rafaelduransaez.jastic.ui.components.jAlertDialog.JAlertDialog
 import com.rafaelduransaez.jastic.ui.utils.findActivity
 import com.rafaelduransaez.jastic.ui.utils.openSettings
-import com.rafaelduransaez.jastic.ui.utils.permissions.Companion.Companion.MIN_PERMISSIONS
 
+private const val MIN_PERMISSIONS = 2
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -41,12 +40,16 @@ fun PermissionsRequester(permissions: List<String>, onAllGranted: @Composable ()
             showAlertDialog = !this
             allGranted = this
         }
-        onPauseOrDispose { showAlertDialog = false }
+        onPauseOrDispose {
+            showAlertDialog = false
+        }
     }
 
     if (allGranted) {
-        if (permissionsAlreadyRequested)
+        if (permissionsAlreadyRequested) {
             Toast(R.string.str_thanks_for_permissions)
+            permissionsAlreadyRequested = false
+        }
         onAllGranted()
         allGranted = false
         return
@@ -131,11 +134,3 @@ private fun getPermissionsTextProvider(
         }
     }
 
-/*
-@Parcelize
-sealed class PermissionDialogState : Parcelable {
-    data object AllGranted : PermissionDialogState()
-    data object Rationale : PermissionDialogState()
-    data object GoToAppSettings : PermissionDialogState()
-    data object None : PermissionDialogState()
-}*/
