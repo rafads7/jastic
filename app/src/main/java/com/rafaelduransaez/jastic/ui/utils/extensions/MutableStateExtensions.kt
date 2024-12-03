@@ -1,4 +1,4 @@
-package com.rafaelduransaez.jastic.ui.utils
+package com.rafaelduransaez.jastic.ui.utils.extensions
 
 import androidx.compose.runtime.MutableState
 

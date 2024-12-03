@@ -1,17 +1,12 @@
-package com.rafaelduransaez.jastic.ui.utils
+package com.rafaelduransaez.jastic.ui.utils.extensions
 
-import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import android.widget.Toast
-import android.widget.Toast.makeText
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

@@ -19,8 +19,8 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.rafaelduransaez.jastic.R
 import com.rafaelduransaez.jastic.ui.components.common.Toast
 import com.rafaelduransaez.jastic.ui.components.jAlertDialog.JAlertDialog
-import com.rafaelduransaez.jastic.ui.utils.findActivity
-import com.rafaelduransaez.jastic.ui.utils.openSettings
+import com.rafaelduransaez.jastic.ui.utils.extensions.findActivity
+import com.rafaelduransaez.jastic.ui.utils.extensions.openSettings
 
 private const val MIN_PERMISSIONS = 2
 
