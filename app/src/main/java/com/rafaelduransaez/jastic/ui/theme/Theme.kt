@@ -138,10 +138,13 @@ private val shape = JasticShape(
 )
 
 private val size = JasticSize(
-    large = 24.dp,
-    normal = 16.dp,
-    small = 12.dp,
-    extraSmall = 8.dp
+    extraLarge = 24.dp,
+    large = 16.dp,
+    normal = 12.dp,
+    small = 8.dp,
+    extraSmall = 4.dp,
+    minimum = 2.dp,
+    zero = 0.dp
 )
 
 @Composable

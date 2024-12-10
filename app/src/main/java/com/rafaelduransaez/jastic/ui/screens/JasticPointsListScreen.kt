@@ -1,60 +1,171 @@
 package com.rafaelduransaez.jastic.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.rounded.LocationOn
+import androidx.compose.material.icons.twotone.LocationOn
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.rafaelduransaez.domain.models.JasticDestination
+import com.rafaelduransaez.jastic.R
+import com.rafaelduransaez.jastic.ui.MyJasticUiState
+import com.rafaelduransaez.jastic.ui.MyJasticViewModel
+import com.rafaelduransaez.jastic.ui.components.common.ColumnItemsSpacer
+import com.rafaelduransaez.jastic.ui.components.common.JasticProgressIndicator
+import com.rafaelduransaez.jastic.ui.components.jIcon.JIcon
 import com.rafaelduransaez.jastic.ui.components.jText.JText
+import com.rafaelduransaez.jastic.ui.components.jText.JTextTitle
+import com.rafaelduransaez.jastic.ui.theme.JasticTheme
+import com.rafaelduransaez.jastic.ui.utils.Constants.FIRST_ITEM_INDEX
+import com.rafaelduransaez.jastic.ui.utils.Constants.FIRST_ITEM_TO_SCROLL
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun JasticPointsList() {
+fun MyJasticScreen(
+    viewModel: MyJasticViewModel = viewModel(),
+    contentPadding: PaddingValues = PaddingValues(all = JasticTheme.size.normal),
+    onJasticDestinationClicked: (id: Int) -> Unit = {}
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val listState = rememberLazyListState()
+    val showScrollToTopButton by remember { derivedStateOf { listState.firstVisibleItemIndex > FIRST_ITEM_TO_SCROLL } }
+
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Red)
+        modifier = Modifier.fillMaxSize()
     ) {
+        when (val state = uiState) {
+            is MyJasticUiState.Loading -> {
+                JasticProgressIndicator()
+            }
+
+            is MyJasticUiState.ShowMyJasticDestinations -> {
+                if (state.jasticPoints.isEmpty()) {
+                    EmptyScreen()
+                } else {
+                    JasticDestinationsList(
+                        jasticPoints = state.jasticPoints,
+                        paddingValues = contentPadding,
+                        showScrollToTopButton = showScrollToTopButton,
+                        listState = listState,
+                        onJasticDestinationClicked = onJasticDestinationClicked
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun EmptyScreen() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        JIcon(
+            icon = Icons.TwoTone.LocationOn,
+            tint = JasticTheme.colorScheme.secondary,
+            contentDescriptionResId = R.string.str_jastic_empty_state_title
+        )
+        ColumnItemsSpacer(JasticTheme.size.large)
+        JTextTitle(textId = R.string.str_jastic_empty_state_title)
+    }
+}
+
+@Composable
+fun JasticDestinationsList(
+    jasticPoints: List<JasticDestination>,
+    paddingValues: PaddingValues,
+    showScrollToTopButton: Boolean,
+    listState: LazyListState,
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    onJasticDestinationClicked: (id: Int) -> Unit
+) {
+    Box {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+            contentPadding = paddingValues,
+            verticalArrangement = Arrangement.spacedBy(JasticTheme.size.minimum),
+            state = listState
         ) {
-            items(3) { index ->
-                JasticPoint(index)
+            items(count = jasticPoints.size, key = { jasticPoints[it].title }) { index ->
+                JasticDestinationCard(jasticPoints[index], onJasticDestinationClicked)
+            }
+        }
+
+        if (showScrollToTopButton) {
+            Button(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(all = JasticTheme.size.normal),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = JasticTheme.colorScheme.secondary
+                ),
+                onClick = {
+                    coroutineScope.launch {
+                        listState.animateScrollToItem(FIRST_ITEM_INDEX)
+                    }
+                }) {
+                JText(textId = R.string.str_jastic_scroll_to_top)
             }
         }
     }
 }
 
 @Composable
-fun JasticPoint(index: Int) =
-
+fun JasticDestinationCard(
+    destination: JasticDestination,
+    onJasticDestinationClicked: (id: Int) -> Unit
+) {
     ElevatedCard(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(vertical = JasticTheme.size.small)
             .fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = MaterialTheme.shapes.small,
-//        onClick = { onRepoClicked() }
+        onClick = { onJasticDestinationClicked(destination.id) },
+        colors = CardDefaults.cardColors(
+            containerColor = JasticTheme.colorScheme.onPrimary,
+            contentColor = JasticTheme.colorScheme.primary
+        )
 
     ) {
-        Row(Modifier.padding(8.dp)) {
+        Column {
             JText(
-                text = "Rafa $index",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
+                modifier = Modifier.padding(all = JasticTheme.size.small),
+                text = destination.title
+            )
+            JText(
+                modifier = Modifier.padding(all = JasticTheme.size.small),
+                text = destination.description,
             )
         }
     }
+}

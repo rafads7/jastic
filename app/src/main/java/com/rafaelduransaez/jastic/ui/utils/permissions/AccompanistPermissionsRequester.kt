@@ -6,6 +6,7 @@ import android.Manifest.permission.ACCESS_NOTIFICATION_POLICY
 import android.Manifest.permission.POST_NOTIFICATIONS
 import android.Manifest.permission.READ_CONTACTS
 import android.content.Context
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +27,10 @@ private const val MIN_PERMISSIONS = 2
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun PermissionsRequester(permissions: List<String>, onAllGranted: @Composable () -> Unit = {}) {
+fun PermissionsRequester(
+    permissions: List<String>,
+    onAllGranted: @Composable () -> Unit = {}
+) {
 
     var showAlertDialog by rememberSaveable { mutableStateOf(false) }
     var allGranted by rememberSaveable { mutableStateOf(false) }
@@ -55,7 +59,7 @@ fun PermissionsRequester(permissions: List<String>, onAllGranted: @Composable ()
         return
     }
 
-    if (showAlertDialog) {
+    else if (showAlertDialog) {
         PermissionsDialog(
             permissionsState = permissionsState,
             permissionsAlreadyRequested = permissionsAlreadyRequested,

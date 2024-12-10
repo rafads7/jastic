@@ -1,9 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
+    //alias(libs.plugins.kotlin.compose) USE WHEN KOTLIN VERSION 2.0.0+
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.mapsplatform.secrets.gradle)
+    alias(libs.plugins.ksp)
     kotlin("plugin.serialization") version "2.0.21"
 }
 
@@ -45,15 +47,20 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "21"
-    }
     buildFeatures {
         compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14"
+    }
+
+    kotlinOptions {
+        jvmTarget = "21"
     }
 }
 
@@ -104,5 +111,10 @@ dependencies {
     implementation(libs.maps.ktx) // KTX for the Maps SDK for Android library
     implementation(libs.maps.utils.ktx) // KTX for the Maps SDK for Android Utility Library
 
-
+    //Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
 }

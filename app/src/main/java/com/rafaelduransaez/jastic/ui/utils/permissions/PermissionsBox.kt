@@ -33,6 +33,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.rafaelduransaez.domain.components.common.empty
 
 /**
  * The PermissionBox uses a [Box] to show a simple permission request UI when the provided [permission]
@@ -75,9 +76,7 @@ fun PermissionBox(
     onGranted: @Composable BoxScope.(List<String>) -> Unit,
 ) {
     val context = LocalContext.current
-    var errorText by remember {
-        mutableStateOf("")
-    }
+    var errorText by remember { mutableStateOf(String.empty()) }
 
     val permissionState = rememberMultiplePermissionsState(permissions = permissions) { map ->
         val rejectedPermissions = map.filterValues { !it }.keys
@@ -147,6 +146,7 @@ private fun PermissionScreen(
             " - " + it.permission.removePrefix("android.permission.")
         }
     }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()

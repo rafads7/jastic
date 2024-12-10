@@ -15,4 +15,4 @@ fun AddFAB(onAdd: () -> Unit = {}) =
 
 @Composable
 fun LikeFAB(onLike: () -> Unit, modifier: Modifier = Modifier) =
-    JFloatingActionButton(icon = Icons.Default.Favorite, onClick = onLike)
+    JFloatingActionButton(modifier = modifier, icon = Icons.Default.Favorite, onClick = onLike)

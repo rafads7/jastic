@@ -13,9 +13,14 @@
     <string name="str_all_permissions_needed_desc">"Necesitamos permisos de ubicación y notificaciones para brindarte la mejor experiencia de usuario posible y poder rastrear tu posición y notificarte cuando llegues a tu destino. Gracias."</string>
     <string name="str_cancel">Cancelar</string>
     <string name="str_destiny_point_alias">Alias para el punto de destino</string>
-    <string name="str_contact">Contact</string>
-    <string name="str_contact_name">Contact name</string>
-    <string name="str_contact_name_optional">Contact name (optional)</string>
+    <string name="str_contact">Contacto</string>
+    <string name="str_contact_name">Nombre del contacto</string>
+    <string name="str_contact_name_optional">Nombre del contacto (opcional)</string>
     <string name="str_contacts_permission_needed">Contact Permission</string>
     <string name="str_contacts_permission_needed_desc">We need Contact Permission to help you choose the contact to notice through your phone\'s contact app. Thank you.</string>
+    <string name="str_save">Guardar</string>
+    <string name="str_my_jastic">Mi Jastic</string>
+    <string name="str_settings">Ajustes</string>
+    <string name="str_jastic_empty_state_title">Añade algunos destinos a Jastic!</string>
+    <string name="str_jastic_scroll_to_top">Deslizar al inicio</string>
 </resources>

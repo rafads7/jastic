@@ -9,6 +9,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.rafaelduransaez.jastic.R
 
 data class JasticColorScheme(
@@ -66,10 +67,13 @@ data class JasticShape(
 )
 
 data class JasticSize(
+    val extraLarge: Dp,
     val large: Dp,
     val normal: Dp,
     val small: Dp,
-    val extraSmall: Dp
+    val extraSmall: Dp,
+    val minimum: Dp,
+    val zero: Dp
 )
 
 val LocalJasticColorScheme = staticCompositionLocalOf {
@@ -134,10 +138,13 @@ val LocalJasticShape = staticCompositionLocalOf {
 
 val LocalJasticSize = staticCompositionLocalOf {
     JasticSize(
+        extraLarge = Dp.Unspecified,
         large = Dp.Unspecified,
         normal = Dp.Unspecified,
         small = Dp.Unspecified,
-        extraSmall = Dp.Unspecified
+        extraSmall = Dp.Unspecified,
+        minimum = Dp.Unspecified,
+        zero = 0.dp
     )
 }
 

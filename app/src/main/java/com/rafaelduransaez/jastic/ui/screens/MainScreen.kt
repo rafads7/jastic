@@ -6,19 +6,16 @@ import android.Manifest.permission.POST_NOTIFICATIONS
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
@@ -29,8 +26,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -40,14 +40,16 @@ import com.rafaelduransaez.jastic.R
 import com.rafaelduransaez.jastic.ui.components.jFloatingActionButton.AddFAB
 import com.rafaelduransaez.jastic.ui.components.jFloatingActionButton.LikeFAB
 import com.rafaelduransaez.jastic.ui.components.jIcon.JIcon
-import com.rafaelduransaez.jastic.ui.components.jIconButton.JIconButton
-import com.rafaelduransaez.jastic.ui.components.jText.JText
-import com.rafaelduransaez.jastic.ui.navigation.JasticPointsList
+import com.rafaelduransaez.jastic.ui.components.jText.JTextLarge
+import com.rafaelduransaez.jastic.ui.components.jText.JTextTitle
+import com.rafaelduransaez.jastic.ui.navigation.MyJastic
 import com.rafaelduransaez.jastic.ui.navigation.NewJasticPoint
+import com.rafaelduransaez.jastic.ui.navigation.Settings
+import com.rafaelduransaez.jastic.ui.navigation.TopLevelRoute
+import com.rafaelduransaez.jastic.ui.navigation.bottomNavigationRoutes
 import com.rafaelduransaez.jastic.ui.theme.JasticTheme
-import com.rafaelduransaez.jastic.ui.utils.permissions.PermissionsRequester
-import kotlinx.serialization.ExperimentalSerializationApi
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview
 @Composable
@@ -56,7 +58,8 @@ fun MainScreen(
 ) {
     var permissionsGranted by rememberSaveable { mutableStateOf(false) }
     val snackBarHostState = remember { SnackbarHostState() }
-    val showFAB = showFAB(navController)
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val showFAB = showFAB(currentBackStackEntry?.destination)
 
     Scaffold(
         topBar = {
@@ -69,27 +72,50 @@ fun MainScreen(
                 AddFAB { navController.navigate(route = NewJasticPoint) }
             }
         },
-        snackbarHost = { SnackbarHost(snackBarHostState) }
+        snackbarHost = { SnackbarHost(snackBarHostState) },
+        bottomBar = {
+            JasticBottomBar(
+                currentBackStackEntry = currentBackStackEntry,
+                onBottomNavItemClicked = {
+                    navController.navigate(route = it) {
+                        popUpTo(navController.graph.id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
+        }
     ) { contentPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = contentPadding)
+                .background(JasticTheme.colorScheme.onPrimary)
         ) {
-            NavHost(navController = navController, startDestination = JasticPointsList) {
-                composable<JasticPointsList> {
+            NavHost(navController = navController, startDestination = MyJastic) {
+                composable<MyJastic> {
+                    MyJasticScreen {
+                        navController.navigate(route = NewJasticPoint)
+                    }
+                    /*
                     PermissionsRequester(getInitialPermissions()) {
                         permissionsGranted = true
                     }
                     if (permissionsGranted)
-                        JasticPointsList()
+                        MyJasticScreen()*/
+
+                    //GeofencingScreen()
                 }
 
                 composable<NewJasticPoint> {
+                    NewDestinyPointScreen()
+                }
+
+                composable<Settings> {
                     Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        //.padding(paddingValues = contentPadding),
+                        modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
                         LikeFAB(onLike = {})
@@ -107,22 +133,55 @@ fun MainTopAppBar(onNavIconClick: () -> Unit) = TopAppBar(
         containerColor = JasticTheme.colorScheme.primaryContainer,
         titleContentColor = JasticTheme.colorScheme.primary,
     ),
-    modifier = Modifier.background(Color.Blue),
-    title = { JText(textId = R.string.app_name) },
-    navigationIcon = {
-        JIconButton(onClick = onNavIconClick, icon = Icons.AutoMirrored.Filled.ArrowBack)
-    }
+    title = { JTextTitle(textId = R.string.app_name) }
+    //navigationIcon = { BackNavigationIcon(onNavIconClick) }
 )
 
-@OptIn(ExperimentalSerializationApi::class)
 @Composable
-fun showFAB(navController: NavHostController): Boolean {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    return navBackStackEntry?.destination?.route == JasticPointsList.serializer().descriptor.serialName
+fun JasticBottomBar(
+    modifier: Modifier = Modifier,
+    currentBackStackEntry: NavBackStackEntry?,
+    routes: List<TopLevelRoute<out Any>> = bottomNavigationRoutes,
+    onBottomNavItemClicked: (route: Any) -> Unit
+) {
+    NavigationBar(
+        modifier = modifier,
+        containerColor = JasticTheme.colorScheme.onPrimary,
+        contentColor = JasticTheme.colorScheme.primary
+    ) {
+        val currentDestination = currentBackStackEntry?.destination
+
+        routes.forEach { item ->
+            NavigationBarItem(
+                label = { JTextLarge(textId = item.labelId) },
+                selected = currentDestination?.hierarchy?.any { it.hasRoute(item.route::class) } == true,
+                onClick = { onBottomNavItemClicked(item.route) },
+                icon = {
+                    currentDestination?.let {
+                        JIcon(icon = item.icon, contentDescriptionResId = item.labelId)
+                    }
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = JasticTheme.colorScheme.primary,
+                    selectedTextColor = JasticTheme.colorScheme.primary,
+                    indicatorColor = JasticTheme.colorScheme.primaryContainer,
+                    unselectedIconColor = JasticTheme.colorScheme.primary,
+                    unselectedTextColor = JasticTheme.colorScheme.primary
+                )
+            )
+        }
+    }
 }
 
-private fun getInitialPermissions() =
+@Composable
+fun showFAB(navDestination: NavDestination?) =
+    navDestination?.hierarchy?.any { it.hasRoute(MyJastic::class) } == true
+
+
+fun getInitialPermissions() =
     mutableListOf(ACCESS_NOTIFICATION_POLICY, ACCESS_FINE_LOCATION).apply {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) add(POST_NOTIFICATIONS)
         //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) add(ACCESS_BACKGROUND_LOCATION)
     }
+
+

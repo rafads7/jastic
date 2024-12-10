@@ -14,6 +14,6 @@ fun BackNavigationIcon(onBack: () -> Unit = {}) =
     IconButton(onClick = onBack) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = String.empty()
+            contentDescription = "Back Icon Button"
         )
     }

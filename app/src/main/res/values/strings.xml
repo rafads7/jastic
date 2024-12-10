@@ -17,5 +17,10 @@
     <string name="str_contact_name_optional">Contact name (optional)</string>
     <string name="str_contacts_permission_needed">Contact Permission</string>
     <string name="str_contacts_permission_needed_desc">We need Contact Permission to help you choose the contact to notice through your phone\'s contact app. Thank you.</string>
+    <string name="str_save">Save</string>
+    <string name="str_my_jastic">My Jastic</string>
+    <string name="str_settings">Settings</string>
+    <string name="str_jastic_empty_state_title">Add some Jastic destinations!</string>
+    <string name="str_jastic_scroll_to_top">Scroll to top</string>
 
 </resources>

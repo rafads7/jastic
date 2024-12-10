@@ -1,5 +1,69 @@
 package com.rafaelduransaez.jastic.ui.geofences
 
+
+/*import android.app.PendingIntent
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
+import android.os.Build
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.location.Geofence
+import com.google.android.gms.location.GeofenceStatusCodes
+import com.google.android.gms.location.GeofencingRequest
+import com.google.android.gms.maps.model.LatLng
+
+
+class GeofenceHelper(base: Context) : ContextWrapper(base) {
+    fun getGeofencingRequest(geofence: Geofence?): GeofencingRequest {
+        return GeofencingRequest.Builder()
+            .addGeofence(geofence!!)
+            .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+            .build()
+    }
+
+    fun getGeofence(id: String, latLng: LatLng, radius: Float, transitionTypes: Int): Geofence {
+        return Geofence.Builder()
+            .setCircularRegion(latLng.latitude, latLng.longitude, radius)
+            .setRequestId(id)
+            .setTransitionTypes(transitionTypes)
+            .setLoiteringDelay(5000)
+            .setExpirationDuration(Geofence.NEVER_EXPIRE)
+            .build()
+    }
+
+
+    val geofencePendingIntent: PendingIntent by lazy {
+        val intent = Intent(base, GeofenceBroadcastReceiver::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getBroadcast(base, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
+        } else {
+            PendingIntent.getBroadcast(base, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+    }
+
+    fun getErrorString(e: Exception): String {
+        if (e is ApiException) {
+            when (e.statusCode) {
+                GeofenceStatusCodes
+                    .GEOFENCE_NOT_AVAILABLE -> return "GEOFENCE_NOT_AVAILABLE"
+
+                GeofenceStatusCodes
+                    .GEOFENCE_TOO_MANY_GEOFENCES -> return "GEOFENCE_TOO_MANY_GEOFENCE"
+
+                GeofenceStatusCodes
+                    .GEOFENCE_TOO_MANY_PENDING_INTENTS -> return "GEOFENCE_TOO_MANY_PENDING_INTENTS"
+            }
+        }
+        return e.localizedMessage ?:""
+    }
+
+    companion object {
+        private const val TAG = "GeofenceHelper"
+    }
+}*/
+
+
+
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
@@ -19,16 +83,18 @@ class GeofenceHelper(context: Context) {
     val geofenceList = mutableMapOf<String, Geofence>()
 
     private val geofencingPendingIntent by lazy {
+        val intent = Intent(CUSTOM_INTENT_GEOFENCE)
+        intent.setPackage(context.packageName)
+
         PendingIntent.getBroadcast(
             context,
-            CUSTOM_REQUEST_CODE_GEOFENCE,
-            Intent(CUSTOM_INTENT_GEOFENCE),
-            /*            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-                            PendingIntent.FLAG_CANCEL_CURRENT
-                        } else {
-                            PendingIntent.FLAG_MUTABLE
-                        }*/
-            PendingIntent.FLAG_UPDATE_CURRENT// or PendingIntent.FLAG_NO_CREATE
+            0,
+            intent,
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            } else {
+                PendingIntent.FLAG_IMMUTABLE
+            }
         )
     }
 
@@ -46,10 +112,11 @@ class GeofenceHelper(context: Context) {
     }
 
     @SuppressLint("MissingPermission")
-    fun registerGeofence() {
+    fun registerGeofence(onAdded: () -> Unit = {}) {
         client.addGeofences(createGeofencingRequest(), geofencingPendingIntent)
             .addOnSuccessListener {
                 Log.d(TAG, "registerGeofence: SUCCESS")
+                onAdded()
             }.addOnFailureListener { exception ->
                 Log.d(TAG, "registerGeofence: Failure\n$exception")
             }
@@ -62,8 +129,8 @@ class GeofenceHelper(context: Context) {
 
     private fun createGeofencingRequest(): GeofencingRequest {
         return GeofencingRequest.Builder().apply {
-            setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
             addGeofences(geofenceList.values.toList())
+            setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
         }.build()
     }
 
@@ -75,20 +142,15 @@ class GeofenceHelper(context: Context) {
     ): Geofence {
         return Geofence.Builder()
             .setRequestId(key)
+            .setTransitionTypes(GEOFENCE_TRANSITION_ENTER or GEOFENCE_TRANSITION_EXIT)
             .setCircularRegion(location.latitude, location.longitude, radiusInMeters)
             .setExpirationDuration(expirationTimeInMillis)
-            .setTransitionTypes(GEOFENCE_TRANSITION_ENTER or GEOFENCE_TRANSITION_EXIT)
             .build()
     }
 
     companion object {
         private const val TAG = "GeofenceHelper"
 
-        const val CUSTOM_INTENT_USER_ACTION = "USER-ACTIVITY-DETECTION-INTENT-ACTION"
-        const val CUSTOM_REQUEST_CODE_USER_ACTION = 1000
         const val CUSTOM_INTENT_GEOFENCE = "GEOFENCE-TRANSITION-INTENT-ACTION"
-        const val CUSTOM_REQUEST_CODE_GEOFENCE = 1001
-
     }
-
 }

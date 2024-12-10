@@ -7,6 +7,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.rafaelduransaez.jastic.ui.components.jIcon.JIcon
+import com.rafaelduransaez.jastic.ui.theme.JasticTheme
 import kotlinx.coroutines.launch
 
 @Composable
@@ -17,11 +18,12 @@ fun JFloatingActionButton(
 
 ) {
 
-    val scope = rememberCoroutineScope()
     FloatingActionButton(
         onClick = { onClick() },
         shape = ShapeDefaults.ExtraLarge,
-        modifier = modifier
+        modifier = modifier,
+        containerColor = JasticTheme.colorScheme.primaryContainer,
+        contentColor = JasticTheme.colorScheme.secondary
     ) {
         JIcon(icon = icon)
     }
