@@ -1,24 +1,25 @@
 package com.rafaelduransaez.jastic.ui.components.jText
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import com.rafaelduransaez.jastic.R
-import com.rafaelduransaez.jastic.ui.theme.JasticSize
 import com.rafaelduransaez.jastic.ui.theme.JasticTheme
 
 @Composable
-fun JText(modifier: Modifier = Modifier, @StringRes textId: Int) {
+fun JText(modifier: Modifier = Modifier, @StringRes textId: Int, color: Color = Color.Unspecified) {
     Text(
         text = stringResource(textId),
-        modifier = modifier
+        modifier = modifier,
+        color = color,
+        style = JasticTheme.typography.labelNormal
     )
 }
 
@@ -31,7 +32,7 @@ fun JTextTitle(modifier: Modifier = Modifier, @StringRes textId: Int) {
     Text(
         text = stringResource(textId),
         modifier = modifier,
-        style = JasticTheme.typography.titleLarge,
+        style = JasticTheme.typography.titleSemiBold,
         color = JasticTheme.colorScheme.primary
     )
 }
@@ -41,7 +42,33 @@ fun JTextLarge(modifier: Modifier = Modifier, @StringRes textId: Int) {
     Text(
         text = stringResource(textId),
         modifier = modifier,
-        style = JasticTheme.typography.labelLarge
+        style = JasticTheme.typography.bodySemiBold,
+    )
+}
+
+@Composable
+fun JTextCardTitle(modifier: Modifier = Modifier, text: String) {
+    Text(
+        text = text,
+        modifier = modifier
+            .background(JasticTheme.colorScheme.secondary)
+            .fillMaxWidth()
+            .padding(all = JasticTheme.size.small),
+        style = JasticTheme.typography.title,
+        color = JasticTheme.colorScheme.onPrimary
+    )
+}
+
+@Composable
+fun JTextCardBody(modifier: Modifier = Modifier, text: String) {
+    Text(
+        text = text,
+        modifier = modifier
+            .background(JasticTheme.colorScheme.onPrimary)
+            .fillMaxWidth()
+            .padding(all = JasticTheme.size.small),
+        style = JasticTheme.typography.labelBold,
+        color = JasticTheme.colorScheme.secondary
     )
 }
 

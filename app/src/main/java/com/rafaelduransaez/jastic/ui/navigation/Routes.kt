@@ -14,6 +14,9 @@ object MyJastic
 object Settings
 
 @Serializable
+object Maps
+
+@Serializable
 object NewJasticPoint
 
 data class TopLevelRoute<T : Any>(val labelId: Int, val route: T, val icon: ImageVector)

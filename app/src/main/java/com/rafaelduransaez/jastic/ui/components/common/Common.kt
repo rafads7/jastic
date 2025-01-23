@@ -1,5 +1,6 @@
 package com.rafaelduransaez.jastic.ui.components.common
 
+import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.BoxScope
@@ -39,4 +40,8 @@ fun BoxScope.JasticProgressIndicator(modifier: Modifier = Modifier) {
         modifier = modifier.align(Alignment.Center),
         color = JasticTheme.colorScheme.primary
     )
+}
+
+fun Context.toast(text: String) {
+    Toast.makeText(this, text, Toast.LENGTH_LONG).show()
 }

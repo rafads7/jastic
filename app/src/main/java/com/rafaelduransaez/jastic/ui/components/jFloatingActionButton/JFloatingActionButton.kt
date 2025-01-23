@@ -20,7 +20,6 @@ fun JFloatingActionButton(
 
     FloatingActionButton(
         onClick = { onClick() },
-        shape = ShapeDefaults.ExtraLarge,
         modifier = modifier,
         containerColor = JasticTheme.colorScheme.primaryContainer,
         contentColor = JasticTheme.colorScheme.secondary

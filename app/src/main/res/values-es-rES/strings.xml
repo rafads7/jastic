@@ -23,4 +23,7 @@
     <string name="str_settings">Ajustes</string>
     <string name="str_jastic_empty_state_title">Añade algunos destinos a Jastic!</string>
     <string name="str_jastic_scroll_to_top">Deslizar al inicio</string>
+    <string name="str_location">Location</string>
+    <string name="str_open_map">Open map</string>
+    <string name="str_retry">Retry</string>
 </resources>

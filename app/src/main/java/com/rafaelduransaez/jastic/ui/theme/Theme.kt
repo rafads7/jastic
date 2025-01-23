@@ -3,11 +3,9 @@ package com.rafaelduransaez.jastic.ui.theme
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -90,17 +88,17 @@ private val LightColorScheme = JasticColorScheme(
 )
 
 private val typography = JasticTypography(
-    titleLarge = TextStyle(
+    titleSemiBold = TextStyle(
         fontFamily = LocalJasticFont,
         fontWeight = FontWeight.SemiBold,
         fontSize = 24.sp
     ),
-    titleNormal = TextStyle(
+    title = TextStyle(
         fontFamily = LocalJasticFont,
         fontWeight = FontWeight.Normal,
         fontSize = 24.sp
     ),
-    titleSmall = TextStyle(
+    titleLight = TextStyle(
         fontFamily = LocalJasticFont,
         fontWeight = FontWeight.Light,
         fontSize = 24.sp
@@ -110,7 +108,7 @@ private val typography = JasticTypography(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     ),
-    labelLarge = TextStyle(
+    bodySemiBold = TextStyle(
         fontFamily = LocalJasticFont,
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp
@@ -125,7 +123,7 @@ private val typography = JasticTypography(
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp
     ),
-    labelSmall = TextStyle(
+    labelLight = TextStyle(
         fontFamily = LocalJasticFont,
         fontWeight = FontWeight.Light,
         fontSize = 12.sp

@@ -51,14 +51,14 @@ data class JasticColorScheme(
 )
 
 data class JasticTypography(
-    val titleLarge: TextStyle,
-    val titleNormal: TextStyle,
-    val titleSmall: TextStyle,
+    val titleSemiBold: TextStyle,
+    val title: TextStyle,
+    val titleLight: TextStyle,
     val body: TextStyle,
-    val labelLarge: TextStyle,
+    val bodySemiBold: TextStyle,
     val labelBold: TextStyle,
     val labelNormal: TextStyle,
-    val labelSmall: TextStyle,
+    val labelLight: TextStyle,
 )
 
 data class JasticShape(
@@ -118,14 +118,14 @@ val LocalJasticColorScheme = staticCompositionLocalOf {
 
 val LocalJasticTypography = staticCompositionLocalOf {
     JasticTypography(
-        titleLarge = TextStyle.Default,
-        titleNormal = TextStyle.Default,
-        titleSmall = TextStyle.Default,
+        titleSemiBold = TextStyle.Default,
+        title = TextStyle.Default,
+        titleLight = TextStyle.Default,
         body = TextStyle.Default,
-        labelLarge = TextStyle.Default,
+        bodySemiBold = TextStyle.Default,
         labelBold = TextStyle.Default,
         labelNormal = TextStyle.Default,
-        labelSmall = TextStyle.Default
+        labelLight = TextStyle.Default
     )
 }
 

@@ -1,0 +1,85 @@
+package com.rafaelduransaez.jastic.ui.components.jTextField
+
+import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import com.rafaelduransaez.domain.components.common.empty
+import com.rafaelduransaez.jastic.ui.components.jIconButton.JIconButton
+import com.rafaelduransaez.jastic.ui.components.jText.JText
+import com.rafaelduransaez.jastic.ui.theme.JasticTheme
+
+@Composable
+fun JOutlinedTextField(
+    modifier: Modifier = Modifier,
+    text: String = String.empty(),
+    onValueChange: (String) -> Unit = { },
+    @StringRes hint: Int? = null
+) {
+    var textState by rememberSaveable { mutableStateOf(text) }
+
+    OutlinedTextField(
+        modifier = modifier,
+        value = text,
+        onValueChange = {
+            onValueChange(it)
+            textState = it
+        },
+        label = { hint?.let { JText(textId = it) } },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = JasticTheme.colorScheme.scrim,
+            unfocusedTextColor = JasticTheme.colorScheme.scrim,
+            focusedContainerColor = JasticTheme.colorScheme.onPrimary,
+            unfocusedContainerColor = JasticTheme.colorScheme.onPrimary,
+            focusedBorderColor = JasticTheme.colorScheme.primaryContainer,
+            unfocusedBorderColor = JasticTheme.colorScheme.primary,
+            cursorColor = JasticTheme.colorScheme.primary,
+            focusedPlaceholderColor = JasticTheme.colorScheme.primary,
+            unfocusedPlaceholderColor = JasticTheme.colorScheme.primary,
+            focusedLabelColor = JasticTheme.colorScheme.primary,
+            unfocusedLabelColor = JasticTheme.colorScheme.primary,
+        ),
+        textStyle = JasticTheme.typography.body
+    )
+    //rememberTextFieldState()
+}
+
+@Composable
+fun JOutlinedTextFieldWithIconButton(
+    modifier: Modifier = Modifier,
+    text: String = String.empty(),
+    onValueChange: (String) -> Unit = {},
+    @StringRes hint: Int? = null,
+    icon: ImageVector,
+    onIconClick: () -> Unit
+) {
+    Row(
+        modifier = modifier.padding(vertical = JasticTheme.size.extraSmall),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        JOutlinedTextField(
+            modifier = Modifier.weight(1f),
+            text = text,
+            hint = hint,
+            onValueChange = {
+                onValueChange(it)
+            }
+        )
+
+        //JTextFieldActionButton(textId = R.string.str_open_map) { onIconClick() }
+        JIconButton(
+            modifier = Modifier.padding(start = JasticTheme.size.small),
+            icon = icon,
+            onClick = onIconClick
+        )
+    }
+}

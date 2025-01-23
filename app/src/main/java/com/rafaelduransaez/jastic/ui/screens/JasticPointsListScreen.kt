@@ -1,7 +1,9 @@
 package com.rafaelduransaez.jastic.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,12 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.twotone.LocationOn
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -35,10 +32,12 @@ import com.rafaelduransaez.domain.models.JasticDestination
 import com.rafaelduransaez.jastic.R
 import com.rafaelduransaez.jastic.ui.MyJasticUiState
 import com.rafaelduransaez.jastic.ui.MyJasticViewModel
+import com.rafaelduransaez.jastic.ui.components.jButton.JButton
 import com.rafaelduransaez.jastic.ui.components.common.ColumnItemsSpacer
 import com.rafaelduransaez.jastic.ui.components.common.JasticProgressIndicator
 import com.rafaelduransaez.jastic.ui.components.jIcon.JIcon
-import com.rafaelduransaez.jastic.ui.components.jText.JText
+import com.rafaelduransaez.jastic.ui.components.jText.JTextCardBody
+import com.rafaelduransaez.jastic.ui.components.jText.JTextCardTitle
 import com.rafaelduransaez.jastic.ui.components.jText.JTextTitle
 import com.rafaelduransaez.jastic.ui.theme.JasticTheme
 import com.rafaelduransaez.jastic.ui.utils.Constants.FIRST_ITEM_INDEX
@@ -102,9 +101,9 @@ fun EmptyScreen() {
 @Composable
 fun JasticDestinationsList(
     jasticPoints: List<JasticDestination>,
-    paddingValues: PaddingValues,
-    showScrollToTopButton: Boolean,
-    listState: LazyListState,
+    paddingValues: PaddingValues = PaddingValues(all = JasticTheme.size.normal),
+    showScrollToTopButton: Boolean = false,
+    listState: LazyListState = rememberLazyListState(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     onJasticDestinationClicked: (id: Int) -> Unit
 ) {
@@ -120,24 +119,27 @@ fun JasticDestinationsList(
             }
         }
 
-        if (showScrollToTopButton) {
-            Button(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(all = JasticTheme.size.normal),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = JasticTheme.colorScheme.secondary
-                ),
-                onClick = {
-                    coroutineScope.launch {
-                        listState.animateScrollToItem(FIRST_ITEM_INDEX)
-                    }
-                }) {
-                JText(textId = R.string.str_jastic_scroll_to_top)
-            }
+        AnimatedVisibility(showScrollToTopButton, modifier = Modifier.align(Alignment.TopCenter)) {
+            ScrollToTopButton(coroutineScope, listState)
         }
     }
 }
+
+@Composable
+fun BoxScope.ScrollToTopButton(
+    coroutineScope: CoroutineScope,
+    listState: LazyListState
+) {
+    JButton(
+        modifier = Modifier.align(Alignment.TopCenter),
+        textId = R.string.str_jastic_scroll_to_top
+    ) {
+        coroutineScope.launch {
+            listState.animateScrollToItem(FIRST_ITEM_INDEX)
+        }
+    }
+}
+
 
 @Composable
 fun JasticDestinationCard(
@@ -152,20 +154,14 @@ fun JasticDestinationCard(
         shape = MaterialTheme.shapes.small,
         onClick = { onJasticDestinationClicked(destination.id) },
         colors = CardDefaults.cardColors(
-            containerColor = JasticTheme.colorScheme.onPrimary,
-            contentColor = JasticTheme.colorScheme.primary
+            containerColor = JasticTheme.colorScheme.onSecondary,
+            contentColor = JasticTheme.colorScheme.secondary
         )
 
     ) {
         Column {
-            JText(
-                modifier = Modifier.padding(all = JasticTheme.size.small),
-                text = destination.title
-            )
-            JText(
-                modifier = Modifier.padding(all = JasticTheme.size.small),
-                text = destination.description,
-            )
+            JTextCardTitle(text = destination.title)
+            JTextCardBody(text = destination.description)
         }
     }
 }

@@ -1,8 +1,8 @@
 [versions]
 accompanistPermissions = "0.36.0"
 activityCompose = "1.9.3"
-agp = "8.7.2" #"8.7.3" when Kotlin version 2.0.0+
-composeBom = "2024.11.00"
+agp = "8.7.3" #"8.7.3" when Kotlin version 2.0.0+
+composeBom = "2024.12.01"
 coreKtx = "1.15.0"
 espressoCore = "3.6.1"
 hiltNavigationCompose = "1.2.0"
@@ -13,12 +13,14 @@ kotlin = "1.9.24" #"2.1.0" when Kotlin version 2.0.0+
 #kotlinCompose = "2.0.21" #use only when using with Kotlin verion 2.0.0+
 kotlinxCoroutinesPlayServices = "1.9.0"
 kotlinxSerializationJson = "1.6.3" #"1.7.3" when Kotlin version 2.0.0+
-ksp = "1.9.0-1.0.12"#"2.1.0-1.0.29" when Kotlin version 2.0.0+
+ksp = "1.9.0-1.0.12" #"2.1.0-1.0.29" when Kotlin version 2.0.0+
 lifecycleRuntimeKtx = "2.8.7"
 mapsCompose = "6.2.1"
 mapsKtx = "5.1.1"
 mapsUtilsKtx = "5.1.1"
-navigationCompose = "2.8.4"
+material3 = "1.4.0-alpha04"
+materialIconsCore = "1.7.6"
+navigationCompose = "2.8.5"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
 secretsGradlePlugin = "2.0.1"
@@ -33,7 +35,11 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "materialIconsCore" }
+androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+androidx-material3-window-sizeclass-jvmstubs = { module = "androidx.compose.material3:material3-window-size-class-jvmstubs", version.ref = "material3" }
+androidx-material3-windows-sizeclass = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "material3" }
+androidx-material3-adaptive-navigation-suite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite", version.ref = "material3" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationCompose" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationCompose" }

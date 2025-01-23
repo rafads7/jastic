@@ -1,5 +1,4 @@
 package com.rafaelduransaez.jastic.di
-/*
 
 import android.app.Application
 import com.rafaelduransaez.jastic.JasticApplication
@@ -17,4 +16,4 @@ object AppModule {
     @Singleton
     fun provideApplication(app: Application) = app as JasticApplication
 
-}*/
+}

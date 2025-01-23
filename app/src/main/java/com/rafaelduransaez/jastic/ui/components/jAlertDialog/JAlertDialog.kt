@@ -37,7 +37,12 @@ fun JAlertDialog(
             dismissOnBackPress = dismissOnBackPress
         ),
         iconContentColor = JasticTheme.colorScheme.secondaryContainer,
-        icon = { JIcon(icon = Icons.Filled.Settings) },
+        icon = {
+            JIcon(
+                icon = Icons.Filled.Settings,
+                tint = JasticTheme.colorScheme.primaryContainer
+            )
+        },
         title = { JText(text = title) },
         text = { JText(text = description) },
         confirmButton = {

@@ -75,8 +75,11 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    //implementation(libs.androidx.material3.windows.sizeclass)
+    //implementation(libs.androidx.material3.adaptive.navigation.suite)
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.play.services.location)
+
 
     //Testing
     testImplementation(libs.junit)
@@ -91,6 +94,9 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.material.icons.core)
+    implementation(libs.androidx.material3.adaptive.navigation.suite)
+    implementation(libs.androidx.material3.windows.sizeclass)
 
     //Permissions
     implementation(libs.accompanist.permissions)
