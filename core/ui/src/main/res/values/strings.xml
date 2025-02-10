@@ -1,0 +1,16 @@
+<resources>
+    <string name="str_ok">OK</string>
+    <string name="str_cancel">Cancel</string>
+    <string name="str_retry">Retry</string>
+    <string name="str_save">Save</string>
+    <string name="str_go_to_settings">Go to Settings</string>
+    <string name="str_notifications_permissions_needed">Notifications Permission needed</string>
+    <string name="str_notifications_permissions_needed_desc">We need the Notifications Permission in order to send the correspondent notifications when your destination is reached, please.</string>
+    <string name="str_thanks_for_permissions">Permissions granted! Thank you!</string>
+    <string name="str_all_permissions_needed">Permissions needed</string>
+    <string name="str_all_permissions_needed_desc">"We need both Location and Notifications permissions in order to provide the best user experience possible and be able to track your position and notify you when you reach your destination. Thank you. "</string>
+    <string name="str_location_permissions_needed">Location Permission needed</string>
+    <string name="str_location_permissions_needed_desc">We need the Location Permission in order to track your position and get to know you are reaching your destination, please. Thank you.</string>
+    <string name="str_contacts_permission_needed">Contact Permission</string>
+    <string name="str_contacts_permission_needed_desc">We need Contact Permission to help you choose the contact to notice through your phone\'s contact app, please. Thank you.</string>
+</resources>

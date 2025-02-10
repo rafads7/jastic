@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="str_feature_myjastic_empty_state_title">Add some Jastic destinations!</string>
+    <string name="str_feature_myjastic_scroll_to_top">Scroll to top</string>
+    <string name="str_feature_myjastic_destiny_point_alias">Destiny point alias</string>
+    <string name="str_feature_myjastic_location">Location</string>
+    <string name="str_feature_my_jastic_retry">Retry</string>
+</resources>

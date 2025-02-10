@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Jastic</string>
-    <string name="hello_world">¡Hola, mundo!</string>
-    <string name="str_location_permissions_needed">Permiso de Localización </string>
-    <string name="str_location_permissions_needed_desc">Necesitamos el Permiso de Localización para rastrear tu posición y saber que se está acercando a su destino, por favor.</string>
-    <string name="str_ok">OK</string>
-    <string name="str_go_to_settings">Ir a ajustes</string>
-    <string name="str_notifications_permissions_needed">Permiso de Notificaciones</string>
-    <string name="str_notifications_permissions_needed_desc">Necesitamos el Permiso de Notificaciones para notificarte cuando llegues a tu destino, por favor.</string>
-    <string name="str_thanks_for_permissions">Permisos otorgados. ¡Gracias!</string>
-    <string name="str_all_permissions_needed">Necesitamos permisos</string>
-    <string name="str_all_permissions_needed_desc">"Necesitamos permisos de ubicación y notificaciones para brindarte la mejor experiencia de usuario posible y poder rastrear tu posición y notificarte cuando llegues a tu destino. Gracias."</string>
-    <string name="str_cancel">Cancelar</string>
-    <string name="str_destiny_point_alias">Alias para el punto de destino</string>
-    <string name="str_contact">Contacto</string>
-    <string name="str_contact_name">Nombre del contacto</string>
-    <string name="str_contact_name_optional">Nombre del contacto (opcional)</string>
-    <string name="str_contacts_permission_needed">Contact Permission</string>
-    <string name="str_contacts_permission_needed_desc">We need Contact Permission to help you choose the contact to notice through your phone\'s contact app. Thank you.</string>
-    <string name="str_save">Guardar</string>
+    <string name="hello_world">¡Hola, mundo!</string><string name="str_ok">OK</string>
     <string name="str_my_jastic">Mi Jastic</string>
-    <string name="str_settings">Ajustes</string>
-    <string name="str_jastic_empty_state_title">Añade algunos destinos a Jastic!</string>
-    <string name="str_jastic_scroll_to_top">Deslizar al inicio</string>
-    <string name="str_location">Location</string>
-    <string name="str_open_map">Open map</string>
-    <string name="str_retry">Retry</string>
 </resources>

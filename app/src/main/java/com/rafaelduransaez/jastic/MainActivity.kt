@@ -6,19 +6,22 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.rafaelduransaez.jastic.ui.screens.MainScreen
-import com.rafaelduransaez.jastic.ui.theme.JasticTheme
+import com.rafaelduransaez.core.designsystem.JasticTheme
+import com.rafaelduransaez.jastic.ui.JasticApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+/*    @Inject
+    lateinit var navigator: JasticNavigator*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             JasticTheme {
-                MainScreen()
+                JasticApp()
             }
         }
     }
@@ -28,7 +31,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PreviewScreen() {
     JasticTheme {
-        MainScreen()
+        JasticApp()
     }
 }
 

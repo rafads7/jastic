@@ -30,7 +30,7 @@ android {
 
     defaultConfig {
         applicationId = "com.rafaelduransaez.jastic"
-        minSdk = 24
+        minSdk = 28
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -66,7 +66,10 @@ android {
 
 dependencies {
 
-    implementation(project(mapOf("path" to ":domain")))
+    implementation(project(mapOf("path" to ":core:navigation")))
+    implementation(project(mapOf("path" to ":core:ui")))
+    implementation(project(mapOf("path" to ":feature:myjastic:presentation")))
+    implementation(project(mapOf("path" to ":feature:settings:presentation")))
 
     //Android
     implementation(libs.androidx.core.ktx)
@@ -76,10 +79,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     //implementation(libs.androidx.material3.windows.sizeclass)
-    //implementation(libs.androidx.material3.adaptive.navigation.suite)
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.play.services.location)
-
 
     //Testing
     testImplementation(libs.junit)

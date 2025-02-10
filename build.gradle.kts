@@ -6,6 +6,7 @@ plugins {
     //alias(libs.plugins.kotlin.compose) apply false  USE WHEN KOTLIN VERSION 2.0.0+
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.android.library) apply false
 }
 
 buildscript {
