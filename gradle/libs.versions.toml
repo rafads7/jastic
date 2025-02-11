@@ -1,7 +1,7 @@
 [versions]
 accompanistPermissions = "0.36.0"
 activityCompose = "1.9.3"
-agp = "8.7.2" #"8.7.3" when Kotlin version 2.0.0+
+agp = "8.7.3" #"8.7.3" when Kotlin version 2.0.0+
 composeBom = "2024.12.01"
 coreKtx = "1.15.0"
 espressoCore = "3.6.1"

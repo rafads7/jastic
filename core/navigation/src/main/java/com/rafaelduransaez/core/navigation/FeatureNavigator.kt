@@ -1,8 +1,9 @@
 package com.rafaelduransaez.core.navigation
 
-import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 
 interface FeatureNavigator {
-    fun NavGraphBuilder.registerNavGraph(onBackClicked: () -> Unit,
-                                         onNavigateTo: (NavigationRoutes) -> Unit)
+    fun navigateTo(action: FeatureNavAction)
 }
+
+interface FeatureNavAction

@@ -1,14 +1,6 @@
 package com.rafaelduransaez.jastic.ui
 
-import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.Manifest.permission.ACCESS_NOTIFICATION_POLICY
-import android.Manifest.permission.POST_NOTIFICATIONS
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -22,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -42,7 +33,6 @@ import com.rafaelduransaez.jastic.navigation.JasticAppRootNavGraph
 import com.rafaelduransaez.jastic.navigation.TopLevelRoute
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Preview
 @Composable
 fun JasticApp(
     appState: JasticAppState = rememberJasticAppState(),

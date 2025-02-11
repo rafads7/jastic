@@ -12,6 +12,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavigationGraphs
+import com.rafaelduransaez.core.navigation.NavigationRoutes
+import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticNavActions
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.myJasticNavGraph
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.navigateToJasticDestinationDetail
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.navigateToMap
@@ -22,6 +24,7 @@ fun JasticAppRootNavGraph(
     contentPadding: PaddingValues,
     navController: NavHostController,
     snackBarHostState: SnackbarHostState
+    /*navigator: JasticNavigator*/
 ) {
     Box(
         modifier = Modifier
@@ -30,13 +33,17 @@ fun JasticAppRootNavGraph(
             .background(JasticTheme.colorScheme.onPrimary)
     ) {
         NavHost(navController = navController, startDestination = NavigationGraphs.MyJasticGraph) {
-            myJasticNavGraph(
-                onBackClicked = navController::popBackStack,
-                onJasticDestinationSelected = navController::navigateToJasticDestinationDetail,
-                onOpenMaps = navController::navigateToMap
-            )
-
+            myJasticNavGraph { action -> navController.navigateTo(action) }
             settingsGraph()
         }
+    }
+
+}
+
+private fun NavHostController.navigateTo(action: MyJasticNavActions) {
+    when (action) {
+        MyJasticNavActions.Back -> popBackStack()
+        MyJasticNavActions.Map -> navigateToMap()
+        is MyJasticNavActions.JasticDestinationDetail -> navigateToJasticDestinationDetail(action.id)
     }
 }

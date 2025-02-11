@@ -31,8 +31,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rafaelduransaez.core.components.common.ColumnItemsSpacer
 import com.rafaelduransaez.core.components.common.JasticProgressIndicator
 import com.rafaelduransaez.core.components.jButton.JButton
@@ -51,8 +51,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 internal fun MyJasticSection(
-    onJasticDestinationSelected: (id: Int) -> Unit,
-    //onAction: (MyJasticActions) -> Unit
+    onJasticDestinationSelected: (id: Int) -> Unit
 ) {
     var permissionsGranted by remember { mutableStateOf(false) }
 
@@ -66,22 +65,18 @@ internal fun MyJasticSection(
     }
 
     if (permissionsGranted)
-        //onAction(MyJasticActions.JasticDestinationDetail(2))
         MyJasticScreen(
             onJasticDestinationClicked = onJasticDestinationSelected
         )
 }
 
-sealed interface MyJasticActions {
-    data class JasticDestinationDetail(val id: Int) : MyJasticActions
-}
-
 
 @Composable
 internal fun MyJasticScreen(
-    viewModel: MyJasticViewModel = viewModel(),
+    viewModel: MyJasticViewModel = hiltViewModel(),
     contentPadding: PaddingValues = PaddingValues(all = JasticTheme.size.normal),
     onJasticDestinationClicked: (id: Int) -> Unit = {}
+
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()

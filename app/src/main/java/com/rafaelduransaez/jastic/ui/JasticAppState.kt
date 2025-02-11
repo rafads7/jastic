@@ -10,13 +10,15 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.rafaelduransaez.core.navigation.NavigationGraphs
+import com.rafaelduransaez.jastic.navigation.JasticNavigator
 import com.rafaelduransaez.jastic.navigation.TopLevelRoute
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun rememberJasticAppState(
     navHostController: NavHostController = rememberNavController(),
-    coroutineScope: CoroutineScope = rememberCoroutineScope()
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    /*jasticNavigator: JasticNavigator*/
 ): JasticAppState {
 
     return remember(navHostController, coroutineScope) {
@@ -30,7 +32,8 @@ fun rememberJasticAppState(
 @Stable
 class JasticAppState(
     val navController: NavHostController,
-    coroutineScope: CoroutineScope
+    val coroutineScope: CoroutineScope
+    /*val navigator: JasticNavigator*/
 ) {
 
     private val previousDestination = mutableStateOf<NavDestination?>(null)
