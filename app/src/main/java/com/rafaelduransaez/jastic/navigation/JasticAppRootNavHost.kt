@@ -12,7 +12,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavigationGraphs
-import com.rafaelduransaez.core.navigation.NavigationRoutes
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticNavActions
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.myJasticNavGraph
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.navigateToJasticDestinationDetail
@@ -34,6 +33,7 @@ fun JasticAppRootNavGraph(
     ) {
         NavHost(navController = navController, startDestination = NavigationGraphs.MyJasticGraph) {
             myJasticNavGraph { action -> navController.navigateTo(action) }
+            //myJasticNavGraph { route -> navController.navigate(route) }
             settingsGraph()
         }
     }

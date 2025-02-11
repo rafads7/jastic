@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.rafaelduransaez.core.navigation.NavigationGraphs
-import com.rafaelduransaez.core.navigation.NavigationRoutes
+import com.rafaelduransaez.core.navigation.NavigationRoute
 import com.rafaelduransaez.feature.settings.presentation.settings.SettingsSection
 
 /*interface SettingsNavigator: FeatureNavigator {
@@ -31,13 +31,13 @@ class SettingsNavigatorImpl: SettingsNavigator {
 }*/
 
 fun NavController.navigateToSettings() {
-    navigate(route = NavigationRoutes.Settings)
+    navigate(route = NavigationRoute.Settings)
 }
 
 fun NavGraphBuilder.settingsGraph() {
-    navigation<NavigationGraphs.SettingsGraph>(startDestination = NavigationRoutes.Settings) {
+    navigation<NavigationGraphs.SettingsGraph>(startDestination = NavigationRoute.Settings) {
 
-        composable<NavigationRoutes.Settings> {
+        composable<NavigationRoute.Settings> {
             val innerNavController = rememberNavController()
             SettingsSection(innerNavController)
         }

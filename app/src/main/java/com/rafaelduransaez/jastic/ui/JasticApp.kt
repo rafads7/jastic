@@ -26,7 +26,7 @@ import com.rafaelduransaez.core.components.jText.JTextLarge
 import com.rafaelduransaez.core.components.jText.JTextTitle
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavigationGraphs
-import com.rafaelduransaez.core.navigation.NavigationRoutes
+import com.rafaelduransaez.core.navigation.NavigationRoute
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.navigateToJasticDestinationDetail
 import com.rafaelduransaez.jastic.R
 import com.rafaelduransaez.jastic.navigation.JasticAppRootNavGraph
@@ -127,8 +127,8 @@ fun JasticBottomBar(
 }
 
 fun showFAB(navDestination: NavDestination?) =
-    navDestination?.hasRouteInHierarchy<NavigationRoutes.MyJastic>() ?: false
+    navDestination?.hasRouteInHierarchy<NavigationRoute.Home.MyJastic>() ?: false
 
-inline fun <reified T : NavigationRoutes> NavDestination.hasRouteInHierarchy(): Boolean {
+inline fun <reified T : NavigationRoute> NavDestination.hasRouteInHierarchy(): Boolean {
     return this.hierarchy.any { it.hasRoute(T::class) }
 }
