@@ -1,9 +1,5 @@
 package com.rafaelduransaez.feature.myjastic.presentation.myJastic
 
-import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.Manifest.permission.ACCESS_NOTIFICATION_POLICY
-import android.Manifest.permission.POST_NOTIFICATIONS
-import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,15 +20,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rafaelduransaez.core.components.common.ColumnItemsSpacer
 import com.rafaelduransaez.core.components.common.JasticProgressIndicator
 import com.rafaelduransaez.core.components.jButton.JButton
@@ -42,7 +34,6 @@ import com.rafaelduransaez.core.components.jText.JTextCardBody
 import com.rafaelduransaez.core.components.jText.JTextCardTitle
 import com.rafaelduransaez.core.components.jText.JTextTitle
 import com.rafaelduransaez.core.designsystem.JasticTheme
-import com.rafaelduransaez.core.permissions.PermissionsRequester
 import com.rafaelduransaez.core.utils.extensions.negative
 import com.rafaelduransaez.feature.myjastic.domain.model.JasticDestination
 import com.rafaelduransaez.feature.myjastic.presentation.R
@@ -53,34 +44,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 internal fun MyJasticScreen(
-    onJasticDestinationClicked: (id: Int) -> Unit,
-) {
-    var permissionsGranted by remember { mutableStateOf(false) }
-
-    val initialPermissions = mutableListOf(ACCESS_NOTIFICATION_POLICY, ACCESS_FINE_LOCATION).apply {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) add(POST_NOTIFICATIONS)
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) add(ACCESS_BACKGROUND_LOCATION)
-    }
-
-    PermissionsRequester(initialPermissions) {
-        permissionsGranted = true
-    }
-
-    if (permissionsGranted)
-        MyJastic(
-            onJasticDestinationClicked = { onJasticDestinationClicked(it) }
-        )
-}
-
-
-@Composable
-internal fun MyJastic(
-    viewModel: MyJasticViewModel = hiltViewModel(),
+    uiState: MyJasticUiState,
     contentPadding: PaddingValues = PaddingValues(all = JasticTheme.size.normal),
     onJasticDestinationClicked: (id: Int) -> Unit
 
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
     val showScrollToTopButton by remember { derivedStateOf { listState.firstVisibleItemIndex > FIRST_ITEM_TO_SCROLL } }
 

@@ -46,7 +46,7 @@ class MyJasticViewModel @Inject constructor() : ViewModel() {
     }
 
     companion object {
-        const val CACHE_TIMEOUT = 5000L
+        const val CACHE_TIMEOUT = 2000L
     }
 }
 
