@@ -9,13 +9,14 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navOptions
 import com.rafaelduransaez.core.designsystem.JasticTheme
+import com.rafaelduransaez.core.navigation.Back
+import com.rafaelduransaez.core.navigation.JasticNavigable
 import com.rafaelduransaez.core.navigation.NavigationGraphs
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticNavActions
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.myJasticNavGraph
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.navigateToJasticDestinationDetail
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.navigateToMap
 import com.rafaelduransaez.feature.settings.navigation.settingsGraph
 
 @Composable
@@ -23,7 +24,6 @@ fun JasticAppRootNavGraph(
     contentPadding: PaddingValues,
     navController: NavHostController,
     snackBarHostState: SnackbarHostState
-    /*navigator: JasticNavigator*/
 ) {
     Box(
         modifier = Modifier
@@ -32,14 +32,24 @@ fun JasticAppRootNavGraph(
             .background(JasticTheme.colorScheme.onPrimary)
     ) {
         NavHost(navController = navController, startDestination = NavigationGraphs.MyJasticGraph) {
-            myJasticNavGraph { action -> navController.navigateTo(action) }
-            //myJasticNavGraph { route -> navController.navigate(route) }
+            myJasticNavGraph { route, options -> navController.navigateTo(route, options) }
             settingsGraph()
         }
     }
 
 }
 
+private fun NavHostController.navigateTo(
+    route: JasticNavigable,
+    options: NavOptionsBuilder.() -> Unit
+) {
+    when (route) {
+        Back -> navigateUp()
+        else -> navigate(route, navOptions(options))
+    }
+}
+
+/*
 private fun NavHostController.navigateTo(action: MyJasticNavActions) {
     when (action) {
         MyJasticNavActions.Back -> popBackStack()
@@ -47,3 +57,4 @@ private fun NavHostController.navigateTo(action: MyJasticNavActions) {
         is MyJasticNavActions.JasticDestinationDetail -> navigateToJasticDestinationDetail(action.id)
     }
 }
+*/

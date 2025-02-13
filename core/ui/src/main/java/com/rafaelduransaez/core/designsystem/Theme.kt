@@ -136,7 +136,8 @@ private val shape = JasticShape(
 )
 
 private val size = JasticSize(
-    extraLarge = 24.dp,
+    maximum = 24.dp,
+    extraLarge = 20.dp,
     large = 16.dp,
     normal = 12.dp,
     small = 8.dp,

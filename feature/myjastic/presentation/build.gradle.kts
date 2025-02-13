@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.ksp)
+    kotlin("plugin.serialization") version "2.0.21"
 }
 
 android {
@@ -65,6 +66,9 @@ dependencies {
     implementation(libs.androidx.material.icons.core)
     implementation(libs.androidx.material3.adaptive.navigation.suite)
     implementation(libs.androidx.material3.windows.sizeclass)
+
+    //Serialization
+    implementation(libs.kotlinx.serialization.json)
 
     //Navigation
     implementation(libs.androidx.navigation.compose)

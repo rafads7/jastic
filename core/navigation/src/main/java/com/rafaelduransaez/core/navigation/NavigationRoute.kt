@@ -1,26 +1,21 @@
 package com.rafaelduransaez.core.navigation
 
+import androidx.navigation.NavOptionsBuilder
 import kotlinx.serialization.Serializable
 
+interface JasticNavigable
+
 @Serializable
-sealed interface NavigationRoute {
+data object Back: JasticNavigable
 
-    sealed class Home: NavigationRoute {
-        @Serializable
-        data object MyJastic: Home()
-
-        @Serializable
-        data object Map: Home()
-
-        @Serializable
-        data class JasticDestinationDetail(val jasticDestinationId: Int): Home()
-    }
+@Serializable
+sealed interface NavigationRoute: JasticNavigable {
 
     @Serializable
     data object Settings: NavigationRoute
 }
 
-typealias NavRouteTo = (NavigationRoute) -> Unit
+typealias NavRouteTo = (JasticNavigable, NavOptionsBuilder.() -> Unit) -> Unit
 
 
 

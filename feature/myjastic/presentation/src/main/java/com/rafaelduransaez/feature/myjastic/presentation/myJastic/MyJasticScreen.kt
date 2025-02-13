@@ -36,26 +36,24 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rafaelduransaez.core.components.common.ColumnItemsSpacer
 import com.rafaelduransaez.core.components.common.JasticProgressIndicator
 import com.rafaelduransaez.core.components.jButton.JButton
+import com.rafaelduransaez.core.components.jFloatingActionButton.AddFAB
 import com.rafaelduransaez.core.components.jIcon.JIcon
 import com.rafaelduransaez.core.components.jText.JTextCardBody
 import com.rafaelduransaez.core.components.jText.JTextCardTitle
 import com.rafaelduransaez.core.components.jText.JTextTitle
 import com.rafaelduransaez.core.designsystem.JasticTheme
-import com.rafaelduransaez.core.navigation.NavRouteTo
-import com.rafaelduransaez.core.navigation.NavigationRoute
 import com.rafaelduransaez.core.permissions.PermissionsRequester
+import com.rafaelduransaez.core.utils.extensions.negative
 import com.rafaelduransaez.feature.myjastic.domain.model.JasticDestination
 import com.rafaelduransaez.feature.myjastic.presentation.R
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticNavActions
 import com.rafaelduransaez.feature.myjastic.presentation.utils.Constants.FIRST_ITEM_INDEX
 import com.rafaelduransaez.feature.myjastic.presentation.utils.Constants.FIRST_ITEM_TO_SCROLL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-internal fun MyJasticSection(
+internal fun MyJasticScreen(
     onJasticDestinationClicked: (id: Int) -> Unit,
-    //onRouteTo: NavRouteTo
 ) {
     var permissionsGranted by remember { mutableStateOf(false) }
 
@@ -69,20 +67,17 @@ internal fun MyJasticSection(
     }
 
     if (permissionsGranted)
-        MyJasticScreen(
-            onJasticDestinationClicked = {
-                //onRouteTo(NavigationRoute.Home.JasticDestinationDetail(it))
-                onJasticDestinationClicked(it)
-            }
+        MyJastic(
+            onJasticDestinationClicked = { onJasticDestinationClicked(it) }
         )
 }
 
 
 @Composable
-internal fun MyJasticScreen(
+internal fun MyJastic(
     viewModel: MyJasticViewModel = hiltViewModel(),
     contentPadding: PaddingValues = PaddingValues(all = JasticTheme.size.normal),
-    onJasticDestinationClicked: (id: Int) -> Unit = {}
+    onJasticDestinationClicked: (id: Int) -> Unit
 
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -108,6 +103,13 @@ internal fun MyJasticScreen(
                         listState = listState,
                         onJasticDestinationClicked = onJasticDestinationClicked
                     )
+                    AddFAB(
+                        modifier = Modifier
+                            .padding(JasticTheme.size.large)
+                            .align(Alignment.BottomEnd)
+                    ) {
+                        onJasticDestinationClicked(Int.negative())
+                    }
                 }
             }
         }

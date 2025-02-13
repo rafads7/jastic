@@ -11,15 +11,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.rafaelduransaez.core.components.jFloatingActionButton.AddFAB
 import com.rafaelduransaez.core.components.jIcon.BackNavigationIcon
 import com.rafaelduransaez.core.components.jIcon.JIcon
 import com.rafaelduransaez.core.components.jText.JTextLarge
@@ -27,31 +23,22 @@ import com.rafaelduransaez.core.components.jText.JTextTitle
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.navigation.NavigationRoute
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.navigateToJasticDestinationDetail
 import com.rafaelduransaez.jastic.R
 import com.rafaelduransaez.jastic.navigation.JasticAppRootNavGraph
 import com.rafaelduransaez.jastic.navigation.TopLevelRoute
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun JasticApp(
-    appState: JasticAppState = rememberJasticAppState(),
-) {
+fun JasticApp(appState: JasticAppState = rememberJasticAppState()) {
+
     val snackBarHostState = remember { SnackbarHostState() }
-    val currentBackStackEntry by appState.navController.currentBackStackEntryAsState()
-    val showFAB = showFAB(currentBackStackEntry?.destination)
 
     Scaffold(
         topBar = { JasticTopAppBar() },
-        floatingActionButton = {
-            if (showFAB) {
-                AddFAB { appState.navController.navigateToJasticDestinationDetail() }
-            }
-        },
         snackbarHost = { SnackbarHost(snackBarHostState) },
         bottomBar = {
             JasticBottomBar(
-                currentBackStackEntry = currentBackStackEntry,
+                currentDestination = appState.currentDestination,
                 routes = appState.topLevelDestinations,
                 onBottomNavItemClicked = { appState.onTopLevelRouteClicked(it) }
             )
@@ -87,16 +74,15 @@ fun JasticTopAppBar(
 @Composable
 fun JasticBottomBar(
     modifier: Modifier = Modifier,
-    currentBackStackEntry: NavBackStackEntry?,
     routes: List<TopLevelRoute<out NavigationGraphs>>,
-    onBottomNavItemClicked: (route: NavigationGraphs) -> Unit
+    onBottomNavItemClicked: (route: NavigationGraphs) -> Unit,
+    currentDestination: NavDestination?
 ) {
     NavigationBar(
         modifier = modifier,
         containerColor = JasticTheme.colorScheme.onPrimary,
         contentColor = JasticTheme.colorScheme.primary
     ) {
-        val currentDestination = currentBackStackEntry?.destination
 
         routes.forEach { item ->
             val isSelected =
@@ -125,9 +111,6 @@ fun JasticBottomBar(
         }
     }
 }
-
-fun showFAB(navDestination: NavDestination?) =
-    navDestination?.hasRouteInHierarchy<NavigationRoute.Home.MyJastic>() ?: false
 
 inline fun <reified T : NavigationRoute> NavDestination.hasRouteInHierarchy(): Boolean {
     return this.hierarchy.any { it.hasRoute(T::class) }

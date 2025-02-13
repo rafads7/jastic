@@ -67,6 +67,7 @@ data class JasticShape(
 )
 
 data class JasticSize(
+    val maximum: Dp,
     val extraLarge: Dp,
     val large: Dp,
     val normal: Dp,
@@ -138,6 +139,7 @@ val LocalJasticShape = staticCompositionLocalOf {
 
 val LocalJasticSize = staticCompositionLocalOf {
     JasticSize(
+        maximum = Dp.Unspecified,
         extraLarge = Dp.Unspecified,
         large = Dp.Unspecified,
         normal = Dp.Unspecified,
