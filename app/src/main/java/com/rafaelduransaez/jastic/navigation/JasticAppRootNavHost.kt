@@ -27,13 +27,15 @@ import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.permissions.PermissionsRequester
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.myJasticNavGraph
 import com.rafaelduransaez.feature.settings.navigation.settingsGraph
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun JasticAppRootNavGraph(
     contentPadding: PaddingValues,
     navController: NavHostController,
-    snackBarHostState: SnackbarHostState
+    coroutineScope: CoroutineScope
 ) {
+
     var permissionsGranted by remember { mutableStateOf(false) }
 
     val initialPermissions = mutableListOf(ACCESS_NOTIFICATION_POLICY, ACCESS_FINE_LOCATION).apply {
@@ -56,7 +58,9 @@ fun JasticAppRootNavGraph(
                 navController = navController,
                 startDestination = NavigationGraphs.MyJasticGraph
             ) {
-                myJasticNavGraph { route, options -> navController.navigateTo(route, options) }
+                myJasticNavGraph(
+                    onRouteTo = { route, navData, options -> navController.navigateTo(route, navData, options) },
+                )
                 settingsGraph()
             }
         }
@@ -65,8 +69,13 @@ fun JasticAppRootNavGraph(
 
 private fun NavHostController.navigateTo(
     route: JasticNavigable,
+    navData: Map<String, Any>,
     options: NavOptionsBuilder.() -> Unit
 ) {
+    navData.forEach {
+        previousBackStackEntry?.savedStateHandle?.set(it.key, it.value)
+    }
+
     when (route) {
         Back -> navigateUp()
         else -> navigate(route, navOptions(options))

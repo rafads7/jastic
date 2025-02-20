@@ -1,13 +1,18 @@
 package com.rafaelduransaez.feature.myjastic.di
 
+import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailMapper
+import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailMapperImpl
+import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
-@InstallIn(SingletonComponent::class)
 @Module
-object MyJasticModule {
-/*
-    @Provides
-    fun provideMyJasticNavigation(): MyJasticFeatureNavigator = MyJasticFeatureNavigatorImpl()*/
+@InstallIn(SingletonComponent::class)
+abstract class MyJasticModule {
+
+    @Binds
+    abstract fun bindJasticDestinationDetailMapper(mapper: JasticDestinationDetailMapperImpl)
+            : JasticDestinationDetailMapper
+
 }

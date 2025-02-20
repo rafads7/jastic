@@ -5,6 +5,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.rafaelduransaez.core.GeocoderHelper
 import com.rafaelduransaez.core.LocationHelper
 import com.rafaelduransaez.core.LocationHelperImpl
 import dagger.Module
@@ -50,5 +51,11 @@ object LocationModule {
             locationRequest,
             ioDispatcher
         )
+    }
+
+    @Singleton
+    @Provides
+    fun provideGeocoderHelper(@ApplicationContext context: Context): GeocoderHelper {
+        return GeocoderHelper(context)
     }
 }

@@ -31,7 +31,7 @@ sealed class TopLevelRoute<T: NavigationGraphs>(
     @Serializable
     data object SettingsRoute :
         TopLevelRoute<NavigationGraphs.SettingsGraph>(
-            labelId = R.string.str_my_jastic,
+            labelId = R.string.str_settings,
             route = NavigationGraphs.SettingsGraph,
             icon = Icons.Filled.Settings,
             unselectedIcon = Icons.Outlined.Settings

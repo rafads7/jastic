@@ -23,16 +23,17 @@ fun JOutlinedTextField(
     modifier: Modifier = Modifier,
     text: String = String.empty(),
     onValueChange: (String) -> Unit = { },
+    readOnly: Boolean = false,
     @StringRes hint: Int? = null
 ) {
-    var textState by rememberSaveable { mutableStateOf(text) }
+    //var textState by rememberSaveable { mutableStateOf(text) }
 
     OutlinedTextField(
         modifier = modifier,
-        value = text,
+        value = text, //textState,
         onValueChange = {
             onValueChange(it)
-            textState = it
+            //textState = it
         },
         label = { hint?.let { JText(textId = it) } },
         colors = OutlinedTextFieldDefaults.colors(
@@ -48,9 +49,9 @@ fun JOutlinedTextField(
             focusedLabelColor = JasticTheme.colorScheme.primary,
             unfocusedLabelColor = JasticTheme.colorScheme.primary,
         ),
-        textStyle = JasticTheme.typography.body
+        textStyle = JasticTheme.typography.body,
+        readOnly = readOnly
     )
-    //rememberTextFieldState()
 }
 
 @Composable
@@ -60,6 +61,7 @@ fun JOutlinedTextFieldWithIconButton(
     onValueChange: (String) -> Unit = {},
     @StringRes hint: Int? = null,
     icon: ImageVector,
+    readOnly: Boolean = false,
     onIconClick: () -> Unit
 ) {
     Row(
@@ -70,12 +72,12 @@ fun JOutlinedTextFieldWithIconButton(
             modifier = Modifier.weight(1f),
             text = text,
             hint = hint,
+            readOnly = readOnly,
             onValueChange = {
                 onValueChange(it)
             }
         )
 
-        //JTextFieldActionButton(textId = R.string.str_open_map) { onIconClick() }
         JIconButton(
             modifier = Modifier.padding(start = JasticTheme.size.small),
             icon = icon,

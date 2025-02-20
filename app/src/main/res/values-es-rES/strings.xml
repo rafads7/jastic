@@ -3,4 +3,5 @@
     <string name="app_name">Jastic</string>
     <string name="hello_world">¡Hola, mundo!</string><string name="str_ok">OK</string>
     <string name="str_my_jastic">Mi Jastic</string>
+    <string name="str_settings">Ajustes</string>">
 </resources>

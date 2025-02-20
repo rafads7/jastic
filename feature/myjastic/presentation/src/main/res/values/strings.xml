@@ -5,4 +5,6 @@
     <string name="str_feature_myjastic_destiny_point_alias">Destiny point alias</string>
     <string name="str_feature_myjastic_location">Location</string>
     <string name="str_feature_my_jastic_retry">Retry</string>
+    <string name="str_feature_myjastic_address_selected">Address selected (aprox.): %1$s</string>
+    <string name="str_feature_my_jastic_close">Close</string>
 </resources>

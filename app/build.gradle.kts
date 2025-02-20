@@ -69,6 +69,7 @@ dependencies {
     implementation(project(mapOf("path" to ":core:navigation")))
     implementation(project(mapOf("path" to ":core:ui")))
     implementation(project(mapOf("path" to ":feature:myjastic:presentation")))
+    implementation(project(mapOf("path" to ":feature:myjastic:di")))
     implementation(project(mapOf("path" to ":feature:settings:presentation")))
 
     //Android

@@ -35,30 +35,6 @@ fun JButton(
 }
 
 @Composable
-fun JTextFieldActionButton(
-    modifier: Modifier = Modifier,
-    @StringRes textId: Int,
-    onClick: () -> Unit
-) {
-    FilledTonalButton(
-        modifier = modifier.padding(
-            top = JasticTheme.size.normal,
-            bottom = JasticTheme.size.normal,
-            start = JasticTheme.size.normal
-        ),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = JasticTheme.colorScheme.secondaryContainer
-        ),
-        onClick = { onClick() }
-    ) {
-        JText(
-            textId = textId,
-            color = JasticTheme.colorScheme.secondary
-        )
-    }
-}
-
-@Composable
 fun JSaveButton(
     modifier: Modifier = Modifier.fillMaxWidth(),
     enabled: Boolean = true,

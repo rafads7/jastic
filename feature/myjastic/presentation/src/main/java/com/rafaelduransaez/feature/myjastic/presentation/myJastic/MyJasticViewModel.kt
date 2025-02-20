@@ -1,5 +1,6 @@
 package com.rafaelduransaez.feature.myjastic.presentation.myJastic
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rafaelduransaez.feature.myjastic.domain.model.JasticDestination
@@ -14,7 +15,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MyJasticViewModel @Inject constructor() : ViewModel() {
+class MyJasticViewModel @Inject constructor(
+    savedstate: SavedStateHandle
+) : ViewModel() {
+
+    private val detailId = savedstate.get<Int>("id")
 
     private val _uiState = MutableStateFlow<MyJasticUiState>(MyJasticUiState.Loading)
     val uiState = _uiState
@@ -27,9 +32,7 @@ class MyJasticViewModel @Inject constructor() : ViewModel() {
 
     private fun loadMyJasticDestinations() {
         viewModelScope.launch {
-            delay(CACHE_TIMEOUT)
             _uiState.update { MyJasticUiState.ShowMyJasticDestinations(fakeList()) }
-            //_uiState.update { MyJasticUiState.ShowMyJasticDestinations(emptyList()) }
         }
     }
 
@@ -38,15 +41,14 @@ class MyJasticViewModel @Inject constructor() : ViewModel() {
             add(
                 JasticDestination(
                     id = index,
-                    title = "Title ${index + 1}",
-                    description = "Description ${index + 1}"
+                    alias = "Alias $index"
                 )
             )
         }
     }
 
     companion object {
-        const val CACHE_TIMEOUT = 2000L
+        const val CACHE_TIMEOUT = 5000L
     }
 }
 

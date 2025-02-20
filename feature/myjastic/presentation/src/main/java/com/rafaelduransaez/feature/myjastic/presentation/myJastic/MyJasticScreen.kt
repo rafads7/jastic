@@ -34,9 +34,12 @@ import com.rafaelduransaez.core.components.jText.JTextCardBody
 import com.rafaelduransaez.core.components.jText.JTextCardTitle
 import com.rafaelduransaez.core.components.jText.JTextTitle
 import com.rafaelduransaez.core.designsystem.JasticTheme
+import com.rafaelduransaez.core.navigation.NavRouteTo
+import com.rafaelduransaez.core.navigation.invoke
 import com.rafaelduransaez.core.utils.extensions.negative
 import com.rafaelduransaez.feature.myjastic.domain.model.JasticDestination
 import com.rafaelduransaez.feature.myjastic.presentation.R
+import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes
 import com.rafaelduransaez.feature.myjastic.presentation.utils.Constants.FIRST_ITEM_INDEX
 import com.rafaelduransaez.feature.myjastic.presentation.utils.Constants.FIRST_ITEM_TO_SCROLL
 import kotlinx.coroutines.CoroutineScope
@@ -46,7 +49,7 @@ import kotlinx.coroutines.launch
 internal fun MyJasticScreen(
     uiState: MyJasticUiState,
     contentPadding: PaddingValues = PaddingValues(all = JasticTheme.size.normal),
-    onJasticDestinationClicked: (id: Int) -> Unit
+    onRouteTo: NavRouteTo
 
 ) {
     val listState = rememberLazyListState()
@@ -55,28 +58,28 @@ internal fun MyJasticScreen(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        when (val state = uiState) {
+        when (uiState) {
             is MyJasticUiState.Loading -> {
                 JasticProgressIndicator()
             }
 
             is MyJasticUiState.ShowMyJasticDestinations -> {
-                if (state.jasticDestinations.isEmpty()) {
+                if (uiState.jasticDestinations.isEmpty()) {
                     EmptyScreen()
                 } else {
                     JasticDestinationsList(
-                        jasticPoints = state.jasticDestinations,
+                        jasticPoints = uiState.jasticDestinations,
                         paddingValues = contentPadding,
                         showScrollToTopButton = showScrollToTopButton,
                         listState = listState,
-                        onJasticDestinationClicked = onJasticDestinationClicked
+                        onJasticDestinationClicked = { onRouteTo(MyJasticRoutes.JasticDestinationDetail(it)) }
                     )
                     AddFAB(
                         modifier = Modifier
                             .padding(JasticTheme.size.large)
                             .align(Alignment.BottomEnd)
                     ) {
-                        onJasticDestinationClicked(Int.negative())
+                        onRouteTo(MyJasticRoutes.JasticDestinationDetail(Int.negative()))
                     }
                 }
             }
@@ -117,7 +120,7 @@ internal fun JasticDestinationsList(
             verticalArrangement = Arrangement.spacedBy(JasticTheme.size.minimum),
             state = listState
         ) {
-            items(count = jasticPoints.size, key = { jasticPoints[it].title }) { index ->
+            items(count = jasticPoints.size, key = { jasticPoints[it].alias }) { index ->
                 JasticDestinationCard(jasticPoints[index], onJasticDestinationClicked)
             }
         }
@@ -163,8 +166,8 @@ internal fun JasticDestinationCard(
 
     ) {
         Column {
-            JTextCardTitle(text = destination.title)
-            JTextCardBody(text = destination.description)
+            JTextCardTitle(text = destination.alias)
+            JTextCardBody(text = destination.alias)
         }
     }
 }
