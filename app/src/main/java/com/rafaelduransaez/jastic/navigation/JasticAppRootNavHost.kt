@@ -3,13 +3,13 @@ package com.rafaelduransaez.jastic.navigation
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.Manifest.permission.ACCESS_NOTIFICATION_POLICY
 import android.Manifest.permission.POST_NOTIFICATIONS
+import android.Manifest.permission.READ_CONTACTS
 import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,13 +35,13 @@ fun JasticAppRootNavGraph(
     navController: NavHostController,
     coroutineScope: CoroutineScope
 ) {
-
     var permissionsGranted by remember { mutableStateOf(false) }
 
-    val initialPermissions = mutableListOf(ACCESS_NOTIFICATION_POLICY, ACCESS_FINE_LOCATION).apply {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) add(POST_NOTIFICATIONS)
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) add(ACCESS_BACKGROUND_LOCATION)
-    }
+    val initialPermissions =
+        mutableListOf(ACCESS_NOTIFICATION_POLICY, ACCESS_FINE_LOCATION, READ_CONTACTS).apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) add(POST_NOTIFICATIONS)
+            //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) add(ACCESS_BACKGROUND_LOCATION)
+        }
 
     PermissionsRequester(initialPermissions) {
         permissionsGranted = true
@@ -59,7 +59,13 @@ fun JasticAppRootNavGraph(
                 startDestination = NavigationGraphs.MyJasticGraph
             ) {
                 myJasticNavGraph(
-                    onRouteTo = { route, navData, options -> navController.navigateTo(route, navData, options) },
+                    onRouteTo = { route, navData, options ->
+                        navController.navigateTo(
+                            route,
+                            navData,
+                            options
+                        )
+                    }
                 )
                 settingsGraph()
             }

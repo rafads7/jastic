@@ -6,17 +6,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.rafaelduransaez.core.components.jIconButton.JIconButton
 import com.rafaelduransaez.core.components.jText.JText
 import com.rafaelduransaez.core.designsystem.JasticTheme
-import com.rafaelduransaez.core.utils.extensions.empty
+import com.rafaelduransaez.core.domain.extensions.empty
 
 @Composable
 fun JOutlinedTextField(
@@ -24,6 +20,7 @@ fun JOutlinedTextField(
     text: String = String.empty(),
     onValueChange: (String) -> Unit = { },
     readOnly: Boolean = false,
+    @StringRes placeHolder: Int? = null,
     @StringRes hint: Int? = null
 ) {
     //var textState by rememberSaveable { mutableStateOf(text) }
@@ -31,6 +28,7 @@ fun JOutlinedTextField(
     OutlinedTextField(
         modifier = modifier,
         value = text, //textState,
+        placeholder = { placeHolder?.let { JText(textId = it) }},
         onValueChange = {
             onValueChange(it)
             //textState = it
@@ -50,7 +48,8 @@ fun JOutlinedTextField(
             unfocusedLabelColor = JasticTheme.colorScheme.primary,
         ),
         textStyle = JasticTheme.typography.body,
-        readOnly = readOnly
+        readOnly = readOnly,
+        enabled = !readOnly
     )
 }
 
@@ -60,6 +59,7 @@ fun JOutlinedTextFieldWithIconButton(
     text: String = String.empty(),
     onValueChange: (String) -> Unit = {},
     @StringRes hint: Int? = null,
+    @StringRes placeHolder: Int? = null,
     icon: ImageVector,
     readOnly: Boolean = false,
     onIconClick: () -> Unit
@@ -72,6 +72,7 @@ fun JOutlinedTextFieldWithIconButton(
             modifier = Modifier.weight(1f),
             text = text,
             hint = hint,
+            placeHolder = placeHolder,
             readOnly = readOnly,
             onValueChange = {
                 onValueChange(it)

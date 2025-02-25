@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.ksp)
-    kotlin("plugin.serialization") version "2.0.21"
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -43,11 +43,11 @@ android {
 
 dependencies {
 
-    implementation(project(":feature:myjastic:domain"))
-    implementation(project(":core:location"))
-    implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:contacts:domain"))
+    implementation(project(":core:contacts:di"))
+    implementation(project(":feature:myjastic:domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

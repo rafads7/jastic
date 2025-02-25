@@ -15,6 +15,10 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":core:utils"))
+    api(project(":core:domain"))
+    implementation(project(":core:contacts:domain"))
+
+    implementation(libs.javax.inject)
+    implementation(libs.kotlinx.coroutines.core)
 }
 

@@ -21,7 +21,7 @@ import com.rafaelduransaez.core.components.jAlertDialog.JAlertDialog
 import com.rafaelduransaez.core.extensions.findActivity
 import com.rafaelduransaez.core.extensions.openSettings
 
-private const val MIN_PERMISSIONS = 2
+private const val MULTIPLE_PERMISSIONS = 2
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -120,7 +120,7 @@ private fun getPermissionsTextProvider(
     permissionsState: MultiplePermissionsState,
     context: Context
 ): PermissionTextProvider =
-    if (permissionsState.revokedPermissions.size >= MIN_PERMISSIONS) {
+    if (permissionsState.revokedPermissions.size >= MULTIPLE_PERMISSIONS) {
         AllPermissionsTextProvider(context)
     } else {
         when (permissionsState.revokedPermissions.firstOrNull()?.permission) {

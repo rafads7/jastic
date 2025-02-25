@@ -1,7 +1,7 @@
 package com.rafaelduransaez.feature.myjastic.presentation.utils
 
 import com.google.android.gms.maps.model.LatLng
-import com.rafaelduransaez.core.utils.extensions.zero
+import com.rafaelduransaez.core.domain.extensions.zero
 
 object Constants {
     const val FIRST_ITEM_INDEX = 0

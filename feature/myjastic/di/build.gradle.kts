@@ -42,7 +42,10 @@ android {
 
 dependencies {
 
-    implementation(project(mapOf("path" to ":feature:myjastic:presentation")))
+    implementation(project(":feature:myjastic:domain"))
+    implementation(project(":feature:myjastic:data"))
+    implementation(project(":feature:myjastic:presentation"))
+    implementation(project(":core:location"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

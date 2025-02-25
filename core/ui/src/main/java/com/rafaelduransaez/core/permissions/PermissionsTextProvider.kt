@@ -2,8 +2,7 @@ package com.rafaelduransaez.core.permissions
 
 import android.content.Context
 import com.rafaelduransaez.core.components.R
-import com.rafaelduransaez.core.utils.extensions.empty
-
+import com.rafaelduransaez.core.domain.extensions.empty
 
 interface PermissionTextProvider {
     val title: String

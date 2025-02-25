@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.rafaelduransaez.core.components.jIcon.JIcon
 import com.rafaelduransaez.core.designsystem.JasticTheme
-import com.rafaelduransaez.core.utils.extensions.empty
+import com.rafaelduransaez.core.domain.extensions.empty
 
 @Composable
 fun JIconButton(

@@ -1,15 +1,11 @@
 package com.rafaelduransaez.jastic.ui
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -18,8 +14,6 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -30,14 +24,12 @@ import com.rafaelduransaez.core.components.jSnackbar.SnackbarHandler
 import com.rafaelduransaez.core.components.jText.JTextLarge
 import com.rafaelduransaez.core.components.jText.JTextTitle
 import com.rafaelduransaez.core.designsystem.JasticTheme
-import com.rafaelduransaez.core.extensions.show
 import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.navigation.NavigationRoute
 import com.rafaelduransaez.jastic.R
 import com.rafaelduransaez.jastic.navigation.JasticAppRootNavGraph
 import com.rafaelduransaez.jastic.navigation.TopLevelRoute
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -46,10 +38,11 @@ fun JasticApp(appState: JasticAppState = rememberJasticAppState()) {
 
     val snackBarHostState = remember { SnackbarHostState() }
 
-    SnackbarHandler(snackBarHostState, appState.coroutineScope)
+    SnackbarHostHandler(snackBarHostState, appState.coroutineScope)
+
     Scaffold(
         topBar = { JasticTopAppBar() },
-        snackbarHost = { SnackbarHost(snackBarHostState) },
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
         bottomBar = {
             JasticBottomBar(
                 currentDestination = appState.currentDestination,
@@ -67,7 +60,7 @@ fun JasticApp(appState: JasticAppState = rememberJasticAppState()) {
 }
 
 @Composable
-private fun SnackbarHandler(snackBarHostState: SnackbarHostState, coroutineScope: CoroutineScope) {
+private fun SnackbarHostHandler(snackBarHostState: SnackbarHostState, coroutineScope: CoroutineScope) {
     ObserveAsEvent(flow = SnackbarHandler.events, snackBarHostState) { event ->
         coroutineScope.launch {
             snackBarHostState.currentSnackbarData?.dismiss()
@@ -83,17 +76,6 @@ private fun SnackbarHandler(snackBarHostState: SnackbarHostState, coroutineScope
             }
         }
     }
-
-    SnackbarHost(snackBarHostState,
-        snackbar = { snackbarData ->
-            Snackbar(
-                snackbarData = snackbarData,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .background(color = Color.Green)
-            )
-        }
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

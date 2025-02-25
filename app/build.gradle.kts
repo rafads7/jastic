@@ -6,7 +6,9 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.mapsplatform.secrets.gradle)
     alias(libs.plugins.ksp)
-    kotlin("plugin.serialization") version "2.0.21"
+
+    alias(libs.plugins.kotlin.serialization)
+    //kotlin("plugin.serialization") version "2.0.21"
 }
 
 secrets {

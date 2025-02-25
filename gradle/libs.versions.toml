@@ -7,10 +7,12 @@ coreKtx = "1.15.0"
 espressoCore = "3.6.1"
 hiltNavigationCompose = "1.2.0"
 hiltVersion = "2.51.1" #"2.53.1" when Kotlin version 2.0.0+
+javaxInject = "1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 kotlin = "1.9.24" #"2.1.0" when Kotlin version 2.0.0+
 #kotlinCompose = "2.0.21" #use only when using with Kotlin verion 2.0.0+
+kotlinxCoroutinesCore = "1.7.3" #Upgrade whenever we upgrade Kotlin version to +2.0.0
 kotlinxCoroutinesPlayServices = "1.9.0"
 kotlinxSerializationJson = "1.6.3" #"1.7.3" when Kotlin version 2.0.0+
 ksp = "1.9.0-1.0.12" #"2.1.0-1.0.29" when Kotlin version 2.0.0+
@@ -58,7 +60,9 @@ dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = 
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltVersion" }
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltVersion" }
+javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServices" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
@@ -79,6 +83,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion"}
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 #kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinCompose" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

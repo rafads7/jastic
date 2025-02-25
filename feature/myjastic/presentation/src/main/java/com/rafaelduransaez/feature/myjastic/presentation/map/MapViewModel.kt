@@ -1,21 +1,20 @@
 package com.rafaelduransaez.feature.myjastic.presentation.map
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.google.android.gms.maps.model.LatLng
-import com.rafaelduransaez.core.GeocoderHelper
-import com.rafaelduransaez.core.LocationHelper
 import com.rafaelduransaez.core.components.jSnackbar.SnackbarEvent
 import com.rafaelduransaez.core.components.jSnackbar.SnackbarHandler
-import com.rafaelduransaez.core.utils.extensions.empty
-import com.rafaelduransaez.feature.myjastic.domain.model.GeofenceLocation
+import com.rafaelduransaez.core.domain.models.GeofenceLocation
+import com.rafaelduransaez.feature.myjastic.domain.usecase.FetchAddressFromLocationUseCase
+import com.rafaelduransaez.feature.myjastic.domain.usecase.FetchCurrentLocationUseCase
 import com.rafaelduransaez.feature.myjastic.presentation.myJastic.MyJasticViewModel.Companion.CACHE_TIMEOUT
-import com.rafaelduransaez.feature.myjastic.presentation.utils.Constants.NULL_ISLAND
-import com.rafaelduransaez.feature.myjastic.presentation.utils.toGeofenceLocation
+import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -25,17 +24,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    private val locationHelper: LocationHelper,
-    private val geocoderHelper: GeocoderHelper,
+    private val savedStateHandle: SavedStateHandle,
+    private val mapper: MapMapper,
+    private val fetchCurrentLocationUseCase: FetchCurrentLocationUseCase,
+    private val fetchAddressFromLocationUseCase: FetchAddressFromLocationUseCase
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<DataMapUiState> = MutableStateFlow(DataMapUiState())
+    private val _uiState: MutableStateFlow<MapUiState> =
+        MutableStateFlow(MapUiState(isLoading = true))
     val uiState = _uiState
-        .onStart { fetchCurrentLocation() }
+        .onStart { setInitialLocationToShow() }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(CACHE_TIMEOUT),
-            initialValue = DataMapUiState()
+            initialValue = MapUiState(isLoading = true)
         )
 
     internal fun onUiEvent(event: MapUiEvent) {
@@ -45,100 +47,68 @@ class MapViewModel @Inject constructor(
         }
     }
 
+    private fun setInitialLocationToShow() {
+        val mapData = savedStateHandle.toRoute<MyJasticRoutes.Map>()
+        if (mapData.isEmpty()) {
+            fetchCurrentLocation()
+        } else {
+            val location = GeofenceLocation(
+                latitude = mapData.latitude,
+                longitude = mapData.longitude
+            )
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    mapLocation = location,
+                    isLocationSelected = true,
+                )
+            }
+        }
+    }
+
     private fun fetchCurrentLocation() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            locationHelper.requestCurrentLocation()
+            if (!_uiState.value.isLoading)
+                _uiState.update { it.copy(isLoading = true, error = false) }
+
+            fetchCurrentLocationUseCase()
                 .catch { _uiState.update { it.copy(error = true) } }
                 .collect { location ->
                     location?.let {
                         _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                error = false,
-                                currentLocation = location.toGeofenceLocation()
-                            )
+                            it.copy(isLoading = false, mapLocation = location)
                         }
                     } ?: run {
-                        _uiState.update { it.copy(error = true) }
+                        _uiState.update { it.copy(isLoading = false, error = true) }
                     }
                 }
         }
     }
 
-    private fun fetchAddressFromLocation(location: LatLng) {
-        geocoderHelper.getAddressFromLatLng(
-            location = location,
-            onResult = { address ->
-                _uiState.update {
-                    it.copy(
-                        geofenceLocation = GeofenceLocation(
-                            latitude = location.latitude,
-                            longitude = location.longitude,
-                            address = address
-                        )
-                    )
-                }
-                viewModelScope.launch {
-                    SnackbarHandler.sendEvent(SnackbarEvent(message = address))
-                }
-            },
-            onError = {
-                _uiState.update { it.copy(error = true) }
-            }
-        )
-    }
-    /*    private fun fetchCurrentLocation() {
-            viewModelScope.launch {
-                locationHelper.requestCurrentLocation()
-                    .catch { _uiState.update { MapUiState.Error } }
-                    .collect { location ->
-                        location?.let {
-                            _uiState.update { MapUiState.ShowLocation(currentLocation = location) }
-                        } ?: run {
-                            _uiState.update { MapUiState.Error }
-                        }
-                    }
-            }
-        }
+    private fun fetchAddressFromLocation(latLng: LatLng) {
+        val location = mapper.latLngToGeofenceLocation(latLng)
 
-        private fun fetchAddressFromLocation(location: LatLng) {
-            geocoderHelper.getAddressFromLatLng(
-                location = location,
-                onResult = { address ->
+        viewModelScope.launch {
+            fetchAddressFromLocationUseCase(location).fold(
+                onSuccess = { address ->
                     _uiState.update {
-                        MapUiState.ShowLocation(
-                            geofenceLocation = location,
-                            address = address
+                        it.copy(
+                            isLocationSelected = true,
+                            mapLocation = location.copy(address = address)
                         )
                     }
-                    viewModelScope.launch {
-                        SnackbarHandler.sendEvent(SnackbarEvent(message = address))
-                    }
+                    SnackbarHandler.sendEvent(SnackbarEvent(message = address))
                 },
-                onError = {
-                    _uiState.update { MapUiState.Error }
-                }
+                onFailure = { _uiState.update { it.copy(error = true) } }
             )
-        }*/
-
-
+        }
+    }
 }
 
-sealed class MapUiState() {
-    data object Loading : MapUiState()
-    data object Error : MapUiState()
-    data class ShowMap(
-        val currentLocation: LatLng = NULL_ISLAND,
-        val geofenceLocation: LatLng? = null,
-        val address: String = String.empty()
-    ) : MapUiState()
-}
-
-data class DataMapUiState(
+data class MapUiState(
     val isLoading: Boolean = false,
-    val currentLocation: GeofenceLocation = GeofenceLocation(),
-    val geofenceLocation: GeofenceLocation? = null,
+    val isLocationSelected: Boolean = false,
+    val mapLocation: GeofenceLocation = GeofenceLocation(),
     val error: Boolean = false
 )
 

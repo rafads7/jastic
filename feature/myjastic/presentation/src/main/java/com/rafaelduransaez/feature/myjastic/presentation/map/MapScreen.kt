@@ -10,22 +10,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.widgets.ScaleBar
 import com.rafaelduransaez.core.components.common.JasticProgressIndicator
 import com.rafaelduransaez.core.components.jButton.JButton
@@ -38,77 +31,53 @@ import com.rafaelduransaez.core.navigation.invoke
 import com.rafaelduransaez.feature.myjastic.presentation.R
 import com.rafaelduransaez.feature.myjastic.presentation.map.MapUiEvent.LocationFetchError
 import com.rafaelduransaez.feature.myjastic.presentation.map.MapUiEvent.MapLocationSelected
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.Keys.MAP_LATLNG
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toLatLng
-
-val LatLngSaver = Saver<LatLng, List<Double>>(
-    save = { listOf(it.latitude, it.longitude) },
-    restore = { LatLng(it[0], it[1]) }
-)
+import com.rafaelduransaez.feature.myjastic.presentation.utils.toMap
 
 @Composable
 internal fun MapScreen(
-    uiState: DataMapUiState,
+    uiState: MapUiState,
     onUiEvent: (MapUiEvent) -> Unit,
     onRouteTo: NavRouteTo,
 ) {
+    val mapState = rememberJasticMapUiState(
+        currentLocation = uiState.mapLocation.toLatLng(),
+        isSelected = uiState.isLocationSelected
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(all = 8.dp)
     ) {
         when {
-            uiState.error -> JMapError(modifier = Modifier.align(Alignment.Center)) {
-                onUiEvent(LocationFetchError)
-            }
-
-            uiState.isLoading -> JasticProgressIndicator()
-            else -> JasticMap(
-                onUiEvent = onUiEvent,
-                onRouteTo = onRouteTo,
-                currentLocation = uiState.currentLocation.toLatLng(),
-                geofenceLocation = uiState.geofenceLocation?.toLatLng(),
-                onSave = { onRouteTo(Back, mapOf(MAP_LATLNG to uiState.geofenceLocation!!)) },
-            )
-        }
-
-        /*when (uiState) {
-            MapUiState.Loading -> JasticProgressIndicator()
-            is MapUiState.Error -> {
+            uiState.error ->
                 JMapError(modifier = Modifier.align(Alignment.Center)) {
                     onUiEvent(LocationFetchError)
                 }
-            }
 
-            is MapUiState.ShowLocation -> {
+            uiState.isLoading ->
+                JasticProgressIndicator()
+
+            else ->
                 JasticMap(
                     onUiEvent = onUiEvent,
                     onRouteTo = onRouteTo,
-                    currentLocation = uiState.currentLocation,
-                    geofenceLocation = uiState.geofenceLocation
+                    mapState = mapState,
+                    onSave = { onRouteTo(Back, uiState.mapLocation.toMap()) },
                 )
-            }
-        }*/
+
+        }
     }
 }
 
 @Composable
 internal fun JasticMap(
-    currentLocation: LatLng,
-    geofenceLocation: LatLng?,
+    mapState: MapScreenState,
     onUiEvent: (MapUiEvent) -> Unit = {},
     onRouteTo: NavRouteTo,
     onSave: () -> Unit
 ) {
-    val uiSettings = remember { MapUiSettings(myLocationButtonEnabled = false) }
-    val properties = remember { MapProperties() }
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(
-            geofenceLocation ?: currentLocation, MapUtils.DEFAULT_ZOOM
-        )
-    }
-
-    val enableSaveButton by remember(geofenceLocation) { derivedStateOf { geofenceLocation != null } }
 
     Column {
         Box(
@@ -118,15 +87,18 @@ internal fun JasticMap(
         ) {
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState,
-                properties = properties,
-                uiSettings = uiSettings,
+                cameraPositionState = mapState.cameraPositionState,
+                properties = mapState.properties,
+                uiSettings = mapState.uiSettings,
                 onMapLongClick = {
                     onUiEvent(MapLocationSelected(it))
                 }
             ) {
-                if (geofenceLocation != null) {
-                    MapGeofence(geofenceLocation)
+                LaunchedEffect(mapState.currentLocation) {
+                    mapState.animateCamera(mapState.currentLocation)
+                }
+                if (mapState.isSelected) {
+                    MapGeofence(mapState.currentLocation)
                 }
             }
 
@@ -134,14 +106,14 @@ internal fun JasticMap(
                 modifier = Modifier
                     .padding(top = JasticTheme.size.extraSmall, end = JasticTheme.size.large)
                     .align(Alignment.TopStart),
-                cameraPositionState = cameraPositionState
+                cameraPositionState = mapState.cameraPositionState
             )
         }
 
         ControlButtons(
             onCancel = { onRouteTo(Back) },
             onSave = onSave,
-            enableSaveButton = enableSaveButton
+            enableSaveButton = mapState.enableSaveButton
         )
     }
 }
@@ -194,7 +166,7 @@ private fun JMapError(modifier: Modifier = Modifier, onRetry: () -> Unit) {
         )
         JButton(
             modifier = Modifier.padding(all = JasticTheme.size.small),
-            textId = R.string.str_feature_my_jastic_retry
+            textId = R.string.str_feature_myjastic_retry
         ) { onRetry() }
     }
 }

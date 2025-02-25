@@ -4,7 +4,10 @@
     <string name="str_feature_myjastic_scroll_to_top">Deslizar al inicio</string>
     <string name="str_feature_myjastic_destiny_point_alias">Alias para el punto de destino</string>
     <string name="str_feature_myjastic_location">Localización</string>
-    <string name="str_feature_my_jastic_retry">Reintentar</string>
+    <string name="str_feature_myjastic_retry">Reintentar</string>
     <string name="str_feature_myjastic_address_selected">Dirección seleccionada (aprox.): %1$s</string>
-    <string name="str_feature_my_jastic_close">Cerrar</string>
+    <string name="str_feature_myjastic_close">Cerrar</string>
+    <string name="str_feature_myjastic_location_placeholder"><![CDATA[Seleccione la localización en el mapa ->]]></string>
+    <string name="str_feature_myjastic_message">Mensaje a enviar</string>
+    <string name="str_feature_myjastic_contact_phone_number">Contact phone number</string>
 </resources>

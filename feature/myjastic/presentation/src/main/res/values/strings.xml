@@ -4,7 +4,10 @@
     <string name="str_feature_myjastic_scroll_to_top">Scroll to top</string>
     <string name="str_feature_myjastic_destiny_point_alias">Destiny point alias</string>
     <string name="str_feature_myjastic_location">Location</string>
-    <string name="str_feature_my_jastic_retry">Retry</string>
+    <string name="str_feature_myjastic_retry">Retry</string>
     <string name="str_feature_myjastic_address_selected">Address selected (aprox.): %1$s</string>
-    <string name="str_feature_my_jastic_close">Close</string>
+    <string name="str_feature_myjastic_close">Close</string>
+    <string name="str_feature_myjastic_location_placeholder"><![CDATA[Select location from the map ->]]></string>
+    <string name="str_feature_myjastic_message">Message to send</string>
+    <string name="str_feature_myjastic_contact_phone_number">Contact phone number</string>
 </resources>

@@ -36,7 +36,7 @@ import com.rafaelduransaez.core.components.jText.JTextTitle
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.invoke
-import com.rafaelduransaez.core.utils.extensions.negative
+import com.rafaelduransaez.core.domain.extensions.negative
 import com.rafaelduransaez.feature.myjastic.domain.model.JasticDestination
 import com.rafaelduransaez.feature.myjastic.presentation.R
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes
