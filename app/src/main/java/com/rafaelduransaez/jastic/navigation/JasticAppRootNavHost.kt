@@ -1,10 +1,5 @@
 package com.rafaelduransaez.jastic.navigation
 
-import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.Manifest.permission.ACCESS_NOTIFICATION_POLICY
-import android.Manifest.permission.POST_NOTIFICATIONS
-import android.Manifest.permission.READ_CONTACTS
-import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,9 +19,14 @@ import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.Back
 import com.rafaelduransaez.core.navigation.JasticNavigable
 import com.rafaelduransaez.core.navigation.NavigationGraphs
-import com.rafaelduransaez.core.permissions.PermissionsRequester
+import com.rafaelduransaez.core.permissions.JasticPermission
+import com.rafaelduransaez.core.ui.permissions.PermissionsRequester
+import com.rafaelduransaez.core.permissions.toAndroidPermissions
+import com.rafaelduransaez.core.ui.permissions.PermissionsDialogState
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.myJasticNavGraph
 import com.rafaelduransaez.feature.settings.navigation.settingsGraph
+import com.rafaelduransaez.jastic.navigation.PermissionsRequestHolder.Companion.fromJasticPermission
+import com.rafaelduransaez.jastic.navigation.PermissionsRequestHolder.Companion.fromJasticPermissions
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -35,42 +35,61 @@ fun JasticAppRootNavGraph(
     navController: NavHostController,
     coroutineScope: CoroutineScope
 ) {
-    var permissionsGranted by remember { mutableStateOf(false) }
 
-    val initialPermissions =
-        mutableListOf(ACCESS_NOTIFICATION_POLICY, ACCESS_FINE_LOCATION, READ_CONTACTS).apply {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) add(POST_NOTIFICATIONS)
-            //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) add(ACCESS_BACKGROUND_LOCATION)
-        }
+    var requestPermissions by remember { mutableStateOf(PermissionsRequestHolder()) }
 
-    PermissionsRequester(initialPermissions) {
-        permissionsGranted = true
+    PermissionsRequester(
+        permissions = requestPermissions.permissions,
+        coroutineScope = coroutineScope,
+        onCancel = { requestPermissions = PermissionsRequestHolder() }
+    ) {
+        requestPermissions.onAllGranted()
     }
 
-    if (permissionsGranted)
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues = contentPadding)
-                .background(JasticTheme.colorScheme.onPrimary)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues = contentPadding)
+            .background(JasticTheme.colorScheme.onPrimary)
+    ) {
+        NavHost(
+            navController = navController,
+            startDestination = NavigationGraphs.MyJasticGraph
         ) {
-            NavHost(
-                navController = navController,
-                startDestination = NavigationGraphs.MyJasticGraph
-            ) {
-                myJasticNavGraph(
-                    onRouteTo = { route, navData, options ->
-                        navController.navigateTo(
-                            route,
-                            navData,
-                            options
-                        )
-                    }
-                )
-                settingsGraph()
-            }
+            myJasticNavGraph(
+                onRouteTo = { route, navData, options ->
+                    navController.navigateTo(route, navData, options)
+                },
+                onPermissionNeeded = { permission, onAllGranted ->
+                    requestPermissions = PermissionsRequestHolder.fromJasticPermission(
+                        permission, onAllGranted
+                    )
+                }
+            )
+            settingsGraph()
         }
+    }
 
+}
+
+data class PermissionsRequestHolder(
+    val permissions: List<String> = emptyList(),
+    val onAllGranted: @Composable () -> Unit = {}
+) {
+    companion object {
+        fun Companion.fromJasticPermission(
+            permissionList: JasticPermission,
+            onAllGranted: @Composable () -> Unit
+        ) = fromJasticPermissions(listOf(permissionList), onAllGranted)
+
+        fun Companion.fromJasticPermissions(
+            permissionList: List<JasticPermission>,
+            onAllGranted: @Composable () -> Unit
+        ) = PermissionsRequestHolder(
+            permissions = permissionList.flatMap { it.toAndroidPermissions() },
+            onAllGranted = onAllGranted
+        )
+    }
 }
 
 private fun NavHostController.navigateTo(

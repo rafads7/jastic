@@ -10,19 +10,6 @@ import androidx.compose.material3.SnackbarHostState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-fun ComponentActivity.openSettings() {
-    Intent(
-        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-        Uri.fromParts("package", packageName, null)
-    ).also(::startActivity)
-}
-
-fun Context.findActivity(): ComponentActivity? = when (this) {
-    is ComponentActivity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
-}
-
 fun SnackbarHostState.show(coroutineScope: CoroutineScope, message: String) =
     coroutineScope.launch {
         showSnackbar(

@@ -1,4 +1,5 @@
-package com.rafaelduransaez.core.permissions
+package com.rafaelduransaez.core.ui.permissions.deprecated
+/*
 
 import android.content.Intent
 import android.net.Uri
@@ -35,13 +36,15 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.rafaelduransaez.core.domain.extensions.empty
 
+*/
 /**
  * The PermissionBox uses a [Box] to show a simple permission request UI when the provided [permission]
  * is revoked or the provided [onGranted] content if the permission is granted.
  *
  * This composable follows the permission request flow but for a complete example check the samples
  * under privacy/permissions
- */
+ *//*
+
 @Composable
 fun PermissionBox(
     modifier: Modifier = Modifier,
@@ -59,12 +62,14 @@ fun PermissionBox(
     ) { onGranted() }
 }
 
+*/
 /**
  * A variation of [PermissionBox] that takes a list of permissions and only calls [onGranted] when
  * all the [requiredPermissions] are granted.
  *
  * By default it assumes that all [permissions] are required.
- */
+ *//*
+
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PermissionBox(
@@ -222,4 +227,4 @@ private fun PermissionScreen(
             },
         )
     }
-}
+}*/

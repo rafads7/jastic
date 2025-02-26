@@ -1,7 +1,6 @@
-package com.rafaelduransaez.core.permissions
+package com.rafaelduransaez.core.ui.permissions
 
 import android.content.Context
-import com.rafaelduransaez.core.components.R
 import com.rafaelduransaez.core.domain.extensions.empty
 
 interface PermissionTextProvider {
@@ -11,21 +10,21 @@ interface PermissionTextProvider {
 
 class LocationPermissionTextProvider(private val context: Context) : PermissionTextProvider {
     override val title: String
-        get() = context.getString(R.string.str_location_permissions_needed)
+        get() = context.getString(R.string.str_core_ui_permissions_location_permissions_needed)
 
     override val description: String
-        get() = context.getString(R.string.str_location_permissions_needed_desc)
+        get() = context.getString(R.string.str_core_ui_permissions_location_permissions_needed_desc)
 }
 
 class NotificationsPermissionTextProvider(private val context: Context) : PermissionTextProvider {
     override val title: String
-        get() = context.getString(R.string.str_notifications_permissions_needed)
+        get() = context.getString(R.string.str_core_ui_permissions_notifications_permissions_needed)
 
     override val description: String
-        get() = context.getString(R.string.str_notifications_permissions_needed_desc)
+        get() = context.getString(R.string.str_core_ui_permissions_notifications_permissions_needed_desc)
 }
 
-class UnknownPermissionTextProvider() : PermissionTextProvider {
+class UnknownPermissionTextProvider : PermissionTextProvider {
     override val title: String
         get() = String.empty()
 
@@ -35,15 +34,15 @@ class UnknownPermissionTextProvider() : PermissionTextProvider {
 
 class ContactsPermissionTextProvider(private val context: Context): PermissionTextProvider {
     override val title: String
-        get() = context.getString(R.string.str_contacts_permission_needed)
+        get() = context.getString(R.string.str_core_ui_permissions_contacts_permission_needed)
     override val description: String
-        get() = context.getString(R.string.str_contacts_permission_needed_desc)
+        get() = context.getString(R.string.str_core_ui_permissions_contacts_permission_needed_desc)
 }
 
 class AllPermissionsTextProvider(private val context: Context) : PermissionTextProvider {
     override val title: String
-        get() = context.getString(R.string.str_all_permissions_needed)
+        get() = context.getString(R.string.str_core_ui_permissions_all_permissions_needed)
 
     override val description: String
-        get() = context.getString(R.string.str_all_permissions_needed_desc)
+        get() = context.getString(R.string.str_core_ui_permissions_all_permissions_needed_desc)
 }

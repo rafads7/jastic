@@ -25,8 +25,8 @@ fun JAlertDialog(
     onDismissRequest: () -> Unit = { },
     onConfirm: () -> Unit = { },
     onDismiss: (() -> Unit)? = null,
-    @StringRes confirmButtonTextId: Int = R.string.str_ok,
-    @StringRes dismissButtonTextId: Int = R.string.str_cancel,
+    @StringRes confirmButtonTextId: Int = R.string.str_core_ui_ok,
+    @StringRes dismissButtonTextId: Int = R.string.str_core_ui_cancel,
     dismissOnClickOutside: Boolean = false,
     dismissOnBackPress: Boolean = false
 ) {

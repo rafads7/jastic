@@ -22,6 +22,9 @@ import com.rafaelduransaez.core.components.jTextField.JOutlinedTextFieldWithIcon
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.invoke
+import com.rafaelduransaez.core.permissions.JasticPermission
+import com.rafaelduransaez.core.permissions.OnPermissionNeeded
+import com.rafaelduransaez.core.permissions.OnPermissionsNeeded
 import com.rafaelduransaez.feature.myjastic.presentation.R
 import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailUserEvent.AliasUpdate
 import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailUserEvent.MessageUpdate
@@ -33,7 +36,8 @@ internal fun JasticDestinationDetailScreen(
     uiState: JasticDestinationDetailUiState,
     onUiEvent: (JasticDestinationDetailUserEvent) -> Unit,
     onRouteTo: NavRouteTo,
-    contentPadding: PaddingValues = PaddingValues(all = JasticTheme.size.normal)
+    contentPadding: PaddingValues = PaddingValues(all = JasticTheme.size.normal),
+    onPermissionNeeded: OnPermissionNeeded
 ) {
 
     val contactPickerLauncher = rememberLauncherForActivityResult(
@@ -64,14 +68,20 @@ internal fun JasticDestinationDetailScreen(
                 Location(
                     location = uiState.location.address,
                     onIconClick = {
-                        with(uiState.location) {
-                            onRouteTo(MyJasticRoutes.Map(latitude, longitude))
+                        onPermissionNeeded(JasticPermission.Location) {
+                            with(uiState.location) {
+                                onRouteTo(MyJasticRoutes.Map(latitude, longitude))
+                            }
                         }
                     }
                 )
                 ContactPhoneNumber(
                     contactPhoneNumber = uiState.contact.phoneNumber,
-                    onIconClick = { contactPickerLauncher.launch(null) }
+                    onIconClick = {
+                        onPermissionNeeded(JasticPermission.Contacts) {
+                            contactPickerLauncher.launch(null)
+                        }
+                    }
                 )
                 Message(
                     message = uiState.message,

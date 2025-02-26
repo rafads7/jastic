@@ -1,4 +1,4 @@
-package com.rafaelduransaez.core.permissions
+package com.rafaelduransaez.core.ui.permissions.deprecated
 
 import android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -16,16 +16,23 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.rafaelduransaez.core.components.R
 import com.rafaelduransaez.core.components.jAlertDialog.JAlertDialog
-import com.rafaelduransaez.core.extensions.findActivity
-import com.rafaelduransaez.core.extensions.openSettings
+import com.rafaelduransaez.core.ui.permissions.AllPermissionsTextProvider
+import com.rafaelduransaez.core.ui.permissions.ContactsPermissionTextProvider
+import com.rafaelduransaez.core.ui.permissions.LocationPermissionTextProvider
+import com.rafaelduransaez.core.ui.permissions.NotificationsPermissionTextProvider
+import com.rafaelduransaez.core.ui.permissions.PermissionTextProvider
+import com.rafaelduransaez.core.ui.permissions.R
+import com.rafaelduransaez.core.ui.permissions.UnknownPermissionTextProvider
+import com.rafaelduransaez.core.ui.permissions.findActivity
+import com.rafaelduransaez.core.ui.permissions.openSettings
 
 private const val MULTIPLE_PERMISSIONS = 2
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun PermissionsRequester(
+@Deprecated("Use PermissionsRequester")
+fun AccompanistPermissionsRequesterDeprecated(
     permissions: List<String>,
     onAllGranted: @Composable () -> Unit = {}
 ) {
@@ -55,9 +62,7 @@ fun PermissionsRequester(
         onAllGranted()
         allGranted = false
         return
-    }
-
-    else if (showAlertDialog) {
+    } else if (showAlertDialog) {
         PermissionsDialog(
             permissionsState = permissionsState,
             permissionsAlreadyRequested = permissionsAlreadyRequested,
@@ -80,9 +85,9 @@ fun PermissionsDialog(
 ) {
     val textProvider = getPermissionsTextProvider(permissionsState, LocalContext.current)
     when {
-        permissionsState.shouldShowRationale -> RationaleDialog(textProvider, onConfirmToRationale)
+        permissionsState.shouldShowRationale -> RationaleDialogDeprecated(textProvider, onConfirmToRationale)
         permissionsAlreadyRequested -> GoToAppSettingsAppDialog(textProvider, hideDialogAction)
-        else -> RationaleDialog(textProvider, onConfirmToRationale)
+        else -> RationaleDialogDeprecated(textProvider, onConfirmToRationale)
     }
 }
 
@@ -95,7 +100,7 @@ fun GoToAppSettingsAppDialog(
     JAlertDialog(
         title = permissionTextProvider.title,
         description = permissionTextProvider.description,
-        confirmButtonTextId = R.string.str_go_to_settings,
+        confirmButtonTextId = R.string.str_core_ui_permissions_go_to_settings,
         onConfirm = {
             onConfirm()
             context.findActivity()?.openSettings()
@@ -104,7 +109,7 @@ fun GoToAppSettingsAppDialog(
 }
 
 @Composable
-fun RationaleDialog(
+fun RationaleDialogDeprecated(
     permissionTextProvider: PermissionTextProvider,
     onConfirm: () -> Unit
 ) {

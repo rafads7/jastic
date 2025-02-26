@@ -56,7 +56,7 @@ fun JCancelButton(
 ) {
     JButton(
         modifier = modifier,
-        textId = R.string.str_cancel,
+        textId = R.string.str_core_ui_cancel,
         enabled = enabled,
         containerColor = JasticTheme.colorScheme.errorContainer
     ) { onCancel() }

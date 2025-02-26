@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="str_core_ui_permissions_str_ok">OK</string>
+    <string name="str_core_ui_permissions">Cancelar</string>
+    <string name="str_core_ui_permissions_go_to_settings">Ir a Ajustes</string>
+    <string name="str_core_ui_permissions_notifications_permissions_needed">Permiso de Notificaciones</string>
+    <string name="str_core_ui_permissions_notifications_permissions_needed_desc">Necesitamos el Permiso de Notificaciones para notificarte cuando llegues a tu destino, por favor.</string>
+    <string name="str_core_ui_permissions_thanks_for_permissions">Permisos otorgados. ¡Gracias!</string>
+    <string name="str_core_ui_permissions_all_permissions_needed">Necesitamos permisos</string>
+    <string name="str_core_ui_permissions_all_permissions_needed_desc">"Necesitamos diversos permisos para brindarte la mejor experiencia de usuario posible y poder rastrear tu posición y notificarte cuando llegues a tu destino. Gracias."</string>
+    <string name="str_core_ui_permissions_location_permissions_needed">Permiso de Localización </string>
+    <string name="str_core_ui_permissions_location_permissions_needed_desc">Necesitamos el Permiso de Localización para rastrear tu posición y saber que se está acercando a su destino, por favor. Gracias.</string>
+    <string name="str_core_ui_permissions_contacts_permission_needed">Permiso de Contactos</string>
+    <string name="str_core_ui_permissions_contacts_permission_needed_desc">Necesitamos el Permiso para acceder a los Contactos y así ayudarle a seleccioar el contacto a notificar a través de su aplicación de contactos, por favor. Gracias.</string>
+</resources>

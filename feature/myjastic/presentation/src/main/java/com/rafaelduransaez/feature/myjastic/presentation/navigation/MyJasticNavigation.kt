@@ -13,6 +13,7 @@ import com.rafaelduransaez.core.domain.models.GeofenceLocation
 import com.rafaelduransaez.core.extensions.getAndRemove
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs.MyJasticGraph
+import com.rafaelduransaez.core.permissions.OnPermissionNeeded
 import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailScreen
 import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailUserEvent.LocationSelected
 import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailViewModel
@@ -28,7 +29,8 @@ import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRout
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.MyJastic
 
 fun NavGraphBuilder.myJasticNavGraph(
-    onRouteTo: NavRouteTo
+    onRouteTo: NavRouteTo,
+    onPermissionNeeded: OnPermissionNeeded
 ) {
     navigation<MyJasticGraph>(startDestination = MyJastic) {
         composable<MyJastic> {
@@ -61,7 +63,8 @@ fun NavGraphBuilder.myJasticNavGraph(
             JasticDestinationDetailScreen(
                 uiState = uiState,
                 onUiEvent = viewModel::onUiEvent,
-                onRouteTo = onRouteTo
+                onRouteTo = onRouteTo,
+                onPermissionNeeded = onPermissionNeeded
             )
         }
 
