@@ -7,8 +7,8 @@ import android.Manifest.permission.READ_CONTACTS
 import android.os.Build
 import androidx.compose.runtime.Composable
 
-typealias OnPermissionNeeded = (JasticPermission, @Composable () -> Unit) -> Unit
-typealias OnPermissionsNeeded = (List<JasticPermission>, @Composable () -> Unit) -> Unit
+typealias OnPermissionNeeded = (JasticPermission,  () -> Unit) -> Unit
+typealias OnPermissionsNeeded = (List<JasticPermission>, () -> Unit) -> Unit
 
 enum class JasticPermission {
     Contacts,

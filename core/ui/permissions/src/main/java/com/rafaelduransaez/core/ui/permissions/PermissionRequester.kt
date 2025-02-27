@@ -7,26 +7,21 @@ import android.Manifest.permission.POST_NOTIFICATIONS
 import android.Manifest.permission.READ_CONTACTS
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LifecycleResumeEffect
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.rafaelduransaez.core.components.jAlertDialog.JAlertDialog
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 private const val MULTIPLE_PERMISSIONS = 2
@@ -36,8 +31,8 @@ private const val MULTIPLE_PERMISSIONS = 2
 fun PermissionsRequester(
     permissions: List<String>,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    onCancel: () -> Unit,
-    onAllGranted: @Composable () -> Unit = {},
+    onCancelRequest: () -> Unit,
+    onAllGranted: () -> Unit = {},
 ) {
     val context = LocalContext.current
 
@@ -50,6 +45,9 @@ fun PermissionsRequester(
     }
 
     LifecycleResumeEffect(permissionsState) {
+        if (permissionsState.revokedPermissions == permissions)
+            permissionsRequested = false
+
         if (permissionsState.permissions.isNotEmpty()) {
             coroutineScope.launch {
                 snapshotFlow { permissionsState }
@@ -61,7 +59,10 @@ fun PermissionsRequester(
                         }
                     }
             }
+        } else {
+            permissionsDialogState = PermissionsDialogState.None
         }
+
         onPauseOrDispose { }
     }
 
@@ -90,10 +91,10 @@ fun PermissionsRequester(
                     permissionsDialogState = PermissionsDialogState.None
                     context.findActivity()?.openSettings()
                 },
-/*                onDismiss = {
+                onDismiss = {
                     permissionsDialogState = PermissionsDialogState.None
-                    onCancel()
-                }*/
+                    onCancelRequest()
+                }
             )
         }
 
@@ -143,13 +144,13 @@ internal fun RationaleDialog(
 internal fun GoToAppSettingsDialog(
     permissionTextProvider: PermissionTextProvider,
     onConfirm: () -> Unit,
-    //onDismiss: () -> Unit
+    onDismiss: () -> Unit
 ) {
     JAlertDialog(
         title = permissionTextProvider.title,
         description = permissionTextProvider.description,
         confirmButtonTextId = R.string.str_core_ui_permissions_go_to_settings,
         onConfirm = onConfirm,
-        //onDismiss = onDismiss
+        onDismiss = onDismiss
     )
 }

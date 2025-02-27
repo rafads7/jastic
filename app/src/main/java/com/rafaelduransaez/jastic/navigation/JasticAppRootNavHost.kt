@@ -22,11 +22,10 @@ import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.permissions.JasticPermission
 import com.rafaelduransaez.core.ui.permissions.PermissionsRequester
 import com.rafaelduransaez.core.permissions.toAndroidPermissions
-import com.rafaelduransaez.core.ui.permissions.PermissionsDialogState
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.myJasticNavGraph
 import com.rafaelduransaez.feature.settings.navigation.settingsGraph
+import com.rafaelduransaez.jastic.navigation.PermissionsRequestHolder.Companion.empty
 import com.rafaelduransaez.jastic.navigation.PermissionsRequestHolder.Companion.fromJasticPermission
-import com.rafaelduransaez.jastic.navigation.PermissionsRequestHolder.Companion.fromJasticPermissions
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -36,12 +35,12 @@ fun JasticAppRootNavGraph(
     coroutineScope: CoroutineScope
 ) {
 
-    var requestPermissions by remember { mutableStateOf(PermissionsRequestHolder()) }
+    var requestPermissions by remember { mutableStateOf(PermissionsRequestHolder.empty()) }
 
     PermissionsRequester(
         permissions = requestPermissions.permissions,
         coroutineScope = coroutineScope,
-        onCancel = { requestPermissions = PermissionsRequestHolder() }
+        onCancelRequest = { requestPermissions = PermissionsRequestHolder.empty() }
     ) {
         requestPermissions.onAllGranted()
     }
@@ -73,18 +72,23 @@ fun JasticAppRootNavGraph(
 }
 
 data class PermissionsRequestHolder(
-    val permissions: List<String> = emptyList(),
-    val onAllGranted: @Composable () -> Unit = {}
+    val permissions: List<String>,
+    val onAllGranted: () -> Unit
 ) {
     companion object {
+
+        fun Companion.empty() = PermissionsRequestHolder(
+            permissions = emptyList(), onAllGranted = {}
+        )
+
         fun Companion.fromJasticPermission(
             permissionList: JasticPermission,
-            onAllGranted: @Composable () -> Unit
+            onAllGranted: () -> Unit
         ) = fromJasticPermissions(listOf(permissionList), onAllGranted)
 
         fun Companion.fromJasticPermissions(
             permissionList: List<JasticPermission>,
-            onAllGranted: @Composable () -> Unit
+            onAllGranted: () -> Unit
         ) = PermissionsRequestHolder(
             permissions = permissionList.flatMap { it.toAndroidPermissions() },
             onAllGranted = onAllGranted
