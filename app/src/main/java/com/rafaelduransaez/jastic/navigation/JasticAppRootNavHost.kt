@@ -32,18 +32,8 @@ import kotlinx.coroutines.CoroutineScope
 fun JasticAppRootNavGraph(
     contentPadding: PaddingValues,
     navController: NavHostController,
-    coroutineScope: CoroutineScope
+    onPermissionsRequest: (PermissionsRequestHolder) -> Unit
 ) {
-
-    var requestPermissions by remember { mutableStateOf(PermissionsRequestHolder.empty()) }
-
-    PermissionsRequester(
-        permissions = requestPermissions.permissions,
-        coroutineScope = coroutineScope,
-        onCancelRequest = { requestPermissions = PermissionsRequestHolder.empty() }
-    ) {
-        requestPermissions.onAllGranted()
-    }
 
     Box(
         modifier = Modifier
@@ -60,9 +50,8 @@ fun JasticAppRootNavGraph(
                     navController.navigateTo(route, navData, options)
                 },
                 onPermissionNeeded = { permission, onAllGranted ->
-                    requestPermissions = PermissionsRequestHolder.fromJasticPermission(
-                        permission, onAllGranted
-                    )
+                    //requestPermissions = PermissionsRequestHolder.fromJasticPermission(permission, onAllGranted)
+                    onPermissionsRequest(PermissionsRequestHolder.fromJasticPermission(permission, onAllGranted))
                 }
             )
             settingsGraph()

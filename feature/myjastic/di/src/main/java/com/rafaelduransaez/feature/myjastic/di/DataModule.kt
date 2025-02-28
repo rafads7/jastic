@@ -17,11 +17,10 @@ object DataModule {
 
     @Provides
     fun provideLocationRepository(
-        @IODispatcher dispatcher: CoroutineDispatcher,
         locationHelper: LocationHelper,
         addressHelper: AddressHelper
     ): LocationRepository {
-        return LocationRepositoryImpl(dispatcher, locationHelper, addressHelper)
+        return LocationRepositoryImpl(locationHelper, addressHelper)
     }
 
 }

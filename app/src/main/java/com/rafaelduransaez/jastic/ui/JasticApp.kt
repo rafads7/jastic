@@ -12,7 +12,10 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -26,8 +29,11 @@ import com.rafaelduransaez.core.components.jText.JTextTitle
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.navigation.NavigationRoute
+import com.rafaelduransaez.core.ui.permissions.PermissionsRequester
 import com.rafaelduransaez.jastic.R
 import com.rafaelduransaez.jastic.navigation.JasticAppRootNavGraph
+import com.rafaelduransaez.jastic.navigation.PermissionsRequestHolder
+import com.rafaelduransaez.jastic.navigation.PermissionsRequestHolder.Companion.empty
 import com.rafaelduransaez.jastic.navigation.TopLevelRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -51,10 +57,21 @@ fun JasticApp(appState: JasticAppState = rememberJasticAppState()) {
             )
         }
     ) { contentPadding ->
+
+        var requestPermissions by remember { mutableStateOf(PermissionsRequestHolder.empty()) }
+
+        PermissionsRequester(
+            permissions = requestPermissions.permissions,
+            coroutineScope = appState.coroutineScope,
+            onCancelRequest = { requestPermissions = PermissionsRequestHolder.empty() }
+        ) {
+            requestPermissions.onAllGranted()
+        }
+
         JasticAppRootNavGraph(
             contentPadding = contentPadding,
             navController = appState.navController,
-            coroutineScope = appState.coroutineScope
+            onPermissionsRequest = { holder -> requestPermissions = holder }
         )
     }
 }

@@ -57,8 +57,9 @@ object LocationModule {
     @Singleton
     @Provides
     fun provideAddressHelper(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
+        @IODispatcher coroutineDispatcher: CoroutineDispatcher
     ): AddressHelper {
-        return GeocoderHelper(context)
+        return GeocoderHelper(context, coroutineDispatcher)
     }
 }
