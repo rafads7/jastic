@@ -13,6 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+local.defaults.properties
+secrets.properties
 /.idea/.name
 /.idea/codeStyles/codeStyleConfig.xml
 /.idea/compiler.xml

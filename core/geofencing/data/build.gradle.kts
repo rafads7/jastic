@@ -51,4 +51,12 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.play.services.location)
+
+    //Compose
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.material.icons.core)
+    implementation(libs.androidx.material3.adaptive.navigation.suite)
+    implementation(libs.androidx.material3.windows.sizeclass)
 }
