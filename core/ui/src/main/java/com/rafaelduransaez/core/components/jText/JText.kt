@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -71,10 +72,12 @@ fun JTextCardBody(modifier: Modifier = Modifier, text: String) {
 }
 
 @Composable
-fun JDialogText(modifier: Modifier = Modifier, @StringRes textId: Int) =
-    Text(
-        text = stringResource(textId),
-        modifier = modifier,
-        style = JasticTheme.typography.labelBold,
-        color = JasticTheme.colorScheme.primary
-    )
+fun JDialogTextButton(modifier: Modifier = Modifier, @StringRes textId: Int, onClick: () -> Unit) =
+
+    TextButton(modifier = modifier, onClick = onClick) {
+        Text(
+            text = stringResource(textId),
+            style = JasticTheme.typography.labelBold,
+            color = JasticTheme.colorScheme.primary
+        )
+    }

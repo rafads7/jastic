@@ -19,6 +19,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.rafaelduransaez.core.components.jAlertDialog.JAlertDialog
+import com.rafaelduransaez.core.components.jAlertDialog.JCustomDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
