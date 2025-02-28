@@ -47,6 +47,8 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:contacts:domain"))
     implementation(project(":core:contacts:di"))
+    implementation(project(":core:geofencing:domain"))
+    implementation(project(":core:geofencing:data"))
     implementation(project(":feature:myjastic:domain"))
 
     implementation(libs.androidx.core.ktx)

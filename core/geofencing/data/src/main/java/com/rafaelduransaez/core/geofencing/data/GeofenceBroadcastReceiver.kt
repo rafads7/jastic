@@ -1,6 +1,5 @@
-package com.rafaelduransaez.core.geofences
+package com.rafaelduransaez.core.geofencing.data
 
-/*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -47,20 +46,9 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
     companion object {
         private const val TAG = "GeofenceBroadcastReceiv"
     }
-}*/
+}
 
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
 /*import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingEvent
 

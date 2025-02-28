@@ -30,6 +30,7 @@ import com.rafaelduransaez.core.components.common.JasticProgressIndicator
 import com.rafaelduransaez.core.components.jButton.JButton
 import com.rafaelduransaez.core.components.jFloatingActionButton.AddFAB
 import com.rafaelduransaez.core.components.jIcon.JIcon
+import com.rafaelduransaez.core.components.jText.JDialogTextButton
 import com.rafaelduransaez.core.components.jText.JTextCardBody
 import com.rafaelduransaez.core.components.jText.JTextCardTitle
 import com.rafaelduransaez.core.components.jText.JTextTitle
@@ -121,7 +122,7 @@ internal fun JasticDestinationsList(
             state = listState
         ) {
             items(count = jasticPoints.size, key = { jasticPoints[it].alias }) { index ->
-                JasticDestinationCard(jasticPoints[index], onJasticDestinationClicked)
+                JasticDestinationListItem(jasticPoints[index], onJasticDestinationClicked)
             }
         }
 
@@ -148,7 +149,7 @@ internal fun BoxScope.ScrollToTopButton(
 
 
 @Composable
-internal fun JasticDestinationCard(
+internal fun JasticDestinationListItem(
     destination: JasticDestination,
     onJasticDestinationClicked: (id: Int) -> Unit
 ) {

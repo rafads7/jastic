@@ -1,6 +1,5 @@
-package com.rafaelduransaez.core.geofences
+package com.rafaelduransaez.core.geofencing.data
 
-/*
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
@@ -13,7 +12,6 @@ import com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER
 import com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.tasks.await
 
 class GeofenceHelper(context: Context) {
@@ -65,12 +63,10 @@ class GeofenceHelper(context: Context) {
         geofenceList.clear()
     }
 
-    private fun createGeofencingRequest(): GeofencingRequest {
-        return GeofencingRequest.Builder().apply {
-            addGeofences(geofenceList.values.toList())
-            setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
-        }.build()
-    }
+    private fun createGeofencingRequest() = GeofencingRequest.Builder().apply {
+        addGeofences(geofenceList.values.toList())
+        setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+    }.build()
 
     private fun createGeofence(
         key: String,
@@ -92,4 +88,4 @@ class GeofenceHelper(context: Context) {
         const val CUSTOM_INTENT_GEOFENCE = "GEOFENCE-TRANSITION-INTENT-ACTION"
     }
 }
-*/
+

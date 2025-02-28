@@ -1,4 +1,4 @@
-package com.rafaelduransaez.feature.myjastic.domain.model
+package com.rafaelduransaez.core.geofencing.domain
 
 data class Geofence(
     val requestKey: Int,
