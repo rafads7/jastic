@@ -10,21 +10,35 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import com.rafaelduransaez.core.designsystem.JasticTheme
 
 @Composable
-fun JText(modifier: Modifier = Modifier, @StringRes textId: Int, color: Color = Color.Unspecified) {
+fun JText(
+    modifier: Modifier = Modifier, text: String, color: Color = Color.Unspecified,
+    style: TextStyle = JasticTheme.typography.labelNormal
+) =
     Text(
+        text = text,
+        modifier = modifier,
+        color = color,
+        style = style
+    )
+
+@Composable
+fun JText(
+    modifier: Modifier = Modifier,
+    @StringRes textId: Int,
+    color: Color = Color.Unspecified,
+    style: TextStyle = JasticTheme.typography.labelNormal
+) {
+    JText(
         text = stringResource(textId),
         modifier = modifier,
         color = color,
-        style = JasticTheme.typography.labelNormal
+        style = style
     )
 }
-
-@Composable
-fun JText(modifier: Modifier = Modifier, text: String) =
-    Text(modifier = modifier, text = text)
 
 @Composable
 fun JTextTitle(modifier: Modifier = Modifier, @StringRes textId: Int) {

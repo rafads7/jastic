@@ -9,14 +9,16 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.widgets.ScaleBar
@@ -24,11 +26,15 @@ import com.rafaelduransaez.core.components.common.JasticProgressIndicator
 import com.rafaelduransaez.core.components.jButton.JButton
 import com.rafaelduransaez.core.components.jButton.JCancelButton
 import com.rafaelduransaez.core.components.jButton.JSaveButton
+import com.rafaelduransaez.core.components.jText.JText
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.Back
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.invoke
 import com.rafaelduransaez.feature.myjastic.presentation.R
+import com.rafaelduransaez.feature.myjastic.presentation.map.MapScreenState.Companion.SLIDER_MAX_VALUE
+import com.rafaelduransaez.feature.myjastic.presentation.map.MapScreenState.Companion.SLIDER_MIN_VALUE
+import com.rafaelduransaez.feature.myjastic.presentation.map.MapScreenState.Companion.SLIDER_STEPS
 import com.rafaelduransaez.feature.myjastic.presentation.map.MapUiEvent.LocationFetchError
 import com.rafaelduransaez.feature.myjastic.presentation.map.MapUiEvent.MapLocationSelected
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toLatLng
@@ -80,13 +86,18 @@ internal fun JasticMap(
 ) {
 
     Column {
+
+        JasticMapSlider(
+            mapState = mapState,
+            onSliderValueChange = { mapState.sliderState.value = it }
+        )
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
         ) {
             GoogleMap(
-                modifier = Modifier.fillMaxSize(),
                 cameraPositionState = mapState.cameraPositionState,
                 properties = mapState.properties,
                 uiSettings = mapState.uiSettings,
@@ -98,7 +109,7 @@ internal fun JasticMap(
                     mapState.animateCamera(mapState.currentLocation)
                 }
                 if (mapState.isSelected) {
-                    MapGeofence(mapState.currentLocation)
+                    MapGeofence(mapState)
                 }
             }
 
@@ -108,7 +119,17 @@ internal fun JasticMap(
                     .align(Alignment.TopStart),
                 cameraPositionState = mapState.cameraPositionState
             )
+
+            JText(
+                modifier = Modifier
+                    .padding(all = JasticTheme.size.small)
+                    .align(Alignment.TopEnd),
+                text = stringResource(R.string.str_feature_myjastic_geofence_radius, mapState.sliderState.value.toInt()),
+                style = JasticTheme.typography.labelLight
+            )
         }
+
+
 
         ControlButtons(
             onCancel = { onRouteTo(Back) },
@@ -116,6 +137,26 @@ internal fun JasticMap(
             enableSaveButton = mapState.enableSaveButton
         )
     }
+}
+
+@Composable
+fun JasticMapSlider(mapState: MapScreenState, onSliderValueChange: (Float) -> Unit) {
+
+    Slider(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = JasticTheme.size.small),
+        value = mapState.sliderState.value,
+        onValueChange = onSliderValueChange,
+        valueRange = SLIDER_MIN_VALUE..SLIDER_MAX_VALUE,
+        steps = SLIDER_STEPS,
+        colors = SliderDefaults.colors(
+            thumbColor = JasticTheme.colorScheme.secondary,
+            activeTrackColor = JasticTheme.colorScheme.secondary,
+            inactiveTrackColor = JasticTheme.colorScheme.secondaryContainer,
+        ),
+        enabled = mapState.isSelected
+    )
 }
 
 @Composable
@@ -140,10 +181,10 @@ private fun ControlButtons(
 }
 
 @Composable
-private fun MapGeofence(location: LatLng) {
+private fun MapGeofence(mapState: MapScreenState) {
     Circle(
-        center = location,
-        radius = MapUtils.MEDIUM_RADIUS,
+        center = mapState.currentLocation,
+        radius = mapState.sliderState.value.toDouble(),
         fillColor = JasticTheme.colorScheme.error.copy(0.5f),
         strokeColor = JasticTheme.colorScheme.onErrorContainer
     )
@@ -169,11 +210,4 @@ private fun JMapError(modifier: Modifier = Modifier, onRetry: () -> Unit) {
             textId = R.string.str_feature_myjastic_retry
         ) { onRetry() }
     }
-}
-
-object MapUtils {
-    const val DEFAULT_ZOOM = 15f
-    const val DEFAULT_RADIUS = 100.0
-    const val MEDIUM_RADIUS = 150.0
-    const val BIG_RADIUS = 200.0
 }

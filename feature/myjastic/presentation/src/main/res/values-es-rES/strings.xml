@@ -10,4 +10,5 @@
     <string name="str_feature_myjastic_location_placeholder"><![CDATA[Seleccione la localización en el mapa ->]]></string>
     <string name="str_feature_myjastic_message">Mensaje a enviar</string>
     <string name="str_feature_myjastic_contact_phone_number">Contact phone number</string>
+    <string name="str_feature_myjastic_geofence_radius">Radio geovallado: %1$sm</string>
 </resources>
