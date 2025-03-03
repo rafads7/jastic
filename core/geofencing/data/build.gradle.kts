@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose) // USE WHEN KOTLIN VERSION 2.0.0+
 }
 
 android {
@@ -30,9 +31,7 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
-    }
+
     kotlinOptions {
         jvmTarget = "21"
     }

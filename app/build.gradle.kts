@@ -2,13 +2,14 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.kotlin.android)
-    //alias(libs.plugins.kotlin.compose) USE WHEN KOTLIN VERSION 2.0.0+
+
+    alias(libs.plugins.kotlin.compose) // USE WHEN KOTLIN VERSION 2.0.0+
+
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.mapsplatform.secrets.gradle)
     alias(libs.plugins.ksp)
 
     alias(libs.plugins.kotlin.serialization)
-    //kotlin("plugin.serialization") version "2.0.21"
 }
 
 secrets {
@@ -56,9 +57,6 @@ android {
     }
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
     }
 
     kotlinOptions {

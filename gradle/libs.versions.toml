@@ -1,35 +1,34 @@
 [versions]
-accompanistPermissions = "0.36.0"
-activityCompose = "1.9.3"
-agp = "8.7.3" #"8.7.3" when Kotlin version 2.0.0+
-composeBom = "2024.12.01"
+accompanistPermissions = "0.37.0"
+activityCompose = "1.10.1"
+agp = "8.7.3"
+composeBom = "2025.02.00"
 coreKtx = "1.15.0"
 espressoCore = "3.6.1"
 hiltNavigationCompose = "1.2.0"
-hiltVersion = "2.51.1" #"2.53.1" when Kotlin version 2.0.0+
+hiltVersion = "2.54"
 javaxInject = "1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-kotlin = "1.9.24" #"2.1.0" when Kotlin version 2.0.0+
-#kotlinCompose = "2.0.21" #use only when using with Kotlin verion 2.0.0+
-kotlinxCoroutinesCore = "1.7.3" #Upgrade whenever we upgrade Kotlin version to +2.0.0
-kotlinxCoroutinesPlayServices = "1.9.0"
-kotlinxSerializationJson = "1.6.3" #"1.7.3" when Kotlin version 2.0.0+
-ksp = "1.9.0-1.0.12" #"2.1.0-1.0.29" when Kotlin version 2.0.0+
+kotlin = "2.1.0"
+kotlinxCoroutinesCore = "1.10.1"
+kotlinxCoroutinesPlayServices = "1.10.1"
+kotlinxSerializationJson = "1.8.0"
+ksp = "2.1.0-1.0.29"
 lifecycleRuntimeKtx = "2.8.7"
 mapsCompose = "6.2.1"
 mapsKtx = "5.1.1"
 mapsUtilsKtx = "5.1.1"
-material3 = "1.4.0-alpha04"
-materialIconsCore = "1.7.6"
-navigationCompose = "2.8.4"
+material3 = "1.4.0-alpha09"
+materialIconsCore = "1.7.8"
+navigationCompose = "2.8.8"
 playServicesLocation = "21.3.0"
-playServicesMaps = "19.0.0"
+playServicesMaps = "19.1.0"
 secretsGradlePlugin = "2.0.1"
 appcompat = "1.7.0"
 material = "1.12.0"
-navigationRuntimeKtx = "2.8.6"
-navigationRuntimeAndroid = "2.9.0-alpha05"
+navigationRuntimeKtx = "2.8.8"
+navigationRuntimeAndroid = "2.9.0-alpha07"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -75,8 +74,6 @@ play-services-maps = { module = "com.google.android.gms:play-services-maps", ver
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
-androidx-navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -84,7 +81,7 @@ hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersio
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
-#kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinCompose" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 mapsplatform-secrets-gradle = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin" }
