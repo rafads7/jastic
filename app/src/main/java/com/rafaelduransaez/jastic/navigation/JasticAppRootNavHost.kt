@@ -17,8 +17,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.Back
+import com.rafaelduransaez.core.navigation.JasticNavData
 import com.rafaelduransaez.core.navigation.JasticNavigable
 import com.rafaelduransaez.core.navigation.NavigationGraphs
+import com.rafaelduransaez.core.navigation.navigateTo
 import com.rafaelduransaez.core.permissions.JasticPermission
 import com.rafaelduransaez.core.ui.permissions.PermissionsRequester
 import com.rafaelduransaez.core.permissions.toAndroidPermissions
@@ -50,7 +52,6 @@ fun JasticAppRootNavGraph(
                     navController.navigateTo(route, navData, options)
                 },
                 onPermissionNeeded = { permission, onAllGranted ->
-                    //requestPermissions = PermissionsRequestHolder.fromJasticPermission(permission, onAllGranted)
                     onPermissionsRequest(PermissionsRequestHolder.fromJasticPermission(permission, onAllGranted))
                 }
             )
@@ -75,7 +76,7 @@ data class PermissionsRequestHolder(
             onAllGranted: () -> Unit
         ) = fromJasticPermissions(listOf(permissionList), onAllGranted)
 
-        fun Companion.fromJasticPermissions(
+        private fun Companion.fromJasticPermissions(
             permissionList: List<JasticPermission>,
             onAllGranted: () -> Unit
         ) = PermissionsRequestHolder(
@@ -84,28 +85,3 @@ data class PermissionsRequestHolder(
         )
     }
 }
-
-private fun NavHostController.navigateTo(
-    route: JasticNavigable,
-    navData: Map<String, Any>,
-    options: NavOptionsBuilder.() -> Unit
-) {
-    navData.forEach {
-        previousBackStackEntry?.savedStateHandle?.set(it.key, it.value)
-    }
-
-    when (route) {
-        Back -> navigateUp()
-        else -> navigate(route, navOptions(options))
-    }
-}
-
-/*
-private fun NavHostController.navigateTo(action: MyJasticNavActions) {
-    when (action) {
-        MyJasticNavActions.Back -> popBackStack()
-        MyJasticNavActions.Map -> navigateToMap()
-        is MyJasticNavActions.JasticDestinationDetail -> navigateToJasticDestinationDetail(action.id)
-    }
-}
-*/

@@ -3,7 +3,6 @@ package com.rafaelduransaez.feature.myjastic.presentation.map
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -15,21 +14,23 @@ import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.ktx.utils.sphericalDistance
+import com.google.maps.android.ktx.utils.sphericalHeading
 import com.rafaelduransaez.feature.myjastic.presentation.map.MapScreenState.Companion.DEFAULT_ZOOM
-import com.rafaelduransaez.feature.myjastic.presentation.map.MapScreenState.Companion.SLIDER_INITIAL_VALUE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
 @Stable
 data class MapScreenState(
+    val mapLocation: LatLng,
     val currentLocation: LatLng,
     val isSelected: Boolean = false,
-    val uiSettings: MapUiSettings = MapUiSettings(myLocationButtonEnabled = false),
+    val uiSettings: MapUiSettings = MapUiSettings(myLocationButtonEnabled = true),
     val properties: MapProperties = MapProperties(),
     val cameraPositionState: CameraPositionState,
     val sliderState: MutableState<Float>,
-    val coroutineScope: CoroutineScope
+    val coroutineScope: CoroutineScope,
 ) {
     fun animateCamera(location: LatLng) {
         coroutineScope.launch {
@@ -40,13 +41,16 @@ data class MapScreenState(
         }
     }
 
+/*    fun toggleCamera() {
+        if (!isSelected)
+            animateCamera(currentLocation)
+        else if(cameraPositionState.position.target.sphericalDistance())
+    }*/
+
     val enableSaveButton: Boolean
         get() = isSelected
 
     companion object {
-        const val SLIDER_MIN_VALUE = 100f
-        const val SLIDER_MAX_VALUE = 1000f
-        const val SLIDER_INITIAL_VALUE = 200f
         const val SLIDER_STEPS = 8
         const val DEFAULT_ZOOM = 15f
     }
@@ -54,19 +58,22 @@ data class MapScreenState(
 
 @Composable
 fun rememberJasticMapUiState(
+    mapLocation: LatLng,
     currentLocation: LatLng,
-    isSelected: Boolean
+    radiusInMeters: Float,
+    isSelected: Boolean,
 ): MapScreenState {
     val coroutineScope = rememberCoroutineScope()
     val uiSettings = remember { MapUiSettings(myLocationButtonEnabled = false) }
     val properties = remember { MapProperties() }
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(currentLocation, DEFAULT_ZOOM)
+        position = CameraPosition.fromLatLngZoom(mapLocation, DEFAULT_ZOOM)
     }
-    val sliderState = remember { mutableFloatStateOf(SLIDER_INITIAL_VALUE) }
+    val sliderState = rememberSaveable(radiusInMeters) { mutableFloatStateOf(radiusInMeters) }
 
-    return remember(currentLocation, isSelected) {
+    return remember(mapLocation, currentLocation, isSelected) {
         MapScreenState(
+            mapLocation = mapLocation,
             currentLocation = currentLocation,
             isSelected = isSelected,
             uiSettings = uiSettings,

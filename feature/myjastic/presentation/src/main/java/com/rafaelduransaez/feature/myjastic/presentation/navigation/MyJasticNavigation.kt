@@ -11,6 +11,7 @@ import com.rafaelduransaez.core.domain.extensions.empty
 import com.rafaelduransaez.core.domain.extensions.zero
 import com.rafaelduransaez.core.domain.models.GeofenceLocation
 import com.rafaelduransaez.core.extensions.getAndRemove
+import com.rafaelduransaez.core.navigation.KEY_DATA
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs.MyJasticGraph
 import com.rafaelduransaez.core.permissions.OnPermissionNeeded
@@ -24,9 +25,11 @@ import com.rafaelduransaez.feature.myjastic.presentation.myJastic.MyJasticViewMo
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.Keys.KEY_ADDRESS
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.Keys.KEY_LATITUDE
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.Keys.KEY_LONGITUDE
+import com.rafaelduransaez.feature.myjastic.presentation.navigation.Keys.KEY_RADIUS
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.JasticDestinationDetail
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.Map
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.MyJastic
+import com.rafaelduransaez.feature.myjastic.presentation.utils.toGeofenceLocation
 
 fun NavGraphBuilder.myJasticNavGraph(
     onRouteTo: NavRouteTo,
@@ -50,11 +53,13 @@ fun NavGraphBuilder.myJasticNavGraph(
             with(currentBackStackEntry.savedStateHandle) {
                 LaunchedEffect(this) {
                     if (keys().isNotEmpty()) {
-                        val location = GeofenceLocation(
-                            getAndRemove<Double>(KEY_LATITUDE, Double.zero()),
-                            getAndRemove<Double>(KEY_LONGITUDE, Double.zero()),
-                            getAndRemove<String>(KEY_ADDRESS, String.empty())
-                        )
+                        /*                      val data = getAndRemove<MapNavData>(KEY_DATA, MapNavData.Empty)
+                                                when (data) {
+                                                    is MapNavData.Location ->
+                                                        viewModel.onUiEvent(LocationSelected(data.toGeofenceLocation()))
+                                                    MapNavData.Empty -> Unit
+                                                }*/
+                        val location = this@with.toGeofenceLocation()
                         viewModel.onUiEvent(LocationSelected(location))
                     }
                 }
@@ -85,4 +90,5 @@ object Keys {
     const val KEY_LONGITUDE = "longitude"
     const val KEY_LATITUDE = "latitude"
     const val KEY_ADDRESS = "address"
+    const val KEY_RADIUS = "radius"
 }

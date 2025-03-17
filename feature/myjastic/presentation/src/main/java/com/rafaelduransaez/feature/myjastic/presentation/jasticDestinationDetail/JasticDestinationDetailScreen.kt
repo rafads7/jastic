@@ -24,11 +24,11 @@ import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.invoke
 import com.rafaelduransaez.core.permissions.JasticPermission
 import com.rafaelduransaez.core.permissions.OnPermissionNeeded
-import com.rafaelduransaez.core.permissions.OnPermissionsNeeded
 import com.rafaelduransaez.feature.myjastic.presentation.R
 import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailUserEvent.AliasUpdate
 import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailUserEvent.MessageUpdate
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes
+import com.rafaelduransaez.feature.myjastic.presentation.utils.toMapNavLocationData
 
 
 @Composable
@@ -36,8 +36,8 @@ internal fun JasticDestinationDetailScreen(
     uiState: JasticDestinationDetailUiState,
     onUiEvent: (JasticDestinationDetailUserEvent) -> Unit,
     onRouteTo: NavRouteTo,
-    contentPadding: PaddingValues = PaddingValues(all = JasticTheme.size.normal),
-    onPermissionNeeded: OnPermissionNeeded
+    onPermissionNeeded: OnPermissionNeeded,
+    contentPadding: PaddingValues = PaddingValues(all = JasticTheme.size.normal)
 ) {
 
     val contactPickerLauncher = rememberLauncherForActivityResult(
@@ -70,7 +70,8 @@ internal fun JasticDestinationDetailScreen(
                     onIconClick = {
                         onPermissionNeeded(JasticPermission.Location) {
                             with(uiState.location) {
-                                onRouteTo(MyJasticRoutes.Map(latitude, longitude))
+                                onRouteTo(MyJasticRoutes.Map(latitude, longitude, radiusInMeters))
+                                //onRouteTo(MyJasticRoutes.Map, (this.toMapNavLocationData()))
                             }
                         }
                     }

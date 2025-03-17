@@ -66,12 +66,13 @@ android {
 
 dependencies {
 
-    implementation(project(mapOf("path" to ":core:ui")))
+    implementation(project(":core:ui"))
     implementation(project(":core:ui:permissions"))
-    implementation(project(mapOf("path" to ":core:navigation")))
-    implementation(project(mapOf("path" to ":feature:myjastic:presentation")))
-    implementation(project(mapOf("path" to ":feature:myjastic:di")))
-    implementation(project(mapOf("path" to ":feature:settings:presentation")))
+    implementation(project(":core:navigation"))
+    implementation(project(":core:geofencing:data"))
+    implementation(project(":feature:myjastic:presentation"))
+    implementation(project(":feature:myjastic:di"))
+    implementation(project(":feature:settings:presentation"))
 
     //Android
     implementation(libs.androidx.core.ktx)

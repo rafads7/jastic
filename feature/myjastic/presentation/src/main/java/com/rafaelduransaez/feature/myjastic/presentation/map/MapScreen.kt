@@ -26,19 +26,21 @@ import com.rafaelduransaez.core.components.common.JasticProgressIndicator
 import com.rafaelduransaez.core.components.jButton.JButton
 import com.rafaelduransaez.core.components.jButton.JCancelButton
 import com.rafaelduransaez.core.components.jButton.JSaveButton
+import com.rafaelduransaez.core.components.jFloatingActionButton.LocationFAB
 import com.rafaelduransaez.core.components.jText.JText
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.Back
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.invoke
 import com.rafaelduransaez.feature.myjastic.presentation.R
-import com.rafaelduransaez.feature.myjastic.presentation.map.MapScreenState.Companion.SLIDER_MAX_VALUE
-import com.rafaelduransaez.feature.myjastic.presentation.map.MapScreenState.Companion.SLIDER_MIN_VALUE
 import com.rafaelduransaez.feature.myjastic.presentation.map.MapScreenState.Companion.SLIDER_STEPS
 import com.rafaelduransaez.feature.myjastic.presentation.map.MapUiEvent.LocationFetchError
 import com.rafaelduransaez.feature.myjastic.presentation.map.MapUiEvent.MapLocationSelected
+import com.rafaelduransaez.feature.myjastic.presentation.map.MapViewModel.Companion.RADIUS_MAX_VALUE
+import com.rafaelduransaez.feature.myjastic.presentation.map.MapViewModel.Companion.RADIUS_MIN_VALUE
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toLatLng
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toMap
+import com.rafaelduransaez.feature.myjastic.presentation.utils.toMapNavLocationData
 
 @Composable
 internal fun MapScreen(
@@ -47,7 +49,9 @@ internal fun MapScreen(
     onRouteTo: NavRouteTo,
 ) {
     val mapState = rememberJasticMapUiState(
-        currentLocation = uiState.mapLocation.toLatLng(),
+        mapLocation = uiState.mapLocation.toLatLng(),
+        currentLocation = uiState.currentLocation.toLatLng(),
+        radiusInMeters = uiState.mapLocation.radiusInMeters,
         isSelected = uiState.isLocationSelected
     )
 
@@ -68,9 +72,13 @@ internal fun MapScreen(
             else ->
                 JasticMap(
                     onUiEvent = onUiEvent,
-                    onRouteTo = onRouteTo,
                     mapState = mapState,
                     onSave = { onRouteTo(Back, uiState.mapLocation.toMap()) },
+                    //onSave = { onRouteTo(Back, uiState.mapLocation.toMapNavLocationData()) },
+                    onCancel = {
+                        onUiEvent(MapUiEvent.Cancel)
+                        onRouteTo(Back)
+                    }
                 )
 
         }
@@ -81,15 +89,25 @@ internal fun MapScreen(
 internal fun JasticMap(
     mapState: MapScreenState,
     onUiEvent: (MapUiEvent) -> Unit = {},
-    onRouteTo: NavRouteTo,
+    onCancel: () -> Unit,
     onSave: () -> Unit
 ) {
+
+    LaunchedEffect(mapState.mapLocation, mapState.currentLocation) {
+        if (!mapState.isSelected)
+            mapState.animateCamera(mapState.currentLocation)
+        else
+            mapState.animateCamera(mapState.mapLocation)
+    }
 
     Column {
 
         JasticMapSlider(
             mapState = mapState,
-            onSliderValueChange = { mapState.sliderState.value = it }
+            onSliderValueChange = {
+                onUiEvent(MapUiEvent.OnGeofenceRadiusChanged(it))
+                mapState.sliderState.value = it
+            }
         )
 
         Box(
@@ -102,12 +120,9 @@ internal fun JasticMap(
                 properties = mapState.properties,
                 uiSettings = mapState.uiSettings,
                 onMapLongClick = {
-                    onUiEvent(MapLocationSelected(it))
+                    onUiEvent(MapLocationSelected(it, mapState.sliderState.value))
                 }
             ) {
-                LaunchedEffect(mapState.currentLocation) {
-                    mapState.animateCamera(mapState.currentLocation)
-                }
                 if (mapState.isSelected) {
                     MapGeofence(mapState)
                 }
@@ -124,15 +139,24 @@ internal fun JasticMap(
                 modifier = Modifier
                     .padding(all = JasticTheme.size.small)
                     .align(Alignment.TopEnd),
-                text = stringResource(R.string.str_feature_myjastic_geofence_radius, mapState.sliderState.value.toInt()),
+                text = stringResource(
+                    R.string.str_feature_myjastic_geofence_radius,
+                    mapState.sliderState.value.toInt()
+                ),
                 style = JasticTheme.typography.labelLight
             )
+
+            LocationFAB(
+                modifier = Modifier
+                    .padding(all = JasticTheme.size.large)
+                    .align(Alignment.BottomStart)
+            ) {
+                mapState.animateCamera(mapState.currentLocation)
+            }
         }
 
-
-
         ControlButtons(
-            onCancel = { onRouteTo(Back) },
+            onCancel = onCancel,
             onSave = onSave,
             enableSaveButton = mapState.enableSaveButton
         )
@@ -148,7 +172,7 @@ fun JasticMapSlider(mapState: MapScreenState, onSliderValueChange: (Float) -> Un
             .padding(bottom = JasticTheme.size.small),
         value = mapState.sliderState.value,
         onValueChange = onSliderValueChange,
-        valueRange = SLIDER_MIN_VALUE..SLIDER_MAX_VALUE,
+        valueRange = RADIUS_MIN_VALUE..RADIUS_MAX_VALUE,
         steps = SLIDER_STEPS,
         colors = SliderDefaults.colors(
             thumbColor = JasticTheme.colorScheme.secondary,
@@ -183,7 +207,7 @@ private fun ControlButtons(
 @Composable
 private fun MapGeofence(mapState: MapScreenState) {
     Circle(
-        center = mapState.currentLocation,
+        center = mapState.mapLocation,
         radius = mapState.sliderState.value.toDouble(),
         fillColor = JasticTheme.colorScheme.error.copy(0.5f),
         strokeColor = JasticTheme.colorScheme.onErrorContainer

@@ -88,7 +88,7 @@ fun PermissionsRequester(
                 permissionTextProvider = getPermissionsTextProvider(permissionsState, context),
                 onConfirm = {
                     permissionsDialogState = PermissionsDialogState.None
-                    context.findActivity()?.openSettings()
+                    context.openAppSettings()
                 },
                 onDismiss = {
                     permissionsDialogState = PermissionsDialogState.None

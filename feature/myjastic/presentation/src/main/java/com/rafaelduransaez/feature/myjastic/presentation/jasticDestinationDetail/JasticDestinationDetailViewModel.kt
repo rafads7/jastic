@@ -46,6 +46,7 @@ class JasticDestinationDetailViewModel @Inject constructor(
                 _uiState.update { it.copy(alias = event.alias) }
 
             is JasticDestinationDetailUserEvent.LocationSelected ->
+                // TODO update location when address is empty (e.g. when user just updates radius)
                 _uiState.update { it.copy(location = event.location) }
 
             is JasticDestinationDetailUserEvent.MessageUpdate ->

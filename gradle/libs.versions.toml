@@ -11,6 +11,7 @@ javaxInject = "1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 kotlin = "2.1.0"
+kotlinParcelize = "1.9.22"
 kotlinxCoroutinesCore = "1.10.1"
 kotlinxCoroutinesPlayServices = "1.10.1"
 kotlinxSerializationJson = "1.8.0"
@@ -61,6 +62,7 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltVersion" }
 javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+kotlin-parcelize = { module = "org.jetbrains.kotlin:kotlin-parcelize", version.ref = "kotlinParcelize" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServices" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
