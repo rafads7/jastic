@@ -2,6 +2,7 @@
 <resources>
     <string name="str_retry">Reintentar</string>
     <string name="str_save">Guardar</string>
+    <string name="str_save_and_go">Guardar e Ir</string>
     <string name="str_core_ui_ok">OK</string>
     <string name="str_core_ui_cancel">Cancelar</string>
 </resources>

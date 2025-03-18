@@ -16,7 +16,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
 
         Log.e(TAG, "INSIDE GeofenceEvent")
-        //Toast.makeText(context, "INSIDE", LENGTH_LONG).show()
+        Toast.makeText(context, "INSIDE", LENGTH_LONG).show()
 
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
         geofencingEvent?.let {
@@ -41,7 +41,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             when (transitionType) {
                 Geofence.GEOFENCE_TRANSITION_ENTER -> {
                     Log.d(TAG, "onReceive: Enter")
-                    //Toast.makeText(context, "GEOFENCE_TRANSITION_ENTER", LENGTH_LONG).show()
+                    Toast.makeText(context, "GEOFENCE_TRANSITION_ENTER", LENGTH_LONG).show()
                 }
 
                 Geofence.GEOFENCE_TRANSITION_EXIT -> {

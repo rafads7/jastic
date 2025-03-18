@@ -194,11 +194,11 @@ private fun ControlButtons(
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         JCancelButton(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f).padding(all = JasticTheme.size.small)
         ) { onCancel() }
 
         JSaveButton(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).padding(all = JasticTheme.size.small),
             enabled = enableSaveButton
         ) { onSave() }
     }

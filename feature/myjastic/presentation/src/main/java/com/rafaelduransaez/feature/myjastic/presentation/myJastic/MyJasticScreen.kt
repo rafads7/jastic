@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,7 +25,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.rafaelduransaez.core.components.common.ColumnItemsSpacer
 import com.rafaelduransaez.core.components.common.JasticProgressIndicator
 import com.rafaelduransaez.core.components.jButton.JButton
@@ -73,7 +77,13 @@ internal fun MyJasticScreen(
                         paddingValues = contentPadding,
                         showScrollToTopButton = showScrollToTopButton,
                         listState = listState,
-                        onJasticDestinationClicked = { onRouteTo(MyJasticRoutes.JasticDestinationDetail(it)) }
+                        onJasticDestinationClicked = {
+                            onRouteTo(
+                                MyJasticRoutes.JasticDestinationDetail(
+                                    it
+                                )
+                            )
+                        }
                     )
                     AddFAB(
                         modifier = Modifier
@@ -166,9 +176,33 @@ internal fun JasticDestinationListItem(
         )
 
     ) {
-        Column {
-            JTextCardTitle(text = destination.alias)
-            JTextCardBody(text = destination.alias)
+        ConstraintLayout(
+            modifier = Modifier.fillMaxSize()
+        ) {
+
+            val (headerRef, bodyRef, actionRef) = createRefs()
+
+            JTextCardTitle(modifier = Modifier.constrainAs(headerRef) {
+                top.linkTo(parent.top)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }, text = destination.alias)
+
+            JTextCardBody(modifier = Modifier.constrainAs(bodyRef) {
+                top.linkTo(headerRef.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }, text = destination.alias)
+
+            JButton(
+                modifier = Modifier.constrainAs(actionRef) {
+                    top.linkTo(headerRef.bottom)
+                    bottom.linkTo(bodyRef.top)
+                    end.linkTo(parent.end)
+                },
+                textId = R.string.str_feature_myjastic_go,
+                containerColor = JasticTheme.colorScheme.tertiaryContainer
+            ) { }
         }
     }
 }

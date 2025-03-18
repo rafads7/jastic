@@ -22,7 +22,7 @@ fun JButton(
     onClick: () -> Unit
 ) {
     Button(
-        modifier = modifier.padding(all = JasticTheme.size.normal),
+        modifier = modifier,//.padding(all = JasticTheme.size.normal),
         colors = ButtonDefaults.buttonColors(containerColor = containerColor),
         enabled = enabled,
         onClick = { onClick() }
@@ -43,6 +43,19 @@ fun JSaveButton(
     JButton(
         modifier = modifier,
         textId = R.string.str_save,
+        enabled = enabled
+    ) { onSave() }
+}
+
+@Composable
+fun JSaveAndGoButton(
+    modifier: Modifier = Modifier.fillMaxWidth(),
+    enabled: Boolean = true,
+    onSave: () -> Unit
+) {
+    JButton(
+        modifier = modifier.padding(top = JasticTheme.size.extraSmall),
+        textId = R.string.str_save_and_go,
         enabled = enabled
     ) { onSave() }
 }

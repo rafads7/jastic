@@ -1,5 +1,7 @@
 <resources>
     <string name="str_retry">Retry</string>
-    <string name="str_save">Save</string><string name="str_core_ui_ok">OK</string>
+    <string name="str_save">Save</string>
+    <string name="str_save_and_go">Save and Go</string>
+    <string name="str_core_ui_ok">OK</string>
     <string name="str_core_ui_cancel">Cancel</string>
 </resources>

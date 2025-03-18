@@ -23,7 +23,6 @@ import javax.inject.Inject
 @HiltViewModel
 class JasticDestinationDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val mapper: JasticDestinationDetailMapper,
     private val getContactInfoUseCase: GetContactInfoUseCase,
 ) : ViewModel() {
 
@@ -46,29 +45,37 @@ class JasticDestinationDetailViewModel @Inject constructor(
                 _uiState.update { it.copy(alias = event.alias) }
 
             is JasticDestinationDetailUserEvent.LocationSelected ->
-                // TODO update location when address is empty (e.g. when user just updates radius)
-                _uiState.update { it.copy(location = event.location) }
+                onLocationSelected(event.location)
 
             is JasticDestinationDetailUserEvent.MessageUpdate ->
                 _uiState.update { it.copy(message = event.message) }
 
-            JasticDestinationDetailUserEvent.Save -> {
+            is JasticDestinationDetailUserEvent.ContactSelected ->
+                onContactSelected(event.contactIdentifier)
 
-            }
+            JasticDestinationDetailUserEvent.Save -> Unit
+            JasticDestinationDetailUserEvent.SaveAndGo -> Unit
+        }
+    }
 
-            is JasticDestinationDetailUserEvent.ContactSelected -> {
-                viewModelScope.launch {
-                    getContactInfoUseCase(event.contactIdentifier).fold(
-                        onSuccess = { contact -> _uiState.update { it.copy(contact = contact) } },
-                        onFailure = { failure -> _uiState.update { it.copy(error = true) }
-/*                            when (failure) {
-                                ContactSelectionError.FieldNotFound -> TODO()
-                                ContactSelectionError.Unknown -> _uiState.update { it.copy(error = true) }
-                            }*/
-                        }
-                    )
+    private fun onLocationSelected(location: GeofenceLocation) {
+        val address = location.address.ifEmpty { _uiState.value.location.address }
+        val updatedLocation = location.copy(address = address)
+        _uiState.update { it.copy(location = updatedLocation) }
+    }
+
+    private fun onContactSelected(contactIdentifier: String) {
+        viewModelScope.launch {
+            getContactInfoUseCase(contactIdentifier).fold(
+                onSuccess = { contact -> _uiState.update { it.copy(contact = contact) } },
+                onFailure = { failure ->
+                    _uiState.update { it.copy(error = true) }
+                    /*                            when (failure) {
+                                            ContactSelectionError.FieldNotFound -> TODO()
+                                            ContactSelectionError.Unknown -> _uiState.update { it.copy(error = true) }
+                                        }*/
                 }
-            }
+            )
         }
     }
 
@@ -95,7 +102,10 @@ data class JasticDestinationDetailUiState(
 
 sealed interface JasticDestinationDetailUserEvent {
     data object Save : JasticDestinationDetailUserEvent
-    data class LocationSelected(val location: GeofenceLocation) : JasticDestinationDetailUserEvent
+    data object SaveAndGo : JasticDestinationDetailUserEvent
+    data class LocationSelected(val location: GeofenceLocation) :
+        JasticDestinationDetailUserEvent
+
     data class AliasUpdate(val alias: String) : JasticDestinationDetailUserEvent
     data class MessageUpdate(val message: String) : JasticDestinationDetailUserEvent
     data class ContactSelected(val contactIdentifier: String) : JasticDestinationDetailUserEvent

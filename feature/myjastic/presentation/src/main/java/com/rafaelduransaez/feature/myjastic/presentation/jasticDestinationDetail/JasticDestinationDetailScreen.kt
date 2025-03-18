@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.rafaelduransaez.core.components.jButton.JSaveAndGoButton
 import com.rafaelduransaez.core.components.jButton.JSaveButton
 import com.rafaelduransaez.core.components.jTextField.JOutlinedTextField
 import com.rafaelduransaez.core.components.jTextField.JOutlinedTextFieldWithIconButton
@@ -28,8 +29,6 @@ import com.rafaelduransaez.feature.myjastic.presentation.R
 import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailUserEvent.AliasUpdate
 import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailUserEvent.MessageUpdate
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes
-import com.rafaelduransaez.feature.myjastic.presentation.utils.toMapNavLocationData
-
 
 @Composable
 internal fun JasticDestinationDetailScreen(
@@ -90,6 +89,7 @@ internal fun JasticDestinationDetailScreen(
                 )
             }
             JSaveButton { onUiEvent(JasticDestinationDetailUserEvent.Save) }
+            JSaveAndGoButton { onUiEvent(JasticDestinationDetailUserEvent.SaveAndGo) }
         }
     }
 }
