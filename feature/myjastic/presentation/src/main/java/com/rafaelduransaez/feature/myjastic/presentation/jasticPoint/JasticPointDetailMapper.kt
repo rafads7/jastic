@@ -1,15 +1,15 @@
-package com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail
+package com.rafaelduransaez.feature.myjastic.presentation.jasticPoint
 
 import com.google.android.gms.maps.model.LatLng
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface JasticDestinationDetailMapper {
+interface JasticPointDetailMapper {
     fun locationToText(location: LatLng): String
 }
 
 @Singleton
-class JasticDestinationDetailMapperImpl @Inject constructor() : JasticDestinationDetailMapper {
+class JasticPointDetailMapperImpl @Inject constructor() : JasticPointDetailMapper {
 
     override fun locationToText(location: LatLng) = location.toText()
 

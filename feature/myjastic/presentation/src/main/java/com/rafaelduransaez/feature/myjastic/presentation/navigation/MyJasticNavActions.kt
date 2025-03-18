@@ -7,5 +7,5 @@ import com.rafaelduransaez.core.domain.extensions.negative
 sealed class MyJasticNavActions : FeatureNavAction {
     data object Back : MyJasticNavActions()
     data object Map : MyJasticNavActions()
-    data class JasticDestinationDetail(val id: Int = Int.negative()) : MyJasticNavActions()
+    data class JasticPointDetail(val id: Int = Int.negative()) : MyJasticNavActions()
 }

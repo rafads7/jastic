@@ -29,11 +29,11 @@ import com.rafaelduransaez.core.components.jText.JTextTitle
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.navigation.NavigationRoute
+import com.rafaelduransaez.core.ui.permissions.PermissionsRequestHolder
+import com.rafaelduransaez.core.ui.permissions.PermissionsRequestHolder.Companion.empty
 import com.rafaelduransaez.core.ui.permissions.PermissionsRequester
 import com.rafaelduransaez.jastic.R
 import com.rafaelduransaez.jastic.navigation.JasticAppRootNavGraph
-import com.rafaelduransaez.jastic.navigation.PermissionsRequestHolder
-import com.rafaelduransaez.jastic.navigation.PermissionsRequestHolder.Companion.empty
 import com.rafaelduransaez.jastic.navigation.TopLevelRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

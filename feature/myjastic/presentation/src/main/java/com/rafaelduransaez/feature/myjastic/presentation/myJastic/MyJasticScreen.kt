@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,16 +24,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.rafaelduransaez.core.components.common.ColumnItemsSpacer
 import com.rafaelduransaez.core.components.common.JasticProgressIndicator
 import com.rafaelduransaez.core.components.jButton.JButton
 import com.rafaelduransaez.core.components.jFloatingActionButton.AddFAB
 import com.rafaelduransaez.core.components.jIcon.JIcon
-import com.rafaelduransaez.core.components.jText.JDialogTextButton
 import com.rafaelduransaez.core.components.jText.JTextCardBody
 import com.rafaelduransaez.core.components.jText.JTextCardTitle
 import com.rafaelduransaez.core.components.jText.JTextTitle
@@ -42,7 +38,7 @@ import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.invoke
 import com.rafaelduransaez.core.domain.extensions.negative
-import com.rafaelduransaez.feature.myjastic.domain.model.JasticDestination
+import com.rafaelduransaez.feature.myjastic.domain.model.JasticPoint
 import com.rafaelduransaez.feature.myjastic.presentation.R
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes
 import com.rafaelduransaez.feature.myjastic.presentation.utils.Constants.FIRST_ITEM_INDEX
@@ -68,18 +64,18 @@ internal fun MyJasticScreen(
                 JasticProgressIndicator()
             }
 
-            is MyJasticUiState.ShowMyJasticDestinations -> {
-                if (uiState.jasticDestinations.isEmpty()) {
+            is MyJasticUiState.ShowMyJasticPoints -> {
+                if (uiState.jasticPoints.isEmpty()) {
                     EmptyScreen()
                 } else {
-                    JasticDestinationsList(
-                        jasticPoints = uiState.jasticDestinations,
+                    JasticPointsList(
+                        jasticPoints = uiState.jasticPoints,
                         paddingValues = contentPadding,
                         showScrollToTopButton = showScrollToTopButton,
                         listState = listState,
-                        onJasticDestinationClicked = {
+                        onJasticPointClicked = {
                             onRouteTo(
-                                MyJasticRoutes.JasticDestinationDetail(
+                                MyJasticRoutes.JasticPointDetail(
                                     it
                                 )
                             )
@@ -90,7 +86,7 @@ internal fun MyJasticScreen(
                             .padding(JasticTheme.size.large)
                             .align(Alignment.BottomEnd)
                     ) {
-                        onRouteTo(MyJasticRoutes.JasticDestinationDetail(Int.negative()))
+                        onRouteTo(MyJasticRoutes.JasticPointDetail(Int.negative()))
                     }
                 }
             }
@@ -116,13 +112,13 @@ internal fun EmptyScreen() {
 }
 
 @Composable
-internal fun JasticDestinationsList(
-    jasticPoints: List<JasticDestination>,
+internal fun JasticPointsList(
+    jasticPoints: List<JasticPoint>,
     paddingValues: PaddingValues = PaddingValues(all = JasticTheme.size.normal),
     showScrollToTopButton: Boolean = false,
     listState: LazyListState = rememberLazyListState(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    onJasticDestinationClicked: (id: Int) -> Unit
+    onJasticPointClicked: (id: Int) -> Unit
 ) {
     Box {
         LazyColumn(
@@ -132,7 +128,7 @@ internal fun JasticDestinationsList(
             state = listState
         ) {
             items(count = jasticPoints.size, key = { jasticPoints[it].alias }) { index ->
-                JasticDestinationListItem(jasticPoints[index], onJasticDestinationClicked)
+                JasticPointListItem(jasticPoints[index], onJasticPointClicked)
             }
         }
 
@@ -159,9 +155,9 @@ internal fun BoxScope.ScrollToTopButton(
 
 
 @Composable
-internal fun JasticDestinationListItem(
-    destination: JasticDestination,
-    onJasticDestinationClicked: (id: Int) -> Unit
+internal fun JasticPointListItem(
+    point: JasticPoint,
+    onJasticPointClicked: (id: Int) -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -169,7 +165,7 @@ internal fun JasticDestinationListItem(
             .fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = MaterialTheme.shapes.small,
-        onClick = { onJasticDestinationClicked(destination.id) },
+        onClick = { onJasticPointClicked(point.id) },
         colors = CardDefaults.cardColors(
             containerColor = JasticTheme.colorScheme.onSecondary,
             contentColor = JasticTheme.colorScheme.secondary
@@ -186,13 +182,13 @@ internal fun JasticDestinationListItem(
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
-            }, text = destination.alias)
+            }, text = point.alias)
 
             JTextCardBody(modifier = Modifier.constrainAs(bodyRef) {
                 top.linkTo(headerRef.bottom)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
-            }, text = destination.alias)
+            }, text = point.alias)
 
             JButton(
                 modifier = Modifier.constrainAs(actionRef) {

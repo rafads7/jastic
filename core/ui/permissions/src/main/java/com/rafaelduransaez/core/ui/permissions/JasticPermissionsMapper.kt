@@ -1,4 +1,4 @@
-package com.rafaelduransaez.core.permissions
+package com.rafaelduransaez.core.ui.permissions
 
 import android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -6,9 +6,8 @@ import android.Manifest.permission.ACCESS_NOTIFICATION_POLICY
 import android.Manifest.permission.POST_NOTIFICATIONS
 import android.Manifest.permission.READ_CONTACTS
 import android.os.Build
-import androidx.compose.runtime.Composable
 
-typealias OnPermissionNeeded = (JasticPermission,  () -> Unit) -> Unit
+typealias OnPermissionNeeded = (JasticPermission, () -> Unit) -> Unit
 
 enum class JasticPermission {
     Contacts,

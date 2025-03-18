@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:contacts:domain"))
     implementation(project(":core:contacts:di"))
+    implementation(project(":core:ui:permissions"))
     implementation(project(":core:geofencing:domain"))
     implementation(project(":core:geofencing:di"))
     implementation(project(":core:geofencing:data"))

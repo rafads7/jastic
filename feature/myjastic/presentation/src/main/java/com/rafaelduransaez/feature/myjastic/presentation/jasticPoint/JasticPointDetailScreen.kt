@@ -1,4 +1,4 @@
-package com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail
+package com.rafaelduransaez.feature.myjastic.presentation.jasticPoint
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -23,19 +23,17 @@ import com.rafaelduransaez.core.components.jTextField.JOutlinedTextFieldWithIcon
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.invoke
-import com.rafaelduransaez.core.permissions.JasticPermission
-import com.rafaelduransaez.core.permissions.OnPermissionNeeded
 import com.rafaelduransaez.feature.myjastic.presentation.R
-import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailUserEvent.AliasUpdate
-import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailUserEvent.MessageUpdate
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.AliasUpdate
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.MessageUpdate
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes
 
 @Composable
-internal fun JasticDestinationDetailScreen(
-    uiState: JasticDestinationDetailUiState,
-    onUiEvent: (JasticDestinationDetailUserEvent) -> Unit,
+internal fun JasticPointDetailScreen(
+    uiState: JasticPointDetailUiState,
+    onUiEvent: (JasticPointDetailUserEvent) -> Unit,
     onRouteTo: NavRouteTo,
-    onPermissionNeeded: OnPermissionNeeded,
+    onPermissionNeeded: com.rafaelduransaez.core.ui.permissions.OnPermissionNeeded,
     contentPadding: PaddingValues = PaddingValues(all = JasticTheme.size.normal)
 ) {
 
@@ -44,7 +42,7 @@ internal fun JasticDestinationDetailScreen(
         onResult = { contactUri: Uri? ->
             contactUri?.let {
                 val contactIdentifier = contactUri.toString()
-                onUiEvent(JasticDestinationDetailUserEvent.ContactSelected(contactIdentifier))
+                onUiEvent(JasticPointDetailUserEvent.ContactSelected(contactIdentifier))
             }
         }
     )
@@ -67,7 +65,7 @@ internal fun JasticDestinationDetailScreen(
                 Location(
                     location = uiState.location.address,
                     onIconClick = {
-                        onPermissionNeeded(JasticPermission.Location) {
+                        onPermissionNeeded(com.rafaelduransaez.core.ui.permissions.JasticPermission.Location) {
                             with(uiState.location) {
                                 onRouteTo(MyJasticRoutes.Map(latitude, longitude, radiusInMeters))
                                 //onRouteTo(MyJasticRoutes.Map, (this.toMapNavLocationData()))
@@ -78,7 +76,7 @@ internal fun JasticDestinationDetailScreen(
                 ContactPhoneNumber(
                     contactPhoneNumber = uiState.contact.phoneNumber,
                     onIconClick = {
-                        onPermissionNeeded(JasticPermission.Contacts) {
+                        onPermissionNeeded(com.rafaelduransaez.core.ui.permissions.JasticPermission.Contacts) {
                             contactPickerLauncher.launch(null)
                         }
                     }
@@ -88,8 +86,8 @@ internal fun JasticDestinationDetailScreen(
                     onMessageChanges = { onUiEvent(MessageUpdate(it)) }
                 )
             }
-            JSaveButton { onUiEvent(JasticDestinationDetailUserEvent.Save) }
-            JSaveAndGoButton { onUiEvent(JasticDestinationDetailUserEvent.SaveAndGo) }
+            JSaveButton { onUiEvent(JasticPointDetailUserEvent.Save) }
+            JSaveAndGoButton { onUiEvent(JasticPointDetailUserEvent.SaveAndGo) }
         }
     }
 }

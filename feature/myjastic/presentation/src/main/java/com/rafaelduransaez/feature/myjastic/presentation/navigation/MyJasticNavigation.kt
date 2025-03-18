@@ -7,26 +7,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.rafaelduransaez.core.domain.extensions.empty
-import com.rafaelduransaez.core.domain.extensions.zero
-import com.rafaelduransaez.core.domain.models.GeofenceLocation
-import com.rafaelduransaez.core.extensions.getAndRemove
-import com.rafaelduransaez.core.navigation.KEY_DATA
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs.MyJasticGraph
-import com.rafaelduransaez.core.permissions.OnPermissionNeeded
-import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailScreen
-import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailUserEvent.LocationSelected
-import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailViewModel
+import com.rafaelduransaez.core.ui.permissions.OnPermissionNeeded
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailScreen
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.LocationSelected
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailViewModel
 import com.rafaelduransaez.feature.myjastic.presentation.map.MapScreen
 import com.rafaelduransaez.feature.myjastic.presentation.map.MapViewModel
 import com.rafaelduransaez.feature.myjastic.presentation.myJastic.MyJasticScreen
 import com.rafaelduransaez.feature.myjastic.presentation.myJastic.MyJasticViewModel
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.Keys.KEY_ADDRESS
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.Keys.KEY_LATITUDE
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.Keys.KEY_LONGITUDE
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.Keys.KEY_RADIUS
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.JasticDestinationDetail
+import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.JasticPointDetail
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.Map
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.MyJastic
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toGeofenceLocation
@@ -46,8 +37,8 @@ fun NavGraphBuilder.myJasticNavGraph(
             )
         }
 
-        composable<JasticDestinationDetail> { currentBackStackEntry ->
-            val viewModel: JasticDestinationDetailViewModel = hiltViewModel()
+        composable<JasticPointDetail> { currentBackStackEntry ->
+            val viewModel: JasticPointDetailViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
             with(currentBackStackEntry.savedStateHandle) {
@@ -65,7 +56,7 @@ fun NavGraphBuilder.myJasticNavGraph(
                 }
             }
 
-            JasticDestinationDetailScreen(
+            JasticPointDetailScreen(
                 uiState = uiState,
                 onUiEvent = viewModel::onUiEvent,
                 onRouteTo = onRouteTo,

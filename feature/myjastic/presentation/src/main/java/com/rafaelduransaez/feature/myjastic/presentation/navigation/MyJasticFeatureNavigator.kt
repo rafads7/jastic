@@ -11,8 +11,8 @@ class MyJasticFeatureNavigator : FeatureNavigator {
                     when (action) {
                         MyJasticNavActions.Back -> popBackStack()
                         MyJasticNavActions.Map -> navigateToMap()
-                        is MyJasticNavActions.JasticDestinationDetail ->
-                            navigateToJasticDestinationDetail(action.id)
+                        is MyJasticNavActions.JasticPointDetail ->
+                            navigateToJasticPointDetail(action.id)
                     }
                 }*/
     }

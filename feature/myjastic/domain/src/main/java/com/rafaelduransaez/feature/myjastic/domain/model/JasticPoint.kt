@@ -4,7 +4,7 @@ import com.rafaelduransaez.core.contacts.domain.Contact
 import com.rafaelduransaez.core.domain.extensions.empty
 import com.rafaelduransaez.core.domain.extensions.zero
 
-data class JasticDestination(
+data class JasticPoint(
     val id: Int = Int.zero(),
     val alias: String = String.empty(),
     val contact: Contact = Contact()

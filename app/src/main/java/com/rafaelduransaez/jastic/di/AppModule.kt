@@ -1,10 +1,7 @@
 package com.rafaelduransaez.jastic.di
 
 import android.app.Application
-import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailMapper
-import com.rafaelduransaez.feature.myjastic.presentation.jasticDestinationDetail.JasticDestinationDetailMapperImpl
 import com.rafaelduransaez.jastic.JasticApplication
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

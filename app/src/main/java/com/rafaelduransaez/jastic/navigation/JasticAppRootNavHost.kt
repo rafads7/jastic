@@ -6,29 +6,16 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
-import androidx.navigation.navOptions
 import com.rafaelduransaez.core.designsystem.JasticTheme
-import com.rafaelduransaez.core.navigation.Back
-import com.rafaelduransaez.core.navigation.JasticNavData
-import com.rafaelduransaez.core.navigation.JasticNavigable
 import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.navigation.navigateTo
-import com.rafaelduransaez.core.permissions.JasticPermission
-import com.rafaelduransaez.core.ui.permissions.PermissionsRequester
-import com.rafaelduransaez.core.permissions.toAndroidPermissions
+import com.rafaelduransaez.core.ui.permissions.PermissionsRequestHolder
+import com.rafaelduransaez.core.ui.permissions.PermissionsRequestHolder.Companion.fromJasticPermission
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.myJasticNavGraph
 import com.rafaelduransaez.feature.settings.navigation.settingsGraph
-import com.rafaelduransaez.jastic.navigation.PermissionsRequestHolder.Companion.empty
-import com.rafaelduransaez.jastic.navigation.PermissionsRequestHolder.Companion.fromJasticPermission
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun JasticAppRootNavGraph(
@@ -59,29 +46,4 @@ fun JasticAppRootNavGraph(
         }
     }
 
-}
-
-data class PermissionsRequestHolder(
-    val permissions: List<String>,
-    val onAllGranted: () -> Unit
-) {
-    companion object {
-
-        fun Companion.empty() = PermissionsRequestHolder(
-            permissions = emptyList(), onAllGranted = {}
-        )
-
-        fun Companion.fromJasticPermission(
-            permissionList: JasticPermission,
-            onAllGranted: () -> Unit
-        ) = fromJasticPermissions(listOf(permissionList), onAllGranted)
-
-        private fun Companion.fromJasticPermissions(
-            permissionList: List<JasticPermission>,
-            onAllGranted: () -> Unit
-        ) = PermissionsRequestHolder(
-            permissions = permissionList.flatMap { it.toAndroidPermissions() },
-            onAllGranted = onAllGranted
-        )
-    }
 }

@@ -28,7 +28,7 @@ sealed class MyJasticRoutes : JasticNavigable {
     }
 
     @Serializable
-    data class JasticDestinationDetail(val jasticDestinationId: Int) : MyJasticRoutes()
+    data class JasticPointDetail(val jasticPointId: Int) : MyJasticRoutes()
 }
 
 @Parcelize
