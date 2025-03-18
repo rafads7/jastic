@@ -26,6 +26,7 @@ materialIconsCore = "1.7.8"
 navigationCompose = "2.8.8"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.1.0"
+roomVersion = "2.6.1"
 secretsGradlePlugin = "2.0.1"
 appcompat = "1.7.0"
 material = "1.12.0"
@@ -51,6 +52,9 @@ androidx-material3-adaptive-navigation-suite = { module = "androidx.compose.mate
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationCompose" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationCompose" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomVersion" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomVersion" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomVersion" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
