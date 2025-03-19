@@ -27,7 +27,7 @@ private fun NavHostController.navigateTo(action: MyJasticNavActions) {
     when (action) {
         MyJasticNavActions.Back -> popBackStack()
         MyJasticNavActions.Map -> navigateToMap()
-        is MyJasticNavActions.JasticPointDetail -> navigateToJasticDestinationDetail(action.id)
+        is MyJasticNavActions.JasticPointDetail -> navigateToJasticPointDetail(action.id)
     }
 }
 */

@@ -7,16 +7,13 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.twotone.LocationOn
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -24,15 +21,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import com.rafaelduransaez.core.components.common.ColumnItemsSpacer
 import com.rafaelduransaez.core.components.common.JasticProgressIndicator
 import com.rafaelduransaez.core.components.jButton.JButton
+import com.rafaelduransaez.core.components.jCard.JCard
 import com.rafaelduransaez.core.components.jFloatingActionButton.AddFAB
 import com.rafaelduransaez.core.components.jIcon.JIcon
-import com.rafaelduransaez.core.components.jText.JTextCardBody
-import com.rafaelduransaez.core.components.jText.JTextCardTitle
+import com.rafaelduransaez.core.components.jCard.JCardBody
+import com.rafaelduransaez.core.components.jCard.JCardHeader
+import com.rafaelduransaez.core.components.jCard.JCardIconAction
 import com.rafaelduransaez.core.components.jText.JTextTitle
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.domain.extensions.negative
@@ -118,7 +115,7 @@ internal fun JasticPointsList(
     showScrollToTopButton: Boolean = false,
     listState: LazyListState = rememberLazyListState(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    onJasticPointClicked: (id: Int) -> Unit
+    onJasticPointClicked: (Int) -> Unit
 ) {
     Box {
         LazyColumn(
@@ -159,46 +156,22 @@ internal fun JasticPointListItem(
     point: JasticPoint,
     onJasticPointClicked: (id: Int) -> Unit
 ) {
-    ElevatedCard(
-        modifier = Modifier
-            .padding(vertical = JasticTheme.size.small)
-            .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = MaterialTheme.shapes.small,
-        onClick = { onJasticPointClicked(point.id) },
-        colors = CardDefaults.cardColors(
-            containerColor = JasticTheme.colorScheme.onSecondary,
-            contentColor = JasticTheme.colorScheme.secondary
-        )
-
+    JCard(
+        onClick = { onJasticPointClicked(point.id) }
     ) {
-        ConstraintLayout(
-            modifier = Modifier.fillMaxSize()
-        ) {
-
-            val (headerRef, bodyRef, actionRef) = createRefs()
-
-            JTextCardTitle(modifier = Modifier.constrainAs(headerRef) {
-                top.linkTo(parent.top)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }, text = point.alias)
-
-            JTextCardBody(modifier = Modifier.constrainAs(bodyRef) {
-                top.linkTo(headerRef.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }, text = point.alias)
-
-            JButton(
-                modifier = Modifier.constrainAs(actionRef) {
-                    top.linkTo(headerRef.bottom)
-                    bottom.linkTo(bodyRef.top)
-                    end.linkTo(parent.end)
-                },
-                textId = R.string.str_feature_myjastic_go,
-                containerColor = JasticTheme.colorScheme.tertiaryContainer
-            ) { }
+        Box(Modifier.fillMaxSize()) {
+            Column {
+                JCardHeader(text = point.alias)
+                JCardBody(text = point.alias)
+                JCardBody(text = point.alias)
+                JCardBody(text = point.alias)
+            }
+            JCardIconAction(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                icon = Icons.Default.Edit
+            ) {
+                onJasticPointClicked(point.id)
+            }
         }
     }
 }

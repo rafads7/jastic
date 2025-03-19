@@ -54,6 +54,7 @@ class JasticPointDetailViewModel @Inject constructor(
 
             JasticPointDetailUserEvent.Save -> Unit
             JasticPointDetailUserEvent.SaveAndGo -> Unit
+            is JasticPointDetailUserEvent.SaveLocation -> Unit
         }
     }
 
@@ -108,4 +109,5 @@ sealed interface JasticPointDetailUserEvent {
     data class AliasUpdate(val alias: String) : JasticPointDetailUserEvent
     data class MessageUpdate(val message: String) : JasticPointDetailUserEvent
     data class ContactSelected(val contactIdentifier: String) : JasticPointDetailUserEvent
+    data class SaveLocation(val save: Boolean) : JasticPointDetailUserEvent
 }

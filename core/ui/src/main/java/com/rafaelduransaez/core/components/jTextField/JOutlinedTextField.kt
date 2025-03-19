@@ -23,16 +23,12 @@ fun JOutlinedTextField(
     @StringRes placeHolder: Int? = null,
     @StringRes hint: Int? = null
 ) {
-    //var textState by rememberSaveable { mutableStateOf(text) }
 
     OutlinedTextField(
         modifier = modifier,
-        value = text, //textState,
+        value = text,
         placeholder = { placeHolder?.let { JText(textId = it) }},
-        onValueChange = {
-            onValueChange(it)
-            //textState = it
-        },
+        onValueChange = { onValueChange(it) },
         label = { hint?.let { JText(textId = it) } },
         colors = OutlinedTextFieldDefaults.colors(
             focusedTextColor = JasticTheme.colorScheme.scrim,

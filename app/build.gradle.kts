@@ -75,6 +75,7 @@ dependencies {
     implementation(project(":feature:map:presentation"))
     implementation(project(":feature:map:di"))
     implementation(project(":feature:settings:presentation"))
+    implementation(project(":feature:saved-destinations:presentation"))
 
     //Android
     implementation(libs.androidx.core.ktx)

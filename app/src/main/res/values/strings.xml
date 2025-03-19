@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Jastic</string>
-    <string name="hello_world">Hello, world!</string>
-    <string name="str_my_jastic">My Jastic</string>
-    <string name="str_settings">Settings</string>">
+    <string name="str_jastic_my_jastic">My Jastic</string>
+    <string name="str_jastic_settings">Settings</string>
+    <string name="str_jastic_destinations">Destinations</string>
 
 </resources>

@@ -8,6 +8,9 @@ sealed class NavigationGraphs: JasticNavigable {
     data object MyJasticGraph: NavigationGraphs()
 
     @Serializable
+    data object SavedDestinationsGraph: NavigationGraphs()
+
+    @Serializable
     data class MapGraph(
         val latitude: Double = Double.zero,
         val longitude: Double = Double.zero,

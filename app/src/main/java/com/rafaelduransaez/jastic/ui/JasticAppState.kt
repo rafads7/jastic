@@ -8,8 +8,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.rememberNavController
+import com.rafaelduransaez.core.navigation.JasticNavigable
+import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs
+import com.rafaelduransaez.core.navigation.navigateTo
 import com.rafaelduransaez.jastic.navigation.TopLevelRoute
 import kotlinx.coroutines.CoroutineScope
 
@@ -47,23 +51,27 @@ class JasticAppState(
             } ?: previousDestination.value
         }
 
-    val topLevelDestinations = listOf(TopLevelRoute.MyJasticRoute, TopLevelRoute.SettingsRoute)
+    val topLevelDestinations = listOf(
+        TopLevelRoute.MyJasticRoute,
+        TopLevelRoute.SettingsRoute,
+        TopLevelRoute.SavedDestinationsRoute
+    )
 
-/*    val showFAB: Boolean
-        @Composable get() {
-            return currentDestination?.isStartDestinationOf(NavigationGraphs.MyJasticGraph) == true
-        }
-
-
-    fun NavDestination.isStartDestinationOf(subGraph: NavigationGraphs): Boolean {
-        return when (subGraph) {
-            NavigationGraphs.MyJasticGraph -> {
-                this.route == subGraph.findStartDestination().route
+    /*    val showFAB: Boolean
+            @Composable get() {
+                return currentDestination?.isStartDestinationOf(NavigationGraphs.MyJasticGraph) == true
             }
 
-            else -> false
-        }
-    }*/
+
+        fun NavDestination.isStartDestinationOf(subGraph: NavigationGraphs): Boolean {
+            return when (subGraph) {
+                NavigationGraphs.MyJasticGraph -> {
+                    this.route == subGraph.findStartDestination().route
+                }
+
+                else -> false
+            }
+        }*/
 
     fun onTopLevelRouteClicked(route: NavigationGraphs) {
         with(navController) {
@@ -75,5 +83,9 @@ class JasticAppState(
                 restoreState = true
             }
         }
+    }
+
+    fun navigateTo(route: JasticNavigable, navData: Map<String, Any>, options: NavOptionsBuilder.() -> Unit) {
+        navController.navigateTo(route, navData, options)
     }
 }

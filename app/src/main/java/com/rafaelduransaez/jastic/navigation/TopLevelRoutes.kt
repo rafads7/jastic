@@ -2,8 +2,10 @@ package com.rafaelduransaez.jastic.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.rafaelduransaez.core.navigation.NavigationGraphs
@@ -22,16 +24,24 @@ sealed class TopLevelRoute<T: NavigationGraphs>(
     @Serializable
     data object MyJasticRoute :
         TopLevelRoute<NavigationGraphs.MyJasticGraph>(
-            labelId = R.string.str_my_jastic,
+            labelId = R.string.str_jastic_my_jastic,
             route = NavigationGraphs.MyJasticGraph,
             icon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home
+        )
+    @Serializable
+    data object SavedDestinationsRoute :
+        TopLevelRoute<NavigationGraphs.SavedDestinationsGraph>(
+            labelId = R.string.str_jastic_destinations,
+            route = NavigationGraphs.SavedDestinationsGraph,
+            icon = Icons.Filled.Place,
+            unselectedIcon = Icons.Outlined.Place
         )
 
     @Serializable
     data object SettingsRoute :
         TopLevelRoute<NavigationGraphs.SettingsGraph>(
-            labelId = R.string.str_settings,
+            labelId = R.string.str_jastic_settings,
             route = NavigationGraphs.SettingsGraph,
             icon = Icons.Filled.Settings,
             unselectedIcon = Icons.Outlined.Settings

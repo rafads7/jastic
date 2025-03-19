@@ -22,7 +22,7 @@ fun JButton(
     onClick: () -> Unit
 ) {
     Button(
-        modifier = modifier,//.padding(all = JasticTheme.size.normal),
+        modifier = modifier,
         colors = ButtonDefaults.buttonColors(containerColor = containerColor),
         enabled = enabled,
         onClick = { onClick() }

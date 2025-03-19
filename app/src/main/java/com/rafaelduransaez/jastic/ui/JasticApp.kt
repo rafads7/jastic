@@ -71,6 +71,9 @@ fun JasticApp(appState: JasticAppState = rememberJasticAppState()) {
         JasticAppRootNavGraph(
             contentPadding = contentPadding,
             navController = appState.navController,
+            onRouteTo = { route, navData, options ->
+                appState.navigateTo(route, navData, options)
+            },
             onPermissionsRequest = { holder -> requestPermissions = holder }
         )
     }

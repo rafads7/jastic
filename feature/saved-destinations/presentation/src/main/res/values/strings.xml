@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="str_feature_saved_destinations_radius">Radius(meters)</string>
+    <string name="str_feature_saved_destinations_address">Address</string>
+    <string name="str_feature_saved_destinations_lets_go">LET\'S GO!</string>
+</resources>

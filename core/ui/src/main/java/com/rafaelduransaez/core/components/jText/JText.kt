@@ -1,22 +1,24 @@
 package com.rafaelduransaez.core.components.jText
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
+import com.rafaelduransaez.core.components.jIcon.JIcon
 import com.rafaelduransaez.core.designsystem.JasticTheme
 
 @Composable
 fun JText(
     modifier: Modifier = Modifier, text: String, color: Color = Color.Unspecified,
-    style: TextStyle = JasticTheme.typography.labelNormal
+    style: TextStyle = JasticTheme.typography.labelNormal,
 ) =
     Text(
         text = text,
@@ -60,30 +62,24 @@ fun JTextLarge(modifier: Modifier = Modifier, @StringRes textId: Int) {
 }
 
 @Composable
-fun JTextCardTitle(modifier: Modifier = Modifier, text: String) {
-    Text(
-        text = text,
-        modifier = modifier
-            .background(JasticTheme.colorScheme.secondary)
-            .fillMaxWidth()
-            .padding(all = JasticTheme.size.small),
-        style = JasticTheme.typography.title,
-        color = JasticTheme.colorScheme.onPrimary
-    )
-}
+fun JTextButton(
+    modifier: Modifier = Modifier,
+    @StringRes textId: Int,
+    icon: ImageVector? = null,
+    onClick: () -> Unit
+) =
 
-@Composable
-fun JTextCardBody(modifier: Modifier = Modifier, text: String) {
-    Text(
-        text = text,
-        modifier = modifier
-            .background(JasticTheme.colorScheme.onPrimary)
-            .fillMaxWidth()
-            .padding(all = JasticTheme.size.small),
-        style = JasticTheme.typography.labelBold,
-        color = JasticTheme.colorScheme.secondary
-    )
-}
+    TextButton(modifier = modifier, onClick = onClick) {
+        Text(
+            text = stringResource(textId),
+            style = JasticTheme.typography.labelBold,
+            color = JasticTheme.colorScheme.primary
+        )
+        icon?.let {
+            Spacer(modifier = Modifier.width(8.dp))
+            JIcon(icon = icon)
+        }
+    }
 
 @Composable
 fun JDialogTextButton(modifier: Modifier = Modifier, @StringRes textId: Int, onClick: () -> Unit) =

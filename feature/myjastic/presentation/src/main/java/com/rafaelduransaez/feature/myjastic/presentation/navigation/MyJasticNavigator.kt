@@ -41,14 +41,16 @@ fun NavGraphBuilder.myJasticNavGraph(
             with(currentBackStackEntry.savedStateHandle) {
                 LaunchedEffect(this) {
                     if (keys().isNotEmpty()) {
-                        /*                      val data = getAndRemove<MapNavData>(KEY_DATA, MapNavData.Empty)
-                                                when (data) {
-                                                    is MapNavData.Location ->
-                                                        viewModel.onUiEvent(LocationSelected(data.toGeofenceLocation()))
-                                                    MapNavData.Empty -> Unit
-                                                }*/
                         val location = this@with.toGeofenceLocation()
                         viewModel.onUiEvent(LocationSelected(location))
+                        /*
+                        val data = getAndRemove<MapNavData>(KEY_DATA, MapNavData.Empty)
+                        when (data) {
+                            is MapNavData.Location ->
+                                viewModel.onUiEvent(LocationSelected(data.toGeofenceLocation()))
+                            MapNavData.Empty -> Unit
+                        }
+                        */
                     }
                 }
             }

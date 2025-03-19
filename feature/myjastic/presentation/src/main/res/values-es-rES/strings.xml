@@ -10,4 +10,6 @@
     <string name="str_feature_myjastic_message">Mensaje a enviar</string>
     <string name="str_feature_myjastic_contact_phone_number">Contact phone number</string>
     <string name="str_feature_myjastic_go">VAMOS</string>
+    <string name="str_feature_myjastic_save_location_future">Guardar la localización para poder reutilizarla.</string>
+    <string name="str_feature_myjastic_alt_edit">EDITAR</string>
 </resources>
