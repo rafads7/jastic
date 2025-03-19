@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="str_feature_map_geofence_radius">Geofence radius: %1$sm</string>
+    <string name="str_feature_map_retry">Retry</string>
+</resources>

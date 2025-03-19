@@ -22,11 +22,11 @@ import com.rafaelduransaez.core.components.jTextField.JOutlinedTextField
 import com.rafaelduransaez.core.components.jTextField.JOutlinedTextFieldWithIconButton
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavRouteTo
+import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.navigation.invoke
 import com.rafaelduransaez.feature.myjastic.presentation.R
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.AliasUpdate
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.MessageUpdate
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes
 
 @Composable
 internal fun JasticPointDetailScreen(
@@ -67,7 +67,7 @@ internal fun JasticPointDetailScreen(
                     onIconClick = {
                         onPermissionNeeded(com.rafaelduransaez.core.ui.permissions.JasticPermission.Location) {
                             with(uiState.location) {
-                                onRouteTo(MyJasticRoutes.Map(latitude, longitude, radiusInMeters))
+                                onRouteTo(NavigationGraphs.MapGraph(latitude, longitude, radiusInMeters))
                                 //onRouteTo(MyJasticRoutes.Map, (this.toMapNavLocationData()))
                             }
                         }

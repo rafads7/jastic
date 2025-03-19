@@ -44,13 +44,17 @@ android {
 dependencies {
 
     implementation(project(":core:ui"))
+    implementation(project(":core:ui:permissions"))
+
     implementation(project(":core:navigation"))
+
     implementation(project(":core:contacts:domain"))
     implementation(project(":core:contacts:di"))
-    implementation(project(":core:ui:permissions"))
+
     implementation(project(":core:geofencing:domain"))
     implementation(project(":core:geofencing:di"))
     implementation(project(":core:geofencing:data"))
+
     implementation(project(":feature:myjastic:domain"))
 
     implementation(libs.androidx.core.ktx)
@@ -85,11 +89,4 @@ dependencies {
     ksp(libs.dagger.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    //Maps
-    implementation(libs.play.services.maps)
-    implementation(libs.maps.compose)
-    implementation(libs.maps.compose.utils) //Utils for Clustering, Street View metadata checks, etc
-    implementation(libs.maps.compose.widgets) //Widgets library for ScaleBar, etc
-    implementation(libs.maps.ktx) // KTX for the Maps SDK for Android library
-    implementation(libs.maps.utils.ktx) // KTX for the Maps SDK for Android Utility Library
 }

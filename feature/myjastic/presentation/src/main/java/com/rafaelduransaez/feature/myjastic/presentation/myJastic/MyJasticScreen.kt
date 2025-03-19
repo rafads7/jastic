@@ -35,14 +35,14 @@ import com.rafaelduransaez.core.components.jText.JTextCardBody
 import com.rafaelduransaez.core.components.jText.JTextCardTitle
 import com.rafaelduransaez.core.components.jText.JTextTitle
 import com.rafaelduransaez.core.designsystem.JasticTheme
+import com.rafaelduransaez.core.domain.extensions.negative
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.invoke
-import com.rafaelduransaez.core.domain.extensions.negative
 import com.rafaelduransaez.feature.myjastic.domain.model.JasticPoint
 import com.rafaelduransaez.feature.myjastic.presentation.R
+import com.rafaelduransaez.feature.myjastic.presentation.myJastic.Constants.FIRST_ITEM_INDEX
+import com.rafaelduransaez.feature.myjastic.presentation.myJastic.Constants.FIRST_ITEM_TO_SCROLL
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes
-import com.rafaelduransaez.feature.myjastic.presentation.utils.Constants.FIRST_ITEM_INDEX
-import com.rafaelduransaez.feature.myjastic.presentation.utils.Constants.FIRST_ITEM_TO_SCROLL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -201,4 +201,9 @@ internal fun JasticPointListItem(
             ) { }
         }
     }
+}
+
+object Constants {
+    const val FIRST_ITEM_INDEX = 0
+    const val FIRST_ITEM_TO_SCROLL = 2
 }

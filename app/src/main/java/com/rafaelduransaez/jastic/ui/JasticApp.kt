@@ -27,8 +27,8 @@ import com.rafaelduransaez.core.components.jSnackbar.SnackbarHandler
 import com.rafaelduransaez.core.components.jText.JTextLarge
 import com.rafaelduransaez.core.components.jText.JTextTitle
 import com.rafaelduransaez.core.designsystem.JasticTheme
+import com.rafaelduransaez.core.navigation.JasticNavigable
 import com.rafaelduransaez.core.navigation.NavigationGraphs
-import com.rafaelduransaez.core.navigation.NavigationRoute
 import com.rafaelduransaez.core.ui.permissions.PermissionsRequestHolder
 import com.rafaelduransaez.core.ui.permissions.PermissionsRequestHolder.Companion.empty
 import com.rafaelduransaez.core.ui.permissions.PermissionsRequester
@@ -155,6 +155,6 @@ fun JasticBottomBar(
     }
 }
 
-inline fun <reified T : NavigationRoute> NavDestination.hasRouteInHierarchy(): Boolean {
+inline fun <reified T : JasticNavigable> NavDestination.hasRouteInHierarchy(): Boolean {
     return this.hierarchy.any { it.hasRoute(T::class) }
 }

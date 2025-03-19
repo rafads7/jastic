@@ -14,6 +14,7 @@ import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.navigation.navigateTo
 import com.rafaelduransaez.core.ui.permissions.PermissionsRequestHolder
 import com.rafaelduransaez.core.ui.permissions.PermissionsRequestHolder.Companion.fromJasticPermission
+import com.rafaelduransaez.feature.map.presentation.navigation.mapNavGraph
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.myJasticNavGraph
 import com.rafaelduransaez.feature.settings.navigation.settingsGraph
 
@@ -42,7 +43,15 @@ fun JasticAppRootNavGraph(
                     onPermissionsRequest(PermissionsRequestHolder.fromJasticPermission(permission, onAllGranted))
                 }
             )
+
+            mapNavGraph(
+                onRouteTo = { route, navData, options ->
+                    navController.navigateTo(route, navData, options)
+                }
+            )
+
             settingsGraph()
+
         }
     }
 

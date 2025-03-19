@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlin.compose) // USE WHEN KOTLIN VERSION 2.0.0+
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {

@@ -1,6 +1,5 @@
 package com.rafaelduransaez.feature.myjastic.presentation.myJastic
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rafaelduransaez.feature.myjastic.domain.model.JasticPoint
@@ -14,11 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MyJasticViewModel @Inject constructor(
-    savedstate: SavedStateHandle
-) : ViewModel() {
-
-    private val detailId = savedstate.get<Int>("id")
+class MyJasticViewModel @Inject constructor() : ViewModel() {
 
     private val _uiState = MutableStateFlow<MyJasticUiState>(MyJasticUiState.Loading)
     val uiState = _uiState
@@ -31,18 +26,7 @@ class MyJasticViewModel @Inject constructor(
 
     private fun loadMyJasticPoints() {
         viewModelScope.launch {
-            _uiState.update { MyJasticUiState.ShowMyJasticPoints(fakeList()) }
-        }
-    }
-
-    private fun fakeList() = buildList {
-        repeat(20) { index ->
-            add(
-                JasticPoint(
-                    id = index,
-                    alias = "Alias $index"
-                )
-            )
+            _uiState.update { MyJasticUiState.ShowMyJasticPoints(mockList) }
         }
     }
 
@@ -51,6 +35,16 @@ class MyJasticViewModel @Inject constructor(
     }
 }
 
+val mockList = buildList {
+    repeat(20) { index ->
+        add(
+            JasticPoint(
+                id = index,
+                alias = "Alias $index"
+            )
+        )
+    }
+}
 
 sealed class MyJasticUiState {
     data object Loading : MyJasticUiState()

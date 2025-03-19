@@ -13,12 +13,9 @@ import com.rafaelduransaez.core.ui.permissions.OnPermissionNeeded
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailScreen
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.LocationSelected
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailViewModel
-import com.rafaelduransaez.feature.myjastic.presentation.map.MapScreen
-import com.rafaelduransaez.feature.myjastic.presentation.map.MapViewModel
 import com.rafaelduransaez.feature.myjastic.presentation.myJastic.MyJasticScreen
 import com.rafaelduransaez.feature.myjastic.presentation.myJastic.MyJasticViewModel
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.JasticPointDetail
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.Map
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.MyJastic
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toGeofenceLocation
 
@@ -63,23 +60,5 @@ fun NavGraphBuilder.myJasticNavGraph(
                 onPermissionNeeded = onPermissionNeeded
             )
         }
-
-        composable<Map> {
-            val viewModel: MapViewModel = hiltViewModel()
-            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-            MapScreen(
-                uiState = uiState,
-                onUiEvent = viewModel::onUiEvent,
-                onRouteTo = onRouteTo
-            )
-        }
     }
-}
-
-object Keys {
-    const val KEY_LONGITUDE = "longitude"
-    const val KEY_LATITUDE = "latitude"
-    const val KEY_ADDRESS = "address"
-    const val KEY_RADIUS = "radius"
 }

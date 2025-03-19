@@ -72,6 +72,8 @@ dependencies {
     implementation(project(":core:geofencing:data"))
     implementation(project(":feature:myjastic:presentation"))
     implementation(project(":feature:myjastic:di"))
+    implementation(project(":feature:map:presentation"))
+    implementation(project(":feature:map:di"))
     implementation(project(":feature:settings:presentation"))
 
     //Android
