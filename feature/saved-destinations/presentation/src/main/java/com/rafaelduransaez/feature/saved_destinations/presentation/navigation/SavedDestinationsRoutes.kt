@@ -9,7 +9,4 @@ sealed class SavedDestinationsRoutes: JasticNavigable {
     @Serializable
     data object SavedDestinations : SavedDestinationsRoutes()
 
-
-    @Serializable
-    data object Map : SavedDestinationsRoutes()
 }

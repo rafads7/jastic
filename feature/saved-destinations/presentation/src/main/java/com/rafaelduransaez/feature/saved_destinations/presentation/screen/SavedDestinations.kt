@@ -21,9 +21,11 @@ import com.rafaelduransaez.core.components.jCard.JCardIconAction
 import com.rafaelduransaez.core.components.jFloatingActionButton.AddFAB
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavRouteTo
+import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.navigation.invoke
+import com.rafaelduransaez.core.ui.permissions.JasticPermission
+import com.rafaelduransaez.core.ui.permissions.OnPermissionNeeded
 import com.rafaelduransaez.feature.saved_destinations.domain.SavedDestination
-import com.rafaelduransaez.feature.saved_destinations.presentation.navigation.SavedDestinationsRoutes
 import com.rafaelduransaez.feature.saved_destinations.presentation.utils.toAnnotatedString
 
 @Composable
@@ -31,7 +33,8 @@ fun SavedDestinationsScreen(
     savedDestinations: List<SavedDestination>,
     paddingValues: PaddingValues = PaddingValues(all = JasticTheme.size.normal),
     listState: LazyListState = rememberLazyListState(),
-    onRouteTo: NavRouteTo
+    onRouteTo: NavRouteTo,
+    onPermissionNeeded: OnPermissionNeeded
 ) {
     Box {
         LazyColumn(
@@ -41,7 +44,22 @@ fun SavedDestinationsScreen(
             state = listState
         ) {
             items(count = savedDestinations.size, key = { savedDestinations[it].alias }) { index ->
-                SavedDestinationItem(savedDestinations[index], { id -> })
+                SavedDestinationItem(
+                    destination = savedDestinations[index],
+                    onDestinationEditClicked = { savedDestination ->
+                        onPermissionNeeded(JasticPermission.Location) {
+                            onRouteTo(
+                                NavigationGraphs.MapGraph(
+                                    latitude = savedDestination.latitude,
+                                    longitude = savedDestination.longitude,
+                                    radiusInMeters = savedDestination.radiusInMeters
+                                )
+                            )
+                        }
+                    }, onDestinationClicked = {
+                        //onRouteTo(SavedDestinationsRoutes.DestinationDetail(it))
+                    }
+                )
             }
         }
         AddFAB(
@@ -49,7 +67,9 @@ fun SavedDestinationsScreen(
                 .padding(JasticTheme.size.large)
                 .align(Alignment.BottomEnd)
         ) {
-            onRouteTo(SavedDestinationsRoutes.Map)
+            onPermissionNeeded(JasticPermission.Location) {
+                onRouteTo(NavigationGraphs.MapGraph())
+            }
         }
     }
 }
@@ -57,10 +77,11 @@ fun SavedDestinationsScreen(
 @Composable
 fun SavedDestinationItem(
     destination: SavedDestination,
-    onDestinationClicked: (Int) -> Unit
+    onDestinationEditClicked: (SavedDestination) -> Unit,
+    onDestinationClicked: (SavedDestination) -> Unit
 ) {
     JCard(
-        onClick = { onDestinationClicked(destination.id) },
+        onClick = { onDestinationClicked(destination) },
     ) {
         Box(Modifier.fillMaxSize()) {
             Column {
@@ -72,7 +93,7 @@ fun SavedDestinationItem(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 icon = Icons.Default.Edit
             ) {
-
+                onDestinationEditClicked(destination)
             }
         }
     }

@@ -17,9 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +35,7 @@ import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.navigation.invoke
 import com.rafaelduransaez.core.ui.permissions.JasticPermission
+import com.rafaelduransaez.core.ui.permissions.OnPermissionNeeded
 import com.rafaelduransaez.feature.myjastic.presentation.R
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.AliasUpdate
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.MessageUpdate
@@ -46,7 +45,7 @@ internal fun JasticPointDetailScreen(
     uiState: JasticPointDetailUiState,
     onUiEvent: (JasticPointDetailUserEvent) -> Unit,
     onRouteTo: NavRouteTo,
-    onPermissionNeeded: com.rafaelduransaez.core.ui.permissions.OnPermissionNeeded,
+    onPermissionNeeded: OnPermissionNeeded,
     contentPadding: PaddingValues = PaddingValues(all = JasticTheme.size.normal)
 ) {
 

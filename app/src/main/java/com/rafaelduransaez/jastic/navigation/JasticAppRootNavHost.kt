@@ -12,8 +12,7 @@ import androidx.navigation.compose.NavHost
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs
-import com.rafaelduransaez.core.ui.permissions.PermissionsRequestHolder
-import com.rafaelduransaez.core.ui.permissions.PermissionsRequestHolder.Companion.fromJasticPermission
+import com.rafaelduransaez.core.ui.permissions.OnPermissionNeeded
 import com.rafaelduransaez.feature.map.presentation.navigation.mapNavGraph
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.myJasticNavGraph
 import com.rafaelduransaez.feature.saved_destinations.presentation.navigation.savedDestinationsGraph
@@ -24,7 +23,7 @@ fun JasticAppRootNavGraph(
     contentPadding: PaddingValues,
     navController: NavHostController,
     onRouteTo: NavRouteTo,
-    onPermissionsRequest: (PermissionsRequestHolder) -> Unit
+    onPermissionsNeeded: OnPermissionNeeded
 ) {
 
     Box(
@@ -37,19 +36,11 @@ fun JasticAppRootNavGraph(
             navController = navController,
             startDestination = NavigationGraphs.MyJasticGraph
         ) {
-            myJasticNavGraph(
-                onRouteTo = onRouteTo,
-                onPermissionNeeded = { permission, onAllGranted ->
-                    onPermissionsRequest(PermissionsRequestHolder.fromJasticPermission(permission, onAllGranted))
-                }
-            )
 
-            mapNavGraph(onRouteTo = onRouteTo)
-
-            savedDestinationsGraph(onRouteTo = onRouteTo)
-
+            myJasticNavGraph(onRouteTo, onPermissionsNeeded)
+            savedDestinationsGraph(onRouteTo, onPermissionsNeeded)
+            mapNavGraph(onRouteTo)
             settingsGraph()
-
         }
     }
 

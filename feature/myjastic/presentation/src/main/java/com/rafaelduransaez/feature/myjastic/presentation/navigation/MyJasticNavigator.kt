@@ -23,6 +23,7 @@ fun NavGraphBuilder.myJasticNavGraph(
     onRouteTo: NavRouteTo,
     onPermissionNeeded: OnPermissionNeeded
 ) {
+
     navigation<MyJasticGraph>(startDestination = MyJastic) {
         composable<MyJastic> {
             val viewModel = hiltViewModel<MyJasticViewModel>()

@@ -31,6 +31,7 @@ import com.rafaelduransaez.core.navigation.JasticNavigable
 import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.ui.permissions.PermissionsRequestHolder
 import com.rafaelduransaez.core.ui.permissions.PermissionsRequestHolder.Companion.empty
+import com.rafaelduransaez.core.ui.permissions.PermissionsRequestHolder.Companion.fromJasticPermission
 import com.rafaelduransaez.core.ui.permissions.PermissionsRequester
 import com.rafaelduransaez.jastic.R
 import com.rafaelduransaez.jastic.navigation.JasticAppRootNavGraph
@@ -74,13 +75,21 @@ fun JasticApp(appState: JasticAppState = rememberJasticAppState()) {
             onRouteTo = { route, navData, options ->
                 appState.navigateTo(route, navData, options)
             },
-            onPermissionsRequest = { holder -> requestPermissions = holder }
+            onPermissionsNeeded = { permission, onAllGranted ->
+                requestPermissions = PermissionsRequestHolder.fromJasticPermission(
+                    permission,
+                    onAllGranted
+                )
+            }
         )
     }
 }
 
 @Composable
-private fun SnackbarHostHandler(snackBarHostState: SnackbarHostState, coroutineScope: CoroutineScope) {
+private fun SnackbarHostHandler(
+    snackBarHostState: SnackbarHostState,
+    coroutineScope: CoroutineScope
+) {
     ObserveAsEvent(flow = SnackbarHandler.events, snackBarHostState) { event ->
         coroutineScope.launch {
             snackBarHostState.currentSnackbarData?.dismiss()

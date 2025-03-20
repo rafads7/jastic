@@ -39,7 +39,10 @@ android {
 dependencies {
 
     implementation(project(":core:ui"))
+    implementation(project(":core:ui:permissions"))
+
     implementation(project(":core:navigation"))
+    
     implementation(project(":feature:saved-destinations:domain"))
 
     implementation(libs.androidx.core.ktx)
