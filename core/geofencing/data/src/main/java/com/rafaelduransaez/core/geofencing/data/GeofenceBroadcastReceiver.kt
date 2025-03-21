@@ -16,15 +16,12 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
 
         Log.e(TAG, "INSIDE GeofenceEvent")
-        Toast.makeText(context, "INSIDE", LENGTH_LONG).show()
 
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
         geofencingEvent?.let {
             if (it.hasError()) {
-                val errorMessage =
-                    GeofenceStatusCodes.getStatusCodeString(it.errorCode)
+                val errorMessage = GeofenceStatusCodes.getStatusCodeString(it.errorCode)
                 Log.e(TAG, errorMessage)
-                //Toast.makeText(context, "ERROR: $errorMessage", LENGTH_LONG).show()
                 return
             }
 
@@ -61,62 +58,3 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         private const val TAG = "GeofenceBroadcastReceiver"
     }
 }
-
-/*
-@Composable
-fun GeofenceBroadcastReceiver(
-    systemAction: String,
-    systemEvent: (userActivity: String) -> Unit,
-) {
-    val TAG = "GEOFENCE_EVENT"
-    val context = LocalContext.current
-    val currentSystemOnEvent by rememberUpdatedState(systemEvent)
-
-    DisposableEffect(context, systemAction) {
-        val intentFilter = IntentFilter(systemAction)
-        val broadcast = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                val geofencingEvent = intent?.let { GeofencingEvent.fromIntent(it) } ?: return
-
-                if (geofencingEvent.hasError()) {
-                    val errorMessage =
-                        GeofenceStatusCodes.getStatusCodeString(geofencingEvent.errorCode)
-                    Log.e(TAG, "onReceive: $errorMessage")
-                    return
-                }
-
-                val alertString = "Geofence Alert :" +
-                        " Trigger ${geofencingEvent.triggeringGeofences}" +
-                        " Transition ${geofencingEvent.geofenceTransition}"
-                Log.d(TAG, alertString)
-                currentSystemOnEvent(alertString)
-            }
-        }
-
-        /*        ContextCompat.registerReceiver(
-                    context,
-                    broadcast,
-                    intentFilter,
-                    ContextCompat.RECEIVER_NOT_EXPORTED
-                )*/
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(broadcast, intentFilter, Context.RECEIVER_NOT_EXPORTED)
-        } else {
-            context.registerReceiver(broadcast, intentFilter)
-        }
-
-
-        onDispose {
-            context.unregisterReceiver(broadcast)
-        }
-        /*
-        LocalBroadcastManager.getInstance(context).registerReceiver(broadcast, intentFilter)
-        onDispose {
-            LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcast)
-        }*/
-
-    }
-}
-
-
- */

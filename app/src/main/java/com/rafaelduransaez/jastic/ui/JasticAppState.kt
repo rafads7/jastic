@@ -11,9 +11,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.rememberNavController
 import com.rafaelduransaez.core.navigation.JasticNavigable
-import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs
-import com.rafaelduransaez.core.navigation.navigateTo
+import com.rafaelduransaez.core.navigation.utils.navigateTo
 import com.rafaelduransaez.jastic.navigation.TopLevelRoute
 import kotlinx.coroutines.CoroutineScope
 
@@ -53,8 +52,8 @@ class JasticAppState(
 
     val topLevelDestinations = listOf(
         TopLevelRoute.MyJasticRoute,
-        TopLevelRoute.SettingsRoute,
-        TopLevelRoute.SavedDestinationsRoute
+        TopLevelRoute.SavedDestinationsRoute,
+        TopLevelRoute.SettingsRoute
     )
 
     /*    val showFAB: Boolean

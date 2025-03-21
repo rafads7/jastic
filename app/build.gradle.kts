@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.kotlin.android)
 
-    alias(libs.plugins.kotlin.compose) // USE WHEN KOTLIN VERSION 2.0.0+
+    alias(libs.plugins.kotlin.compose)
 
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.mapsplatform.secrets.gradle)
@@ -67,13 +67,14 @@ android {
 dependencies {
 
     implementation(project(":core:ui"))
-    implementation(project(":core:ui:permissions"))
+    implementation(project(":core:permissions"))
+
     implementation(project(":core:navigation"))
+
     implementation(project(":core:geofencing:data"))
+
     implementation(project(":feature:myjastic:presentation"))
-    implementation(project(":feature:myjastic:di"))
     implementation(project(":feature:map:presentation"))
-    implementation(project(":feature:map:di"))
     implementation(project(":feature:settings:presentation"))
     implementation(project(":feature:saved-destinations:presentation"))
 
@@ -103,7 +104,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.material.icons.core)
     implementation(libs.androidx.material3.adaptive.navigation.suite)
-    implementation(libs.androidx.material3.windows.sizeclass)
 
     //Serialization
     implementation(libs.kotlinx.serialization.json)
@@ -113,18 +113,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.fragment.ktx)
 
-    //Maps
-    implementation(libs.play.services.maps)
-    implementation(libs.maps.compose)
-    implementation(libs.maps.compose.utils) //Utils for Clustering, Street View metadata checks, etc
-    implementation(libs.maps.compose.widgets) //Widgets library for ScaleBar, etc
-    implementation(libs.maps.ktx) // KTX for the Maps SDK for Android library
-    implementation(libs.maps.utils.ktx) // KTX for the Maps SDK for Android Utility Library
-
     //Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.dagger)
-    ksp(libs.dagger.compiler)
 }

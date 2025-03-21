@@ -1,6 +1,7 @@
 plugins {
     id("java-library")
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
 }
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -13,8 +14,16 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":core:domain"))
 
+    api(project(":core:base"))
+    implementation(project(":core:common"))
+
+    // Hilt
     implementation(libs.javax.inject)
+
+    // Coroutines
     implementation(libs.kotlinx.coroutines.core)
+
+    //Serialization
+    implementation(libs.kotlinx.serialization.json)
 }

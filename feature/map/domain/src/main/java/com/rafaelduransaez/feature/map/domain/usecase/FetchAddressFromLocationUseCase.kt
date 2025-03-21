@@ -1,9 +1,9 @@
 package com.rafaelduransaez.feature.map.domain.usecase
 
-import com.rafaelduransaez.core.domain.base.JasticUseCase
-import com.rafaelduransaez.core.domain.models.GeofenceLocation
-import com.rafaelduransaez.core.domain.models.JasticResult
-import com.rafaelduransaez.core.domain.models.NetworkError
+import com.rafaelduransaez.core.base.models.JasticResult
+import com.rafaelduransaez.core.base.models.NetworkError
+import com.rafaelduransaez.core.base.usecase.JasticUseCase
+import com.rafaelduransaez.feature.map.domain.model.GeofenceLocation
 import com.rafaelduransaez.feature.map.domain.repository.LocationRepository
 import javax.inject.Inject
 

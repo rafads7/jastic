@@ -5,7 +5,7 @@ import com.rafaelduransaez.core.domain.extensions.empty
 import com.rafaelduransaez.core.domain.extensions.zero
 
 data class JasticPoint(
-    val id: Int = Int.zero(),
-    val alias: String = String.empty(),
+    val id: Int = Int.zero,
+    val alias: String = String.empty,
     val contact: Contact = Contact()
 )

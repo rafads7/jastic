@@ -12,7 +12,7 @@ import androidx.navigation.compose.NavHost
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs
-import com.rafaelduransaez.core.ui.permissions.OnPermissionNeeded
+import com.rafaelduransaez.core.permissions.OnPermissionNeeded
 import com.rafaelduransaez.feature.map.presentation.navigation.mapNavGraph
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.myJasticNavGraph
 import com.rafaelduransaez.feature.saved_destinations.presentation.navigation.savedDestinationsGraph

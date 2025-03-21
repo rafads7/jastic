@@ -5,11 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.google.android.gms.maps.model.LatLng
-import com.rafaelduransaez.core.domain.models.GeofenceLocation
+import com.rafaelduransaez.feature.map.domain.model.GeofenceLocation
 import com.rafaelduransaez.core.geofencing.domain.sources.GeofenceHelper
 import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.feature.map.domain.usecase.FetchAddressFromLocationUseCase
 import com.rafaelduransaez.feature.map.domain.usecase.FetchCurrentLocationUseCase
+import com.rafaelduransaez.feature.map.presentation.utils.toGeofence
 import com.rafaelduransaez.feature.map.presentation.utils.toGeofenceLocation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -117,13 +118,9 @@ class MapViewModel @Inject constructor(
             )
             withContext(Dispatchers.IO) {
                 geofenceHelper.unregisterGeofence()
-                geofenceHelper.addGeofence(
-                    key = "myJastic",
-                    latitude = _uiState.value.mapLocation.latitude, //TODO change to mapLocation
-                    longitude = _uiState.value.mapLocation.longitude,
-                    radiusInMeters = 500f,
-                    expirationTimeInMillis = 0
-                )
+
+                val geofence = _uiState.value.mapLocation.toGeofence()
+                geofenceHelper.addGeofence(geofence)
             }
         }
     }

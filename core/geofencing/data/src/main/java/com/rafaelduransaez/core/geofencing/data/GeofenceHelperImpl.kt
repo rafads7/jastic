@@ -2,18 +2,14 @@ package com.rafaelduransaez.core.geofencing.data
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
-import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
 import com.google.android.gms.location.Geofence
-import com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_DWELL
-import com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER
-import com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
-import com.google.android.gms.location.LocationServices
+import com.rafaelduransaez.core.geofencing.domain.JasticGeofence
 import com.rafaelduransaez.core.geofencing.domain.sources.GeofenceHelper
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
@@ -29,7 +25,6 @@ class GeofenceHelperImpl @Inject constructor(
 
     private val geofencingPendingIntent by lazy {
         val intent = Intent(context, GeofenceBroadcastReceiver::class.java)
-        //val intent = Intent("GEOFENCE_EVENT")
         //intent.setPackage(context.packageName)
 
         PendingIntent.getBroadcast(
@@ -37,28 +32,20 @@ class GeofenceHelperImpl @Inject constructor(
             REQUEST_CODE,
             intent,
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-                //PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-                //PendingIntent.FLAG_UPDATE_CURRENT
                 PendingIntent.FLAG_CANCEL_CURRENT
             } else {
-                //PendingIntent.FLAG_IMMUTABLE
                 PendingIntent.FLAG_MUTABLE
             }
         )
     }
 
     override fun addGeofence(
-        key: String,
-        latitude: Double,
-        longitude: Double,
-        radiusInMeters: Float,
-        expirationTimeInMillis: Long,
+        jasticGeofence: JasticGeofence,
         onAdded: () -> Unit
     ) {
         if (context.isLocationPermissionGranted.not()) return
 
-        geofenceList[key] = createGeofence(key, latitude, longitude, radiusInMeters)
-
+        geofenceList[jasticGeofence.requestKey] = jasticGeofence.toGeofence()
         registerGeofence { onAdded() }
     }
 
@@ -93,21 +80,6 @@ class GeofenceHelperImpl @Inject constructor(
         setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
         addGeofences(geofenceList.values.toList())
     }.build()
-
-    private fun createGeofence(
-        key: String,
-        latitude: Double,
-        longitude: Double,
-        radiusInMeters: Float,
-        expirationTimeInMillis: Long = Geofence.NEVER_EXPIRE,
-    ): Geofence {
-        return Geofence.Builder()
-            .setRequestId(key)
-            .setCircularRegion(latitude, longitude, radiusInMeters)
-            .setTransitionTypes(GEOFENCE_TRANSITION_ENTER or GEOFENCE_TRANSITION_EXIT)
-            .setExpirationDuration(expirationTimeInMillis)
-            .build()
-    }
 
     companion object {
         private const val TAG = "GeofenceHelper"

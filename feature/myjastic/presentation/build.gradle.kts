@@ -44,7 +44,7 @@ android {
 dependencies {
 
     implementation(project(":core:ui"))
-    implementation(project(":core:ui:permissions"))
+    implementation(project(":core:permissions"))
 
     implementation(project(":core:navigation"))
 
@@ -54,6 +54,8 @@ dependencies {
     implementation(project(":core:geofencing:domain"))
     implementation(project(":core:geofencing:di"))
     implementation(project(":core:geofencing:data"))
+
+    implementation(project(":feature:map:lib"))
 
     implementation(project(":feature:myjastic:domain"))
 
@@ -85,8 +87,6 @@ dependencies {
     //Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
-    implementation(libs.dagger)
-    ksp(libs.dagger.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
 }

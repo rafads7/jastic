@@ -1,7 +1,8 @@
 package com.rafaelduransaez.feature.map.presentation.utils
 
 import com.google.android.gms.maps.model.LatLng
-import com.rafaelduransaez.core.domain.models.GeofenceLocation
+import com.rafaelduransaez.core.geofencing.domain.JasticGeofence
+import com.rafaelduransaez.feature.map.domain.model.GeofenceLocation
 import com.rafaelduransaez.core.navigation.NavigationGraphs.MapGraph.NavKeys.KEY_ADDRESS
 import com.rafaelduransaez.core.navigation.NavigationGraphs.MapGraph.NavKeys.KEY_LATITUDE
 import com.rafaelduransaez.core.navigation.NavigationGraphs.MapGraph.NavKeys.KEY_LONGITUDE
@@ -19,6 +20,13 @@ fun GeofenceLocation?.toMap() = this?.let {
         KEY_RADIUS to radiusInMeters
     )
 } ?: emptyMap()
+
+fun GeofenceLocation.toGeofence() = JasticGeofence(
+    requestKey = latitude.toString() + longitude.toString(),
+    latitude = latitude,
+    longitude = longitude,
+    radiusInMeters = radiusInMeters
+)
 
 /*fun MapNavData.Location.toGeofenceLocation() = GeofenceLocation(
     latitude,

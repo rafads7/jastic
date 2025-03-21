@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.Geofence
+import com.rafaelduransaez.core.geofencing.domain.JasticGeofence
 
 private fun Context.checkPermission(permission: String) =
     ActivityCompat.checkSelfPermission(
@@ -27,4 +29,10 @@ val Context.hasBackgroundLocationPermission
         true
     }
 
+fun JasticGeofence.toGeofence() = Geofence.Builder()
+    .setRequestId(requestKey)
+    .setCircularRegion(latitude, longitude, radiusInMeters)
+    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
+    .setExpirationDuration(Geofence.NEVER_EXPIRE)
+    .build()
 

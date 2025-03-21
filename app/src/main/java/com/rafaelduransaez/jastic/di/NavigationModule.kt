@@ -1,8 +1,5 @@
 package com.rafaelduransaez.jastic.di
 
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticFeatureNavigator
 import com.rafaelduransaez.jastic.navigation.JasticNavigator
 import dagger.Module
@@ -11,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+@Deprecated("This class is deprecated until FeatureNavigator approach is applied")
 @InstallIn(SingletonComponent::class)
 @Module
 object NavigationModule {

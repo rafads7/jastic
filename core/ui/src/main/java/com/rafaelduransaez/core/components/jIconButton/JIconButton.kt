@@ -13,7 +13,7 @@ import com.rafaelduransaez.core.domain.extensions.empty
 fun JIconButton(
     modifier: Modifier = Modifier,
     icon: ImageVector,
-    iconContentDescription: String = String.empty(),
+    iconContentDescription: String = String.empty,
     onClick: () -> Unit
 ) {
     IconButton(

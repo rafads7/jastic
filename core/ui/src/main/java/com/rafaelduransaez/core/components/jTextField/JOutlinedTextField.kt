@@ -17,7 +17,7 @@ import com.rafaelduransaez.core.domain.extensions.empty
 @Composable
 fun JOutlinedTextField(
     modifier: Modifier = Modifier,
-    text: String = String.empty(),
+    text: String = String.empty,
     onValueChange: (String) -> Unit = { },
     readOnly: Boolean = false,
     @StringRes placeHolder: Int? = null,
@@ -52,7 +52,7 @@ fun JOutlinedTextField(
 @Composable
 fun JOutlinedTextFieldWithIconButton(
     modifier: Modifier = Modifier,
-    text: String = String.empty(),
+    text: String = String.empty,
     onValueChange: (String) -> Unit = {},
     @StringRes hint: Int? = null,
     @StringRes placeHolder: Int? = null,

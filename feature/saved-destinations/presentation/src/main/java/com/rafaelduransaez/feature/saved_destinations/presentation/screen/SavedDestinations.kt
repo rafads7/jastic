@@ -23,8 +23,8 @@ import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.navigation.invoke
-import com.rafaelduransaez.core.ui.permissions.JasticPermission
-import com.rafaelduransaez.core.ui.permissions.OnPermissionNeeded
+import com.rafaelduransaez.core.permissions.JasticPermission
+import com.rafaelduransaez.core.permissions.OnPermissionNeeded
 import com.rafaelduransaez.feature.saved_destinations.domain.SavedDestination
 import com.rafaelduransaez.feature.saved_destinations.presentation.utils.toAnnotatedString
 

@@ -14,7 +14,7 @@ import com.rafaelduransaez.core.domain.extensions.empty
 fun JIcon(
     modifier: Modifier = Modifier,
     icon: ImageVector,
-    contentDescription: String = String.empty(),
+    contentDescription: String = String.empty,
     tint: Color = LocalContentColor.current
 ) =
     Icon(

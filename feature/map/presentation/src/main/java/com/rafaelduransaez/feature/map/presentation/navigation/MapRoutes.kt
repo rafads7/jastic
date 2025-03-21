@@ -16,7 +16,7 @@ sealed interface MapRoutes : JasticNavigable {
     ) : MapRoutes {
 
         fun isEmpty(): Boolean {
-            return latitude == Double.zero() && longitude == Double.zero()
+            return latitude == Double.zero && longitude == Double.zero
         }
 
         fun isNotEmpty() = !isEmpty()

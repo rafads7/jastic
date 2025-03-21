@@ -5,7 +5,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs.SavedDestinationsGraph
-import com.rafaelduransaez.core.ui.permissions.OnPermissionNeeded
+import com.rafaelduransaez.core.permissions.OnPermissionNeeded
 import com.rafaelduransaez.feature.saved_destinations.domain.SavedDestination
 import com.rafaelduransaez.feature.saved_destinations.presentation.navigation.SavedDestinationsRoutes.SavedDestinations
 import com.rafaelduransaez.feature.saved_destinations.presentation.screen.SavedDestinationsScreen

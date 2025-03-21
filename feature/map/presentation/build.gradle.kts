@@ -40,7 +40,8 @@ dependencies {
 
     implementation(project(":core:ui"))
     implementation(project(":core:navigation"))
-    implementation(project(":core:domain"))
+    implementation(project(":core:common"))
+
     implementation(project(":core:geofencing:domain"))
     implementation(project(":core:geofencing:di"))
     implementation(project(":core:geofencing:data"))
@@ -75,8 +76,6 @@ dependencies {
     //Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
-    implementation(libs.dagger)
-    ksp(libs.dagger.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
     //Maps

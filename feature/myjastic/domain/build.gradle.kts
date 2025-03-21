@@ -15,7 +15,8 @@ kotlin {
 }
 
 dependencies {
-    api(project(":core:domain"))
+    implementation(project(":core:common"))
+    implementation(project(":core:base"))
     implementation(project(":core:contacts:domain"))
 
     implementation(libs.javax.inject)

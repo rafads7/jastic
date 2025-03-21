@@ -39,7 +39,8 @@ android {
 dependencies {
 
     implementation(project(":core:ui"))
-    implementation(project(":core:ui:permissions"))
+
+    implementation(project(":core:permissions"))
 
     implementation(project(":core:navigation"))
     
@@ -58,6 +59,7 @@ dependencies {
     //Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     //Serialization
     implementation(libs.kotlinx.serialization.json)

@@ -41,8 +41,7 @@ android {
 
 dependencies {
 
-    implementation(project(":core:domain"))
-
+    implementation(project(":core:common"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -73,7 +72,4 @@ dependencies {
     //Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.dagger)
-    ksp(libs.dagger.compiler)
 }

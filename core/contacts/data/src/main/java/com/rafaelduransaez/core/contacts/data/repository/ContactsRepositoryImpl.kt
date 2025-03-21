@@ -1,10 +1,10 @@
 package com.rafaelduransaez.core.contacts.data.repository
 
+import com.rafaelduransaez.core.base.models.JasticResult
 import com.rafaelduransaez.core.contacts.data.source.ContactsSource
 import com.rafaelduransaez.core.contacts.domain.Contact
 import com.rafaelduransaez.core.contacts.domain.ContactSelectionError
 import com.rafaelduransaez.core.contacts.domain.ContactsRepository
-import com.rafaelduransaez.core.domain.models.JasticResult
 import javax.inject.Inject
 import javax.inject.Singleton
 

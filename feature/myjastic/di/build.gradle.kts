@@ -44,7 +44,7 @@ dependencies {
     implementation(project(":feature:myjastic:domain"))
     implementation(project(":feature:myjastic:data"))
     implementation(project(":feature:myjastic:presentation"))
-    implementation(project(":core:location"))
+    //implementation(project(":core:location"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -56,7 +56,4 @@ dependencies {
     //Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.dagger)
-    ksp(libs.dagger.compiler)
 }

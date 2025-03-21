@@ -34,7 +34,6 @@ android {
 
 dependencies {
 
-    implementation(project(":core:domain"))
     implementation(project(":core:contacts:domain"))
 
     implementation(libs.androidx.core.ktx)

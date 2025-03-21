@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.rafaelduransaez.core.contacts.domain.Contact
 import com.rafaelduransaez.core.domain.extensions.empty
-import com.rafaelduransaez.core.domain.models.GeofenceLocation
+import com.rafaelduransaez.feature.map.domain.model.GeofenceLocation
 import com.rafaelduransaez.feature.myjastic.domain.usecase.GetContactInfoUseCase
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.JasticPointDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -91,9 +91,9 @@ class JasticPointDetailViewModel @Inject constructor(
 data class JasticPointDetailUiState(
     val isLoading: Boolean = false,
     val error: Boolean = false,
-    val alias: String = String.empty(),
+    val alias: String = String.empty,
     val location: GeofenceLocation = GeofenceLocation(),
-    val message: String = String.empty(),
+    val message: String = String.empty,
     val contact: Contact = Contact()
 ) {
     val isSaveEnabled: Boolean

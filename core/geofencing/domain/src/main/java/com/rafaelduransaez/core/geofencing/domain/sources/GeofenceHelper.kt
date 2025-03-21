@@ -1,12 +1,10 @@
 package com.rafaelduransaez.core.geofencing.domain.sources
 
+import com.rafaelduransaez.core.geofencing.domain.JasticGeofence
+
 interface GeofenceHelper {
     fun addGeofence(
-        key: String,
-        latitude: Double,
-        longitude: Double,
-        radiusInMeters: Float,
-        expirationTimeInMillis: Long,
+        jasticGeofence: JasticGeofence,
         onAdded: () -> Unit = { }
     )
 

@@ -1,11 +1,11 @@
 package com.rafaelduransaez.feature.myjastic.presentation.navigation
 
-import com.rafaelduransaez.core.navigation.FeatureNavAction
+import com.rafaelduransaez.core.navigation.deprecated_feature_navigator.FeatureNavAction
 import com.rafaelduransaez.core.domain.extensions.negative
 
 @Deprecated("This class will not be used while OnRouteTo is used.")
 sealed class MyJasticNavActions : FeatureNavAction {
     data object Back : MyJasticNavActions()
     data object Map : MyJasticNavActions()
-    data class JasticPointDetail(val id: Int = Int.negative()) : MyJasticNavActions()
+    data class JasticPointDetail(val id: Int = Int.negative) : MyJasticNavActions()
 }

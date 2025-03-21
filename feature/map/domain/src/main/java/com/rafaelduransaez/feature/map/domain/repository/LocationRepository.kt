@@ -1,8 +1,8 @@
 package com.rafaelduransaez.feature.map.domain.repository
 
-import com.rafaelduransaez.core.domain.models.GeofenceLocation
-import com.rafaelduransaez.core.domain.models.JasticResult
-import com.rafaelduransaez.core.domain.models.NetworkError
+import com.rafaelduransaez.core.base.models.JasticResult
+import com.rafaelduransaez.core.base.models.NetworkError
+import com.rafaelduransaez.feature.map.domain.model.GeofenceLocation
 import kotlinx.coroutines.flow.Flow
 
 interface LocationRepository {

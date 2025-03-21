@@ -83,7 +83,7 @@ internal fun MyJasticScreen(
                             .padding(JasticTheme.size.large)
                             .align(Alignment.BottomEnd)
                     ) {
-                        onRouteTo(MyJasticRoutes.JasticPointDetail(Int.negative()))
+                        onRouteTo(MyJasticRoutes.JasticPointDetail(Int.negative))
                     }
                 }
             }
