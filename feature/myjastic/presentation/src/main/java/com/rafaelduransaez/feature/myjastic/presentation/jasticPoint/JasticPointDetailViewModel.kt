@@ -4,7 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.rafaelduransaez.base.presentation.viewmodel.JasticViewModel
 import com.rafaelduransaez.core.base.models.DatabaseError
+import com.rafaelduransaez.core.contacts.domain.Contact
 import com.rafaelduransaez.core.domain.extensions.empty
 import com.rafaelduransaez.core.domain.extensions.isPositive
 import com.rafaelduransaez.core.domain.extensions.zero
@@ -15,15 +17,15 @@ import com.rafaelduransaez.feature.myjastic.domain.usecase.GetJasticPointUseCase
 import com.rafaelduransaez.feature.myjastic.domain.usecase.SaveJasticPointUseCase
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.DestinationSavingOptions.Idle
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.DestinationSavingOptions.Update
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailNavState.ToDestinationSelectionMap
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.JasticPointDetail
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toJasticPointDetailUiState
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toJasticPointUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -36,31 +38,37 @@ class JasticPointDetailViewModel @Inject constructor(
     private val getContactInfoUseCase: GetContactInfoUseCase,
     private val getJasticPointUseCase: GetJasticPointUseCase,
     private val saveJasticPointUseCase: SaveJasticPointUseCase
-) : ViewModel() {
+) : ViewModel() {//JasticViewModel<JasticPointDetailNavState>() {
 
     private val _uiState = MutableStateFlow(JasticPointDetailUiState())
     val uiState = _uiState
-        .onStart {
-            loadJasticPointDetail()
-        }.catch {
-            _uiState.update { it.copy(isLoading = false, error = true) }
-        }
         .stateIn(
             scope = viewModelScope,
             initialValue = JasticPointDetailUiState(isLoading = true),
             started = SharingStarted.WhileSubscribed(CACHE_TIMEOUT)
         )
 
+    init {
+        // .onStart is not used in _uiState Flow because it relaunches when we're back from Map.
+        loadJasticPointDetail()
+    }
+
     private val _navState = Channel<JasticPointDetailNavState>()
     val navState = _navState.receiveAsFlow()
+
+    private fun navigateTo(navDestination: JasticPointDetailNavState) {
+        viewModelScope.launch {
+            _navState.send(navDestination)
+        }
+    }
 
     fun onUiEvent(event: JasticPointDetailUserEvent) {
         when (event) {
             is JasticPointDetailUserEvent.AliasUpdate ->
                 _uiState.update { it.copy(jasticPointAlias = event.alias) }
 
-            is JasticPointDetailUserEvent.LocationSelected ->
-                onLocationSelected(event.location)
+            is JasticPointDetailUserEvent.DestinationSelected ->
+                onDestinationSelected(event.location)
 
             is JasticPointDetailUserEvent.MessageUpdate ->
                 _uiState.update { it.copy(jasticPointMessage = event.message) }
@@ -68,23 +76,31 @@ class JasticPointDetailViewModel @Inject constructor(
             is JasticPointDetailUserEvent.ContactSelected ->
                 onContactSelected(event.contactIdentifier)
 
-            is JasticPointDetailUserEvent.LocationAliasUpdate ->
-                _uiState.update { it.copy(destinationAlias = event.locationAlias) }
+            is JasticPointDetailUserEvent.DestinationAliasUpdate ->
+                _uiState.update { it.copy(destinationAlias = event.destinationAlias) }
 
             JasticPointDetailUserEvent.Save -> onSave()
             JasticPointDetailUserEvent.SaveAndGo -> Unit
             is JasticPointDetailUserEvent.DestinationSavingOptionsChanged ->
                 _uiState.update { it.copy(destinationSavingOptions = event.state) }
+
+            JasticPointDetailUserEvent.DestinationIconClicked ->
+                navigateTo(ToDestinationSelectionMap(
+                    latitude = _uiState.value.geofenceLocation.latitude,
+                    longitude = _uiState.value.geofenceLocation.longitude,
+                    radiusInMeters = _uiState.value.geofenceLocation.radiusInMeters
+                ))
         }
     }
 
-    private fun onLocationSelected(location: GeofenceLocation) {
-        val address = location.address.ifEmpty { _uiState.value.geofenceLocation.address }
-        val updatedLocation = location.copy(address = address)
+    private fun onDestinationSelected(selectedLocation: GeofenceLocation) {
+        val address = selectedLocation.address.ifEmpty { _uiState.value.geofenceLocation.address }
+        val updatedLocation = selectedLocation.copy(address = address)
         _uiState.update {
             it.copy(
                 geofenceLocation = updatedLocation,
-                destinationSavingOptions = Update
+                destinationSavingOptions = Update,
+                showDestinationSavingOptions = true
             )
         }
     }
@@ -92,8 +108,17 @@ class JasticPointDetailViewModel @Inject constructor(
     private fun onContactSelected(contactIdentifier: String) {
         viewModelScope.launch {
             getContactInfoUseCase(contactIdentifier).fold(
-                onSuccess = { contact -> _uiState.update { it.copy(contactPhoneNumber = contact.phoneNumber) } },
+                onSuccess = ::onGetContactInfoSuccess,
                 onFailure = { _uiState.update { it.copy(error = true) } }
+            )
+        }
+    }
+
+    private fun onGetContactInfoSuccess(contact: Contact) {
+        _uiState.update {
+            it.copy(
+                contactPhoneNumber = contact.phoneNumber,
+                contactAlias = contact.name
             )
         }
     }
@@ -118,10 +143,7 @@ class JasticPointDetailViewModel @Inject constructor(
 
     private fun onJasticPointSaved(jasticPointId: Long) {
         _uiState.update { it.copy(isLoading = false) }
-        viewModelScope.launch {
-            _navState.send(JasticPointDetailNavState.ToMyJasticList)
-        }
-
+        navigateTo(JasticPointDetailNavState.ToMyJasticList)
     }
 
     private fun onJasticPointFailedToSaved(error: DatabaseError) {
@@ -175,8 +197,8 @@ data class JasticPointDetailUiState(
     val geofenceLocation: GeofenceLocation = GeofenceLocation(),
     val destinationId: Long = Long.zero,
     val destinationAlias: String = String.empty,
-    val destinationSavingOptions: DestinationSavingOptions = Idle
-
+    val destinationSavingOptions: DestinationSavingOptions = Idle,
+    val showDestinationSavingOptions: Boolean = false
 ) {
     val isSaveEnabled: Boolean
         get() = jasticPointAlias.isNotEmpty()
@@ -190,19 +212,22 @@ data class JasticPointDetailUiState(
 sealed interface JasticPointDetailUserEvent {
     data object Save : JasticPointDetailUserEvent
     data object SaveAndGo : JasticPointDetailUserEvent
-    data class LocationSelected(val location: GeofenceLocation) : JasticPointDetailUserEvent
+    data class DestinationSelected(val location: GeofenceLocation) : JasticPointDetailUserEvent
     data class AliasUpdate(val alias: String) : JasticPointDetailUserEvent
     data class MessageUpdate(val message: String) : JasticPointDetailUserEvent
     data class ContactSelected(val contactIdentifier: String) : JasticPointDetailUserEvent
+    data class DestinationAliasUpdate(val destinationAlias: String) : JasticPointDetailUserEvent
+    data object DestinationIconClicked : JasticPointDetailUserEvent
     data class DestinationSavingOptionsChanged(val state: DestinationSavingOptions) :
         JasticPointDetailUserEvent
-
-    data class LocationAliasUpdate(val locationAlias: String) : JasticPointDetailUserEvent
 }
 
 sealed interface JasticPointDetailNavState {
     data object Idle : JasticPointDetailNavState
     data object ToMyJasticList : JasticPointDetailNavState
+    data class ToDestinationSelectionMap(
+        val latitude: Double, val longitude: Double, val radiusInMeters: Float
+    ) : JasticPointDetailNavState
 }
 
 enum class DestinationSavingOptions { Idle, Save, Update }

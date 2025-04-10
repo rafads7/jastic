@@ -26,16 +26,16 @@ class AndroidContactsSource @Inject constructor(
 
             contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
                 if (!cursor.moveToFirst()) {
-                    return@withContext JasticResult.failure(ContactSelectionError.FieldNotFound)
+                    return@withContext failure(ContactSelectionError.FieldNotFound)
                 }
 
                 val id = cursor.getString(cursor.getColumnIndexOrThrow(Contacts._ID))
                 val name = cursor.getString(cursor.getColumnIndexOrThrow(Contacts.DISPLAY_NAME)).orEmpty()
                 val phoneNumber = getPhoneNumber(id)
 
-                return@withContext JasticResult.success(Contact(id = id, name = name, phoneNumber = phoneNumber))
+                return@withContext success(Contact(id = id, name = name, phoneNumber = phoneNumber))
             }
-            return@withContext JasticResult.failure(ContactSelectionError.Unknown)
+            return@withContext failure(ContactSelectionError.Unknown)
         }
 
         private fun getPhoneNumber(contactId: String): String {

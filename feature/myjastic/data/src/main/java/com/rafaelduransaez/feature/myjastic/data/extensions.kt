@@ -13,7 +13,8 @@ fun JasticDestinationPoint.toJasticListItemUI() = JasticPointListItemUI(
     alias = point.alias,
     address = destination.address,
     contactName = point.contactName,
-    contactPhone = point.contactPhone
+    contactPhone = point.contactPhone,
+    message = point.message
 )
 
 fun JasticDestinationPoint.toJasticPointUI() = JasticPointUI(

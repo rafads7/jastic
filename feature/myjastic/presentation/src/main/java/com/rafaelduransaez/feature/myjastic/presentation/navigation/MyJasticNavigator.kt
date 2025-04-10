@@ -12,7 +12,7 @@ import com.rafaelduransaez.core.navigation.NavigationGraphs.MyJasticGraph
 import com.rafaelduransaez.core.permissions.OnPermissionNeeded
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailNavState
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailScreen
-import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.LocationSelected
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.DestinationSelected
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailViewModel
 import com.rafaelduransaez.feature.myjastic.presentation.myJastic.MyJasticScreen
 import com.rafaelduransaez.feature.myjastic.presentation.myJastic.MyJasticViewModel
@@ -46,7 +46,7 @@ fun NavGraphBuilder.myJasticNavGraph(
                 LaunchedEffect(this) {
                     if (keys().isNotEmpty()) {
                         val location = this@with.toGeofenceLocation()
-                        viewModel.onUiEvent(LocationSelected(location))
+                        viewModel.onUiEvent(DestinationSelected(location))
                         /*
                         val data = getAndRemove<MapNavData>(KEY_DATA, MapNavData.Empty)
                         when (data) {

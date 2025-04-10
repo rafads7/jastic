@@ -45,6 +45,7 @@ dependencies {
 
     implementation(project(":core:ui"))
     implementation(project(":core:permissions"))
+    implementation(project(":core:base:presentation"))
 
     implementation(project(":core:navigation"))
 

@@ -133,9 +133,9 @@ internal fun JasticPointListItem(
         Box(Modifier.fillMaxSize()) {
             Column {
                 JCardHeader(text = point.alias)
-                JCardBody(text = point.alias)
-                JCardBody(text = point.alias)
-                JCardBody(text = point.alias)
+                JCardBody(text = point.address)
+                JCardBody(text = "${point.contactName}: ${point.contactPhone}")
+                JCardBody(text = point.message)
             }
             JCardIconAction(
                 modifier = Modifier.align(Alignment.BottomEnd),

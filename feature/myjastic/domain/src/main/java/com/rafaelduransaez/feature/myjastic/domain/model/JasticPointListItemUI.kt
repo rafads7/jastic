@@ -8,5 +8,6 @@ data class JasticPointListItemUI(
     val alias: String = String.empty,
     val address: String = String.empty,
     val contactName: String = String.empty,
-    val contactPhone: String = String.empty
+    val contactPhone: String = String.empty,
+    val message: String = String.empty
 )

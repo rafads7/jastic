@@ -21,6 +21,7 @@ import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.rafaelduransaez.core.components.common.JasticDatabaseError
 import com.rafaelduransaez.core.components.common.JasticProgressIndicator
 import com.rafaelduransaez.core.components.common.ObserveAsEvent
 import com.rafaelduransaez.core.components.jButton.JSaveAndGoButton
@@ -31,15 +32,15 @@ import com.rafaelduransaez.core.components.jTextField.JOutlinedTextFieldWithIcon
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.Back
 import com.rafaelduransaez.core.navigation.NavRouteTo
-import com.rafaelduransaez.core.navigation.NavigationGraphs
+import com.rafaelduransaez.core.navigation.NavigationGraphs.MapGraph
 import com.rafaelduransaez.core.navigation.invoke
 import com.rafaelduransaez.core.permissions.JasticPermission
 import com.rafaelduransaez.core.permissions.OnPermissionNeeded
 import com.rafaelduransaez.feature.myjastic.presentation.R
-import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.DestinationSavingOptions.Idle
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.AliasUpdate
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.DestinationAliasUpdate
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.DestinationIconClicked
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.DestinationSavingOptionsChanged
-import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.LocationAliasUpdate
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.MessageUpdate
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.Save
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.SaveAndGo
@@ -65,70 +66,58 @@ internal fun JasticPointDetailScreen(
         }
     )
 
-    ObserveAsEvent(flow = navState, key1 = true) {
-        when (it) {
-            JasticPointDetailNavState.Idle -> Unit
-            JasticPointDetailNavState.ToMyJasticList -> onRouteTo(Back)
-        }
-    }
+    NavigationHandler(navState, onRouteTo, onPermissionNeeded)
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(contentPadding)
     ) {
-        Column {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Alias(
-                    alias = uiState.jasticPointAlias,
-                    onAliasChanges = { onUiEvent(AliasUpdate(it)) }
-                )
-                Destination(
-                    location = uiState.geofenceLocation.address,
-                    destinationAlias = uiState.destinationAlias,
-                    onIconClick = {
-                        onPermissionNeeded(JasticPermission.Location) {
-                            with(uiState.geofenceLocation) {
-                                onRouteTo(
-                                    NavigationGraphs.MapGraph(
-                                        latitude = latitude,
-                                        longitude = longitude,
-                                        radiusInMeters = radiusInMeters
-                                    )
-                                )
-                                //onRouteTo(MyJasticRoutes.Map, (this.toMapNavLocationData()))
+        if (uiState.error) {
+            JasticDatabaseError()
+        } else {
+
+            if (uiState.isLoading) {
+                JasticProgressIndicator(modifier = Modifier.fillMaxSize())
+            }
+
+            Column {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Alias(
+                        alias = uiState.jasticPointAlias,
+                        onAliasChanges = { onUiEvent(AliasUpdate(it)) }
+                    )
+                    Destination(
+                        destinationAddress = uiState.geofenceLocation.address,
+                        destinationAlias = uiState.destinationAlias,
+                        onIconClick = { onUiEvent(DestinationIconClicked) },
+                        onDestinationAliasChanged = { onUiEvent(DestinationAliasUpdate(it)) },
+                        showSavingOptions = uiState.showDestinationSavingOptions,
+                        savingSelectedOption = uiState.destinationSavingOptions,
+                        onSavingDestinationOptionsChanged = {
+                            onUiEvent(DestinationSavingOptionsChanged(it))
+                        }
+                    )
+                    ContactPhoneNumber(
+                        contactPhoneNumber = uiState.contactPhoneNumber,
+                        onIconClick = {
+                            onPermissionNeeded(JasticPermission.Contacts) {
+                                contactPickerLauncher.launch(null)
                             }
                         }
-                    },
-                    onLocationAliasChanged = { onUiEvent(LocationAliasUpdate(it)) },
-                    selectedOption = uiState.destinationSavingOptions,
-                    onSavingDestinationOptionsChanged = {
-                        onUiEvent(DestinationSavingOptionsChanged(it))
-                    }
-                )
-                ContactPhoneNumber(
-                    contactPhoneNumber = uiState.contactPhoneNumber,
-                    onIconClick = {
-                        onPermissionNeeded(JasticPermission.Contacts) {
-                            contactPickerLauncher.launch(null)
-                        }
-                    }
-                )
-                Message(
-                    message = uiState.jasticPointMessage,
-                    onMessageChanges = { onUiEvent(MessageUpdate(it)) }
-                )
+                    )
+                    Message(
+                        message = uiState.jasticPointMessage,
+                        onMessageChanges = { onUiEvent(MessageUpdate(it)) }
+                    )
+                }
+                JSaveButton(enabled = uiState.isSaveEnabled) { onUiEvent(Save) }
+                JSaveAndGoButton { onUiEvent(SaveAndGo) }
             }
-            JSaveButton(enabled = uiState.isSaveEnabled) { onUiEvent(Save) }
-            JSaveAndGoButton { onUiEvent(SaveAndGo) }
-        }
-
-        if (uiState.isLoading) {
-            JasticProgressIndicator(modifier = Modifier.fillMaxSize())
         }
     }
 }
@@ -147,16 +136,17 @@ fun Alias(alias: String, onAliasChanges: (String) -> Unit) {
 
 @Composable
 fun Destination(
-    location: String,
+    destinationAddress: String,
     destinationAlias: String,
-    selectedOption: DestinationSavingOptions,
+    showSavingOptions: Boolean,
+    savingSelectedOption: DestinationSavingOptions,
     onSavingDestinationOptionsChanged: (DestinationSavingOptions) -> Unit,
     onIconClick: () -> Unit,
-    onLocationAliasChanged: (String) -> Unit
+    onDestinationAliasChanged: (String) -> Unit
 ) {
 
     JOutlinedTextFieldWithIconButton(
-        text = location,
+        text = destinationAddress,
         onIconClick = onIconClick,
         icon = Icons.Default.LocationOn,
         hint = R.string.str_feature_myjastic_location,
@@ -164,8 +154,8 @@ fun Destination(
         readOnly = true
     )
 
-    if (selectedOption != Idle) {
-        DestinationSaveOptions(selectedOption = selectedOption) {
+    if (showSavingOptions) {
+        DestinationSaveOptions(selectedOption = savingSelectedOption) {
             onSavingDestinationOptionsChanged(it)
         }
     }
@@ -176,7 +166,7 @@ fun Destination(
             .padding(vertical = JasticTheme.size.extraSmall),
         text = destinationAlias,
         hint = R.string.str_feature_myjastic_location_alias,
-        onValueChange = onLocationAliasChanged
+        onValueChange = onDestinationAliasChanged
     )
 
 }
@@ -202,7 +192,10 @@ fun DestinationSaveOptions(
                     unselectedColor = JasticTheme.colorScheme.secondary
                 )
             )
-            JText(textId = R.string.str_feature_myjastic_save_new_location)
+            JText(
+                modifier = Modifier.padding(start = JasticTheme.size.extraSmall),
+                textId = R.string.str_feature_myjastic_save_new_location
+            )
         }
 
         Row(
@@ -220,7 +213,9 @@ fun DestinationSaveOptions(
                     unselectedColor = JasticTheme.colorScheme.secondary
                 )
             )
-            JText(textId = R.string.str_feature_myjastic_update_current_location)
+            JText(
+                modifier = Modifier.padding(start = JasticTheme.size.extraSmall),
+                textId = R.string.str_feature_myjastic_update_current_location)
         }
     }
 }
@@ -247,4 +242,30 @@ fun ContactPhoneNumber(contactPhoneNumber: String, onIconClick: () -> Unit) {
         hint = R.string.str_feature_myjastic_contact_phone_number,
         readOnly = true
     )
+}
+
+@Composable
+fun NavigationHandler(
+    navState: Flow<JasticPointDetailNavState>,
+    onRouteTo: NavRouteTo,
+    onPermissionNeeded: OnPermissionNeeded
+) {
+    ObserveAsEvent(flow = navState, key1 = true) {
+        when (it) {
+            JasticPointDetailNavState.Idle -> Unit
+            JasticPointDetailNavState.ToMyJasticList -> onRouteTo(Back)
+            is JasticPointDetailNavState.ToDestinationSelectionMap -> {
+                onPermissionNeeded(JasticPermission.Location) {
+                    onRouteTo(
+                        MapGraph(
+                            latitude = it.latitude,
+                            longitude = it.longitude,
+                            radiusInMeters = it.radiusInMeters
+                        )
+                    )
+                    //onRouteTo(MyJasticRoutes.Map, (this.toMapNavLocationData()))
+                }
+            }
+        }
+    }
 }
