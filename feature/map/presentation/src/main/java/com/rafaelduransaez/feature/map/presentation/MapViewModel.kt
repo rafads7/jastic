@@ -3,15 +3,22 @@ package com.rafaelduransaez.feature.map.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.toRoute
 import com.google.android.gms.maps.model.LatLng
-import com.rafaelduransaez.feature.map.domain.model.GeofenceLocation
+import com.rafaelduransaez.core.base.models.DatabaseError
+import com.rafaelduransaez.core.domain.extensions.isPositive
+import com.rafaelduransaez.core.domain.extensions.zero
 import com.rafaelduransaez.core.geofencing.domain.sources.GeofenceHelper
 import com.rafaelduransaez.core.navigation.NavigationGraphs
+import com.rafaelduransaez.feature.map.domain.model.GeofenceLocation
 import com.rafaelduransaez.feature.map.domain.usecase.FetchAddressFromLocationUseCase
 import com.rafaelduransaez.feature.map.domain.usecase.FetchCurrentLocationUseCase
 import com.rafaelduransaez.feature.map.presentation.utils.toGeofence
 import com.rafaelduransaez.feature.map.presentation.utils.toGeofenceLocation
+import com.rafaelduransaez.feature.saved_destinations.domain.model.DestinationUI
+import com.rafaelduransaez.feature.saved_destinations.domain.usecases.GetSavedDestinationUseCase
+import com.rafaelduransaez.feature.saved_destinations.domain.usecases.GetSavedDestinationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,10 +36,9 @@ class MapViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val fetchCurrentLocationUseCase: FetchCurrentLocationUseCase,
     private val fetchAddressFromLocationUseCase: FetchAddressFromLocationUseCase,
+    private val getDestinationUseCase: GetSavedDestinationUseCase,
     private val geofenceHelper: GeofenceHelper
 ) : ViewModel() {
-
-    private val detailId = savedStateHandle.get<Int>("id")
 
     private val _uiState: MutableStateFlow<MapUiState> =
         MutableStateFlow(MapUiState(isLoading = true))
@@ -46,7 +52,9 @@ class MapViewModel @Inject constructor(
 
     internal fun onUiEvent(event: MapUiEvent) {
         when (event) {
-            is MapUiEvent.OnGeofenceRadiusChanged -> updateGeofenceRadius(event.radius)
+            is MapUiEvent.OnGeofenceRadiusChanged ->
+                _uiState.update { it.copy(mapLocation = it.mapLocation.copy(radiusInMeters = event.radius)) }
+
             is MapUiEvent.MapLocationSelected -> fetchAddressFromLocation(
                 event.location,
                 event.radius
@@ -127,21 +135,44 @@ class MapViewModel @Inject constructor(
 
     //private fun setSavedLocation(mapData: MapNavData.Location) {
     private fun setSavedLocation(mapData: NavigationGraphs.MapGraph) {
+        if (mapData.id.isPositive()) {
+            viewModelScope.launch {
+                getDestinationUseCase(mapData.id).collect {
+                    it.fold(
+                        onSuccess = ::onGetSavedDestinationSuccess,
+                        onFailure = ::onGetSavedDestinationFailure
+                    )
+                }
+            }
+        } else {
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    isLocationSelected = true,
+                    mapLocation = GeofenceLocation(
+                        latitude = mapData.latitude,
+                        longitude = mapData.longitude,
+                        radiusInMeters = mapData.radiusInMeters
+                    )
+                )
+            }
+
+        }
+    }
+
+    private fun onGetSavedDestinationSuccess(destination: DestinationUI) {
         _uiState.update {
             it.copy(
                 isLoading = false,
                 isLocationSelected = true,
-                mapLocation = GeofenceLocation(
-                    latitude = mapData.latitude,
-                    longitude = mapData.longitude,
-                    radiusInMeters = mapData.radiusInMeters
-                )
+                destinationId = destination.id,
+                mapLocation = destination.toGeofenceLocation()
             )
         }
     }
 
-    private fun updateGeofenceRadius(radius: Float) {
-        _uiState.update { it.copy(mapLocation = it.mapLocation.copy(radiusInMeters = radius)) }
+    private fun onGetSavedDestinationFailure(error: DatabaseError) {
+        _uiState.update { it.copy(isLoading = false, error = true) }
     }
 
     private fun cancelGeofencing() {
@@ -160,15 +191,16 @@ class MapViewModel @Inject constructor(
 data class MapUiState(
     val isLoading: Boolean = false,
     val isLocationSelected: Boolean = false,
+    val destinationId: Long = Long.zero,
     val mapLocation: GeofenceLocation = GeofenceLocation(),
     val currentLocation: GeofenceLocation = GeofenceLocation(),
     val error: Boolean = false
 )
 
 
-sealed class MapUiEvent {
-    data class MapLocationSelected(val location: LatLng, val radius: Float) : MapUiEvent()
-    data class OnGeofenceRadiusChanged(val radius: Float) : MapUiEvent()
-    data object LocationFetchError : MapUiEvent()
-    data object Cancel : MapUiEvent()
+sealed interface MapUiEvent {
+    data class MapLocationSelected(val location: LatLng, val radius: Float) : MapUiEvent
+    data class OnGeofenceRadiusChanged(val radius: Float) : MapUiEvent
+    data object LocationFetchError : MapUiEvent
+    data object Cancel : MapUiEvent
 }

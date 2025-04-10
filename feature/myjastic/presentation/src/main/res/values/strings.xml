@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="str_feature_myjastic_empty_state_title">Add some Jastic destinations!</string>
-    <string name="str_feature_myjastic_scroll_to_top">Scroll to top</string>
+    <string name="str_feature_myjastic_empty_state_title">Add some JasticPoints!</string>
     <string name="str_feature_myjastic_destiny_point_alias">Destiny point alias</string>
     <string name="str_feature_myjastic_location">Location</string>
     <string name="str_feature_myjastic_address_selected">Address selected (aprox.): %1$s</string>
@@ -12,4 +11,8 @@
     <string name="str_feature_myjastic_go">GO</string>
     <string name="str_feature_myjastic_save_location_future">Save location for future reuse.</string>
     <string name="str_feature_myjastic_alt_edit">EDIT</string>
+    <string name="str_feature_myjastic_location_alias">Location alias (ex: home, work, school…)</string>
+    <string name="str_feature_myjastic_error_state_title">Oops! An unexpected error happened when accessing the database, please click on Retry button to get your Jastic points!</string>
+    <string name="str_feature_myjastic_save_new_location">Save as a new location.</string>
+    <string name="str_feature_myjastic_update_current_location">Update current Destination (JasticPoints using same destination will also be updated).</string>
 </resources>

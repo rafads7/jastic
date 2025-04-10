@@ -37,7 +37,7 @@ fun JButton(
 @Composable
 fun JSaveButton(
     modifier: Modifier = Modifier.fillMaxWidth(),
-    enabled: Boolean = true,
+    enabled: Boolean,
     onSave: () -> Unit
 ) {
     JButton(

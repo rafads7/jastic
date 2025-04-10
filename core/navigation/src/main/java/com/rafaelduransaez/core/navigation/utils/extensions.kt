@@ -6,10 +6,6 @@ import androidx.navigation.navOptions
 import com.rafaelduransaez.core.navigation.Back
 import com.rafaelduransaez.core.navigation.JasticNavigable
 
-
-val Double.Companion.zero: Double
-    get() = 0.0
-
 fun NavHostController.navigateTo(
     route: JasticNavigable,
     navData: Map<String, Any>,

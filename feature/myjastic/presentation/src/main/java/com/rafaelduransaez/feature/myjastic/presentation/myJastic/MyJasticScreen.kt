@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.twotone.Build
 import androidx.compose.material.icons.twotone.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -22,7 +23,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.rafaelduransaez.core.components.common.ColumnItemsSpacer
+import com.rafaelduransaez.core.components.common.JasticDatabaseError
+import com.rafaelduransaez.core.components.common.JasticEmptyScreen
 import com.rafaelduransaez.core.components.common.JasticProgressIndicator
+import com.rafaelduransaez.core.components.common.JasticScrollToTopButton
 import com.rafaelduransaez.core.components.jButton.JButton
 import com.rafaelduransaez.core.components.jCard.JCard
 import com.rafaelduransaez.core.components.jFloatingActionButton.AddFAB
@@ -33,9 +37,10 @@ import com.rafaelduransaez.core.components.jCard.JCardIconAction
 import com.rafaelduransaez.core.components.jText.JTextTitle
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.domain.extensions.negative
+import com.rafaelduransaez.core.domain.extensions.zero
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.invoke
-import com.rafaelduransaez.feature.myjastic.domain.model.JasticPoint
+import com.rafaelduransaez.feature.myjastic.domain.model.JasticPointListItemUI
 import com.rafaelduransaez.feature.myjastic.presentation.R
 import com.rafaelduransaez.feature.myjastic.presentation.myJastic.Constants.FIRST_ITEM_INDEX
 import com.rafaelduransaez.feature.myjastic.presentation.myJastic.Constants.FIRST_ITEM_TO_SCROLL
@@ -63,59 +68,40 @@ internal fun MyJasticScreen(
 
             is MyJasticUiState.ShowMyJasticPoints -> {
                 if (uiState.jasticPoints.isEmpty()) {
-                    EmptyScreen()
+                    JasticEmptyScreen(textId = R.string.str_feature_myjastic_empty_state_title)
                 } else {
                     JasticPointsList(
                         jasticPoints = uiState.jasticPoints,
                         paddingValues = contentPadding,
                         showScrollToTopButton = showScrollToTopButton,
                         listState = listState,
-                        onJasticPointClicked = {
-                            onRouteTo(
-                                MyJasticRoutes.JasticPointDetail(
-                                    it
-                                )
-                            )
-                        }
+                        onJasticPointClicked = { onRouteTo(MyJasticRoutes.JasticPointDetail(it)) }
                     )
-                    AddFAB(
-                        modifier = Modifier
-                            .padding(JasticTheme.size.large)
-                            .align(Alignment.BottomEnd)
-                    ) {
-                        onRouteTo(MyJasticRoutes.JasticPointDetail(Int.negative))
-                    }
                 }
             }
+
+            MyJasticUiState.Error -> {
+                JasticDatabaseError(textId = R.string.str_feature_myjastic_error_state_title)
+            }
+        }
+        AddFAB(
+            modifier = Modifier
+                .padding(JasticTheme.size.large)
+                .align(Alignment.BottomEnd)
+        ) {
+            onRouteTo(MyJasticRoutes.JasticPointDetail())
         }
     }
 }
 
 @Composable
-internal fun EmptyScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        JIcon(
-            icon = Icons.TwoTone.LocationOn,
-            tint = JasticTheme.colorScheme.secondary,
-            contentDescriptionResId = R.string.str_feature_myjastic_empty_state_title
-        )
-        ColumnItemsSpacer(JasticTheme.size.large)
-        JTextTitle(textId = R.string.str_feature_myjastic_empty_state_title)
-    }
-}
-
-@Composable
 internal fun JasticPointsList(
-    jasticPoints: List<JasticPoint>,
+    jasticPoints: List<JasticPointListItemUI>,
     paddingValues: PaddingValues = PaddingValues(all = JasticTheme.size.normal),
     showScrollToTopButton: Boolean = false,
     listState: LazyListState = rememberLazyListState(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    onJasticPointClicked: (Int) -> Unit
+    onJasticPointClicked: (Long) -> Unit
 ) {
     Box {
         LazyColumn(
@@ -130,22 +116,7 @@ internal fun JasticPointsList(
         }
 
         AnimatedVisibility(showScrollToTopButton, modifier = Modifier.align(Alignment.TopCenter)) {
-            ScrollToTopButton(coroutineScope, listState)
-        }
-    }
-}
-
-@Composable
-internal fun BoxScope.ScrollToTopButton(
-    coroutineScope: CoroutineScope,
-    listState: LazyListState
-) {
-    JButton(
-        modifier = Modifier.align(Alignment.TopCenter),
-        textId = R.string.str_feature_myjastic_scroll_to_top
-    ) {
-        coroutineScope.launch {
-            listState.animateScrollToItem(FIRST_ITEM_INDEX)
+            JasticScrollToTopButton(coroutineScope = coroutineScope, listState = listState)
         }
     }
 }
@@ -153,8 +124,8 @@ internal fun BoxScope.ScrollToTopButton(
 
 @Composable
 internal fun JasticPointListItem(
-    point: JasticPoint,
-    onJasticPointClicked: (id: Int) -> Unit
+    point: JasticPointListItemUI,
+    onJasticPointClicked: (id: Long) -> Unit
 ) {
     JCard(
         onClick = { onJasticPointClicked(point.id) }

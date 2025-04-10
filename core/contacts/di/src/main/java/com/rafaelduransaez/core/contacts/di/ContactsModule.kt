@@ -1,6 +1,5 @@
 package com.rafaelduransaez.core.contacts.di
 
-import android.content.ContentResolver
 import android.content.Context
 import com.rafaelduransaez.core.contacts.data.repository.ContactsRepositoryImpl
 import com.rafaelduransaez.core.contacts.data.source.AndroidContactsSource
@@ -21,7 +20,6 @@ object ContactsModule {
     @Provides
     @Singleton
     fun provideContactsSource(
-        //@IODispatcher dispatcher: CoroutineDispatcher,
         @ApplicationContext context: Context
     ): ContactsSource = AndroidContactsSource(Dispatchers.IO, context.contentResolver)
 

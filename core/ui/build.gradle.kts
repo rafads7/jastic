@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlin.compose) // USE WHEN KOTLIN VERSION 2.0.0+
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -63,6 +63,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.material.icons.core)
+    implementation(libs.androidx.material.icons.extended)
     //implementation(libs.androidx.material3.adaptive.navigation.suite)
     implementation(libs.androidx.material3.windows.sizeclass)
 

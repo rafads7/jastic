@@ -16,33 +16,39 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.rafaelduransaez.core.components.common.JasticProgressIndicator
+import com.rafaelduransaez.core.components.common.ObserveAsEvent
 import com.rafaelduransaez.core.components.jButton.JSaveAndGoButton
 import com.rafaelduransaez.core.components.jButton.JSaveButton
 import com.rafaelduransaez.core.components.jText.JText
 import com.rafaelduransaez.core.components.jTextField.JOutlinedTextField
 import com.rafaelduransaez.core.components.jTextField.JOutlinedTextFieldWithIconButton
 import com.rafaelduransaez.core.designsystem.JasticTheme
+import com.rafaelduransaez.core.navigation.Back
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.navigation.invoke
 import com.rafaelduransaez.core.permissions.JasticPermission
 import com.rafaelduransaez.core.permissions.OnPermissionNeeded
 import com.rafaelduransaez.feature.myjastic.presentation.R
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.DestinationSavingOptions.Idle
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.AliasUpdate
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.DestinationSavingOptionsChanged
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.LocationAliasUpdate
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.MessageUpdate
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.Save
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.SaveAndGo
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 internal fun JasticPointDetailScreen(
     uiState: JasticPointDetailUiState,
+    navState: Flow<JasticPointDetailNavState>,
     onUiEvent: (JasticPointDetailUserEvent) -> Unit,
     onRouteTo: NavRouteTo,
     onPermissionNeeded: OnPermissionNeeded,
@@ -59,6 +65,13 @@ internal fun JasticPointDetailScreen(
         }
     )
 
+    ObserveAsEvent(flow = navState, key1 = true) {
+        when (it) {
+            JasticPointDetailNavState.Idle -> Unit
+            JasticPointDetailNavState.ToMyJasticList -> onRouteTo(Back)
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -71,23 +84,34 @@ internal fun JasticPointDetailScreen(
                     .verticalScroll(rememberScrollState())
             ) {
                 Alias(
-                    alias = uiState.alias,
+                    alias = uiState.jasticPointAlias,
                     onAliasChanges = { onUiEvent(AliasUpdate(it)) }
                 )
-                Location(
-                    location = uiState.location.address,
+                Destination(
+                    location = uiState.geofenceLocation.address,
+                    destinationAlias = uiState.destinationAlias,
                     onIconClick = {
                         onPermissionNeeded(JasticPermission.Location) {
-                            with(uiState.location) {
-                                onRouteTo(NavigationGraphs.MapGraph(latitude, longitude, radiusInMeters))
+                            with(uiState.geofenceLocation) {
+                                onRouteTo(
+                                    NavigationGraphs.MapGraph(
+                                        latitude = latitude,
+                                        longitude = longitude,
+                                        radiusInMeters = radiusInMeters
+                                    )
+                                )
                                 //onRouteTo(MyJasticRoutes.Map, (this.toMapNavLocationData()))
                             }
                         }
                     },
-                    onSaveLocationCheck = { onUiEvent(JasticPointDetailUserEvent.SaveLocation(it)) }
+                    onLocationAliasChanged = { onUiEvent(LocationAliasUpdate(it)) },
+                    selectedOption = uiState.destinationSavingOptions,
+                    onSavingDestinationOptionsChanged = {
+                        onUiEvent(DestinationSavingOptionsChanged(it))
+                    }
                 )
                 ContactPhoneNumber(
-                    contactPhoneNumber = uiState.contact.phoneNumber,
+                    contactPhoneNumber = uiState.contactPhoneNumber,
                     onIconClick = {
                         onPermissionNeeded(JasticPermission.Contacts) {
                             contactPickerLauncher.launch(null)
@@ -95,12 +119,16 @@ internal fun JasticPointDetailScreen(
                     }
                 )
                 Message(
-                    message = uiState.message,
+                    message = uiState.jasticPointMessage,
                     onMessageChanges = { onUiEvent(MessageUpdate(it)) }
                 )
             }
-            JSaveButton { onUiEvent(JasticPointDetailUserEvent.Save) }
-            JSaveAndGoButton { onUiEvent(JasticPointDetailUserEvent.SaveAndGo) }
+            JSaveButton(enabled = uiState.isSaveEnabled) { onUiEvent(Save) }
+            JSaveAndGoButton { onUiEvent(SaveAndGo) }
+        }
+
+        if (uiState.isLoading) {
+            JasticProgressIndicator(modifier = Modifier.fillMaxSize())
         }
     }
 }
@@ -118,8 +146,14 @@ fun Alias(alias: String, onAliasChanges: (String) -> Unit) {
 }
 
 @Composable
-fun Location(location: String, onIconClick: () -> Unit, onSaveLocationCheck: (Boolean) -> Unit) {
-    var isChecked by rememberSaveable { mutableStateOf(true) }
+fun Destination(
+    location: String,
+    destinationAlias: String,
+    selectedOption: DestinationSavingOptions,
+    onSavingDestinationOptionsChanged: (DestinationSavingOptions) -> Unit,
+    onIconClick: () -> Unit,
+    onLocationAliasChanged: (String) -> Unit
+) {
 
     JOutlinedTextFieldWithIconButton(
         text = location,
@@ -130,25 +164,67 @@ fun Location(location: String, onIconClick: () -> Unit, onSaveLocationCheck: (Bo
         readOnly = true
     )
 
-    Row(
-        modifier = Modifier.clickable {
-            isChecked = !isChecked
-            onSaveLocationCheck(isChecked)
-        },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Checkbox(
-            checked = isChecked,
-            onCheckedChange = null,
-            colors = CheckboxDefaults.colors(
-                checkedColor = JasticTheme.colorScheme.secondaryContainer,
-                uncheckedColor = JasticTheme.colorScheme.secondary,
-                checkmarkColor = JasticTheme.colorScheme.secondary
+    if (selectedOption != Idle) {
+        DestinationSaveOptions(selectedOption = selectedOption) {
+            onSavingDestinationOptionsChanged(it)
+        }
+    }
+
+    JOutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = JasticTheme.size.extraSmall),
+        text = destinationAlias,
+        hint = R.string.str_feature_myjastic_location_alias,
+        onValueChange = onLocationAliasChanged
+    )
+
+}
+
+@Composable
+fun DestinationSaveOptions(
+    selectedOption: DestinationSavingOptions,
+    onOptionSelected: (DestinationSavingOptions) -> Unit
+) {
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = JasticTheme.size.extraSmall)
+                .clickable { onOptionSelected(DestinationSavingOptions.Save) },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = selectedOption == DestinationSavingOptions.Save,
+                onClick = null, // Clicks handled on the whole Row
+                colors = RadioButtonDefaults.colors(
+                    selectedColor = JasticTheme.colorScheme.secondaryContainer,
+                    unselectedColor = JasticTheme.colorScheme.secondary
+                )
             )
-        )
-        JText(textId = R.string.str_feature_myjastic_save_location_future)
+            JText(textId = R.string.str_feature_myjastic_save_new_location)
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = JasticTheme.size.extraSmall)
+                .clickable { onOptionSelected(DestinationSavingOptions.Update) },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = selectedOption == DestinationSavingOptions.Update,
+                onClick = null,
+                colors = RadioButtonDefaults.colors(
+                    selectedColor = JasticTheme.colorScheme.secondaryContainer,
+                    unselectedColor = JasticTheme.colorScheme.secondary
+                )
+            )
+            JText(textId = R.string.str_feature_myjastic_update_current_location)
+        }
     }
 }
+
 
 @Composable
 fun Message(message: String, onMessageChanges: (String) -> Unit) {
@@ -168,6 +244,7 @@ fun ContactPhoneNumber(contactPhoneNumber: String, onIconClick: () -> Unit) {
         text = contactPhoneNumber,
         onIconClick = onIconClick,
         icon = Icons.Default.Person,
-        hint = R.string.str_feature_myjastic_contact_phone_number
+        hint = R.string.str_feature_myjastic_contact_phone_number,
+        readOnly = true
     )
 }

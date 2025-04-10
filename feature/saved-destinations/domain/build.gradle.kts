@@ -11,3 +11,11 @@ kotlin {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
     }
 }
+
+dependencies {
+    api(project(":core:common"))
+    api(project(":core:base"))
+
+    implementation(libs.javax.inject)
+    implementation(libs.kotlinx.coroutines.core)
+}

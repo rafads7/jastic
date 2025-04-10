@@ -21,11 +21,11 @@ sealed class JasticResult<out S, out F: JasticFailure> {
     }
 
     companion object {
-        fun <T> Companion.success(value: T): Success<T> {
+        fun <T> success(value: T): Success<T> {
             return Success(value)
         }
 
-        fun <T: JasticFailure> Companion.failure(value: T): Failure<T> {
+        fun <T: JasticFailure> failure(value: T): Failure<T> {
             return Failure(value)
         }
     }

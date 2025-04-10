@@ -73,10 +73,11 @@ dependencies {
 
     implementation(project(":core:geofencing:data"))
 
-    implementation(project(":feature:myjastic:presentation"))
+    implementation(project(":feature:myjastic:lib"))
+    implementation(project(":feature:saved-destinations:lib"))
+
     implementation(project(":feature:map:presentation"))
     implementation(project(":feature:settings:presentation"))
-    implementation(project(":feature:saved-destinations:presentation"))
 
     //Android
     implementation(libs.androidx.core.ktx)

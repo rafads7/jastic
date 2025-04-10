@@ -5,3 +5,5 @@ val Int.Companion.zero: Int
 
 val Int.Companion.negative
     get() = -1
+
+fun Int.isPositive() = this > Int.zero

@@ -5,4 +5,6 @@
     <string name="str_save_and_go">Guardar e Ir</string>
     <string name="str_core_ui_ok">OK</string>
     <string name="str_core_ui_cancel">Cancelar</string>
+    <string name="str_core_ui_database_error">¡Ups! Surgió un error accediendo a la bse de datos. Inténtalo de nuevo, ¡por favor!</string>
+    <string name="str_core_ui_scroll_to_top">Deslizar al inicio</string>
 </resources>

@@ -9,7 +9,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.feature.saved_destinations.presentation.R
-import com.rafaelduransaez.feature.saved_destinations.domain.SavedDestination
+import com.rafaelduransaez.feature.saved_destinations.domain.model.DestinationUI
+import com.rafaelduransaez.feature.saved_destinations.domain.model.DestinationsListItemUI
 
 @Composable
 fun AnnotatedString.Builder.Property(name: String, value: String, end: Boolean = false) {
@@ -25,7 +26,7 @@ fun AnnotatedString.Builder.Property(name: String, value: String, end: Boolean =
 }
 
 @Composable
-fun SavedDestination.toAnnotatedString() = buildAnnotatedString {
+fun DestinationsListItemUI.toAnnotatedString() = buildAnnotatedString {
     Property(
         name = stringResource(R.string.str_feature_saved_destinations_radius),
         value = radiusInMeters.toString(),

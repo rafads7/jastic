@@ -3,4 +3,5 @@
     <string name="str_feature_saved_destinations_radius">Radius(meters)</string>
     <string name="str_feature_saved_destinations_address">Address</string>
     <string name="str_feature_saved_destinations_lets_go">LET\'S GO!</string>
+    <string name="str_feature_saved_destinations_empty_screen">Add your most visited destinations!</string>
 </resources>

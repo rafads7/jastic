@@ -10,6 +10,7 @@ import androidx.navigation.navigation
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs.MyJasticGraph
 import com.rafaelduransaez.core.permissions.OnPermissionNeeded
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailNavState
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailScreen
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.LocationSelected
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailViewModel
@@ -18,6 +19,7 @@ import com.rafaelduransaez.feature.myjastic.presentation.myJastic.MyJasticViewMo
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.JasticPointDetail
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.MyJastic
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toGeofenceLocation
+import kotlinx.coroutines.flow.Flow
 
 fun NavGraphBuilder.myJasticNavGraph(
     onRouteTo: NavRouteTo,
@@ -38,6 +40,7 @@ fun NavGraphBuilder.myJasticNavGraph(
         composable<JasticPointDetail> { currentBackStackEntry ->
             val viewModel: JasticPointDetailViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val navState: Flow<JasticPointDetailNavState> = viewModel.navState
 
             with(currentBackStackEntry.savedStateHandle) {
                 LaunchedEffect(this) {
@@ -58,6 +61,7 @@ fun NavGraphBuilder.myJasticNavGraph(
 
             JasticPointDetailScreen(
                 uiState = uiState,
+                navState = navState,
                 onUiEvent = viewModel::onUiEvent,
                 onRouteTo = onRouteTo,
                 onPermissionNeeded = onPermissionNeeded

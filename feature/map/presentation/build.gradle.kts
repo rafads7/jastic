@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":core:geofencing:data"))
 
     implementation(project(":feature:map:domain"))
+    implementation(project(":feature:saved-destinations:domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

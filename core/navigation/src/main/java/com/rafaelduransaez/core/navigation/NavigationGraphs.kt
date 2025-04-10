@@ -1,25 +1,29 @@
 package com.rafaelduransaez.core.navigation
 
-import com.rafaelduransaez.core.navigation.utils.zero
+import com.rafaelduransaez.core.domain.extensions.zero
 import kotlinx.serialization.Serializable
 
-sealed class NavigationGraphs: JasticNavigable {
+sealed class NavigationGraphs : JasticNavigable {
     @Serializable
-    data object MyJasticGraph: NavigationGraphs()
+    data object MyJasticGraph : NavigationGraphs()
 
     @Serializable
-    data object SavedDestinationsGraph: NavigationGraphs()
+    data object SavedDestinationsGraph : NavigationGraphs()
 
     @Serializable
     data class MapGraph(
+        val id: Long = Long.zero,
         val latitude: Double = Double.zero,
         val longitude: Double = Double.zero,
         val radiusInMeters: Float = Float.NaN,
-    ): NavigationGraphs() {
+    ) : NavigationGraphs() {
 
-        fun isEmpty(): Boolean {
-            return latitude == Double.zero && longitude == Double.zero
-        }
+        private fun hasNoCoordinates() = latitude == Double.zero && longitude == Double.zero
+
+
+        private fun hasNoId() = id == Long.zero
+
+        fun isEmpty() = hasNoId() && hasNoCoordinates()
 
         fun isNotEmpty() = !isEmpty()
 
@@ -32,5 +36,5 @@ sealed class NavigationGraphs: JasticNavigable {
     }
 
     @Serializable
-    data object SettingsGraph: NavigationGraphs()
+    data object SettingsGraph : NavigationGraphs()
 }

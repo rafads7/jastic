@@ -7,6 +7,7 @@ import com.rafaelduransaez.core.navigation.NavigationGraphs.MapGraph.NavKeys.KEY
 import com.rafaelduransaez.core.navigation.NavigationGraphs.MapGraph.NavKeys.KEY_LATITUDE
 import com.rafaelduransaez.core.navigation.NavigationGraphs.MapGraph.NavKeys.KEY_LONGITUDE
 import com.rafaelduransaez.core.navigation.NavigationGraphs.MapGraph.NavKeys.KEY_RADIUS
+import com.rafaelduransaez.feature.saved_destinations.domain.model.DestinationUI
 
 fun LatLng.toGeofenceLocation() = GeofenceLocation(latitude, longitude)
 
@@ -25,6 +26,13 @@ fun GeofenceLocation.toGeofence() = JasticGeofence(
     requestKey = latitude.toString() + longitude.toString(),
     latitude = latitude,
     longitude = longitude,
+    radiusInMeters = radiusInMeters
+)
+
+fun DestinationUI.toGeofenceLocation() = GeofenceLocation(
+    latitude = latitude,
+    longitude = longitude,
+    address = address,
     radiusInMeters = radiusInMeters
 )
 

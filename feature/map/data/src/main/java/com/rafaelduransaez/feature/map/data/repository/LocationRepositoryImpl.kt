@@ -27,4 +27,3 @@ class LocationRepositoryImpl @Inject constructor(
         }
     }
 }
-

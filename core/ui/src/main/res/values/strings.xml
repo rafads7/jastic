@@ -4,4 +4,6 @@
     <string name="str_save_and_go">Save and Go</string>
     <string name="str_core_ui_ok">OK</string>
     <string name="str_core_ui_cancel">Cancel</string>
+    <string name="str_core_ui_database_error">Oops! There was an error when searching in database. Retry, please!</string>
+    <string name="str_core_ui_scroll_to_top">Scroll to top</string>
 </resources>

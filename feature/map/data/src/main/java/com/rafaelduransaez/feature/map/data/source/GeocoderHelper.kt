@@ -5,8 +5,6 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Build
 import com.rafaelduransaez.core.base.models.JasticResult
-import com.rafaelduransaez.core.base.models.JasticResult.Companion.failure
-import com.rafaelduransaez.core.base.models.JasticResult.Companion.success
 import com.rafaelduransaez.core.base.models.NetworkError
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineDispatcher

@@ -1,5 +1,6 @@
 package com.rafaelduransaez.feature.myjastic.presentation.navigation
 
+import com.rafaelduransaez.core.domain.extensions.zero
 import com.rafaelduransaez.core.navigation.JasticNavigable
 import kotlinx.serialization.Serializable
 
@@ -9,5 +10,5 @@ sealed class MyJasticRoutes : JasticNavigable {
     data object MyJastic : MyJasticRoutes()
 
     @Serializable
-    data class JasticPointDetail(val jasticPointId: Int) : MyJasticRoutes()
+    data class JasticPointDetail(val jasticPointId: Long = Long.zero) : MyJasticRoutes()
 }
