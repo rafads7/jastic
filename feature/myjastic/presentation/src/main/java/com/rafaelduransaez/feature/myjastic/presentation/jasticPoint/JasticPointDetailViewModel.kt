@@ -1,7 +1,6 @@
 package com.rafaelduransaez.feature.myjastic.presentation.jasticPoint
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.rafaelduransaez.base.presentation.viewmodel.JasticViewModel
@@ -22,11 +21,8 @@ import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRout
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toJasticPointDetailUiState
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toJasticPointUI
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -38,7 +34,7 @@ class JasticPointDetailViewModel @Inject constructor(
     private val getContactInfoUseCase: GetContactInfoUseCase,
     private val getJasticPointUseCase: GetJasticPointUseCase,
     private val saveJasticPointUseCase: SaveJasticPointUseCase
-) : ViewModel() {//JasticViewModel<JasticPointDetailNavState>() {
+) : JasticViewModel<JasticPointDetailNavState>() {
 
     private val _uiState = MutableStateFlow(JasticPointDetailUiState())
     val uiState = _uiState
@@ -51,15 +47,6 @@ class JasticPointDetailViewModel @Inject constructor(
     init {
         // .onStart is not used in _uiState Flow because it relaunches when we're back from Map.
         loadJasticPointDetail()
-    }
-
-    private val _navState = Channel<JasticPointDetailNavState>()
-    val navState = _navState.receiveAsFlow()
-
-    private fun navigateTo(navDestination: JasticPointDetailNavState) {
-        viewModelScope.launch {
-            _navState.send(navDestination)
-        }
     }
 
     fun onUiEvent(event: JasticPointDetailUserEvent) {
@@ -85,11 +72,9 @@ class JasticPointDetailViewModel @Inject constructor(
                 _uiState.update { it.copy(destinationSavingOptions = event.state) }
 
             JasticPointDetailUserEvent.DestinationIconClicked ->
-                navigateTo(ToDestinationSelectionMap(
-                    latitude = _uiState.value.geofenceLocation.latitude,
-                    longitude = _uiState.value.geofenceLocation.longitude,
-                    radiusInMeters = _uiState.value.geofenceLocation.radiusInMeters
-                ))
+                with(_uiState.value.geofenceLocation) {
+                    navigateTo(ToDestinationSelectionMap(latitude, longitude, radiusInMeters))
+                }
         }
     }
 
@@ -100,7 +85,7 @@ class JasticPointDetailViewModel @Inject constructor(
             it.copy(
                 geofenceLocation = updatedLocation,
                 destinationSavingOptions = Update,
-                showDestinationSavingOptions = true
+                showDestinationSavingOptions = _uiState.value.destinationId.isPositive()
             )
         }
     }
