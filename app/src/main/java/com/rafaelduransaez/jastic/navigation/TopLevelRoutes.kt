@@ -16,7 +16,7 @@ import kotlinx.serialization.Transient
 @Serializable
 sealed class TopLevelRoute<T: NavigationGraphs>(
     val labelId: Int,
-    val route: T,
+    val navRoute: T,
     @Transient val icon: ImageVector = Icons.Filled.Home,
     @Transient val unselectedIcon: ImageVector = Icons.Outlined.Home
 ) {
@@ -25,7 +25,7 @@ sealed class TopLevelRoute<T: NavigationGraphs>(
     data object MyJasticRoute :
         TopLevelRoute<NavigationGraphs.MyJasticGraph>(
             labelId = R.string.str_jastic_my_jastic,
-            route = NavigationGraphs.MyJasticGraph,
+            navRoute = NavigationGraphs.MyJasticGraph,
             icon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home
         )
@@ -33,7 +33,7 @@ sealed class TopLevelRoute<T: NavigationGraphs>(
     data object SavedDestinationsRoute :
         TopLevelRoute<NavigationGraphs.SavedDestinationsGraph>(
             labelId = R.string.str_jastic_destinations,
-            route = NavigationGraphs.SavedDestinationsGraph,
+            navRoute = NavigationGraphs.SavedDestinationsGraph,
             icon = Icons.Filled.Place,
             unselectedIcon = Icons.Outlined.Place
         )
@@ -42,7 +42,7 @@ sealed class TopLevelRoute<T: NavigationGraphs>(
     data object SettingsRoute :
         TopLevelRoute<NavigationGraphs.SettingsGraph>(
             labelId = R.string.str_jastic_settings,
-            route = NavigationGraphs.SettingsGraph,
+            navRoute = NavigationGraphs.SettingsGraph,
             icon = Icons.Filled.Settings,
             unselectedIcon = Icons.Outlined.Settings
         )

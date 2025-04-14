@@ -37,22 +37,3 @@ fun NavGraphBuilder.savedDestinationsGraph(
         }
     }
 }
-
-val mockList = listOf(
-    DestinationUI(
-        id = 1,
-        alias = "Santiago Bernabéu",
-        address = "Calle de la Castellana, 28012 Madrid, Spain",
-        latitude = 40.453053,
-        longitude = -3.688344,
-        radiusInMeters = 100f
-    ),
-    DestinationUI(
-        id = 2,
-        alias = "Jiading Tongji Daxue",
-        address = "Street I do not know the name where but is in Jiading, Shanghai, China",
-        latitude = 31.2822,
-        longitude = 121.2120,
-        radiusInMeters = 700f
-    )
-)

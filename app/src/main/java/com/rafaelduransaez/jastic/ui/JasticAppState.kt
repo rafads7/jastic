@@ -56,22 +56,6 @@ class JasticAppState(
         TopLevelRoute.SettingsRoute
     )
 
-    /*    val showFAB: Boolean
-            @Composable get() {
-                return currentDestination?.isStartDestinationOf(NavigationGraphs.MyJasticGraph) == true
-            }
-
-
-        fun NavDestination.isStartDestinationOf(subGraph: NavigationGraphs): Boolean {
-            return when (subGraph) {
-                NavigationGraphs.MyJasticGraph -> {
-                    this.route == subGraph.findStartDestination().route
-                }
-
-                else -> false
-            }
-        }*/
-
     fun onTopLevelRouteClicked(route: NavigationGraphs) {
         with(navController) {
             navigate(route = route) {
