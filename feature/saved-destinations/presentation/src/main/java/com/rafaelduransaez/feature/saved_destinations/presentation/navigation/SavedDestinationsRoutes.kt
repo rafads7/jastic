@@ -4,9 +4,4 @@ import com.rafaelduransaez.core.navigation.JasticNavigable
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class SavedDestinationsRoutes: JasticNavigable {
-
-    @Serializable
-    data object SavedDestinations : SavedDestinationsRoutes()
-
-}
+data object SavedDestinations: JasticNavigable

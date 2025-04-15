@@ -16,8 +16,6 @@ import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPoint
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailViewModel
 import com.rafaelduransaez.feature.myjastic.presentation.myJastic.MyJasticScreen
 import com.rafaelduransaez.feature.myjastic.presentation.myJastic.MyJasticViewModel
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.JasticPointDetail
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.MyJastic
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toGeofenceLocation
 import kotlinx.coroutines.flow.Flow
 

@@ -5,10 +5,7 @@ import com.rafaelduransaez.core.navigation.JasticNavigable
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class MyJasticRoutes : JasticNavigable {
-    @Serializable
-    data object MyJastic : MyJasticRoutes()
+data object MyJastic: JasticNavigable
 
-    @Serializable
-    data class JasticPointDetail(val jasticPointId: Long = Long.zero) : MyJasticRoutes()
-}
+@Serializable
+data class JasticPointDetail(val jasticPointId: Long = Long.zero): JasticNavigable

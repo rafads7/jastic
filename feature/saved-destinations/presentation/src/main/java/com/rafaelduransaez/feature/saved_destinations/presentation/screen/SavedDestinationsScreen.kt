@@ -32,7 +32,6 @@ import com.rafaelduransaez.core.permissions.JasticPermission
 import com.rafaelduransaez.core.permissions.OnPermissionNeeded
 import com.rafaelduransaez.feature.saved_destinations.domain.model.DestinationsListItemUI
 import com.rafaelduransaez.feature.saved_destinations.presentation.R
-import com.rafaelduransaez.feature.saved_destinations.presentation.navigation.SavedDestinationsRoutes
 import com.rafaelduransaez.feature.saved_destinations.presentation.utils.toAnnotatedString
 import kotlinx.coroutines.flow.Flow
 

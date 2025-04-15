@@ -17,7 +17,7 @@ import com.rafaelduransaez.feature.myjastic.domain.usecase.SaveJasticPointUseCas
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.DestinationSavingOptions.Idle
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.DestinationSavingOptions.Update
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailNavState.ToDestinationSelectionMap
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes.JasticPointDetail
+import com.rafaelduransaez.feature.myjastic.presentation.navigation.JasticPointDetail
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toJasticPointDetailUiState
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toJasticPointUI
 import dagger.hilt.android.lifecycle.HiltViewModel

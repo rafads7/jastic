@@ -3,7 +3,6 @@ package com.rafaelduransaez.feature.myjastic.presentation.myJastic
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,8 +12,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.twotone.Build
-import androidx.compose.material.icons.twotone.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -22,31 +19,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.rafaelduransaez.core.components.common.ColumnItemsSpacer
 import com.rafaelduransaez.core.components.common.JasticDatabaseError
 import com.rafaelduransaez.core.components.common.JasticEmptyScreen
 import com.rafaelduransaez.core.components.common.JasticProgressIndicator
 import com.rafaelduransaez.core.components.common.JasticScrollToTopButton
-import com.rafaelduransaez.core.components.jButton.JButton
 import com.rafaelduransaez.core.components.jCard.JCard
-import com.rafaelduransaez.core.components.jFloatingActionButton.AddFAB
-import com.rafaelduransaez.core.components.jIcon.JIcon
 import com.rafaelduransaez.core.components.jCard.JCardBody
 import com.rafaelduransaez.core.components.jCard.JCardHeader
 import com.rafaelduransaez.core.components.jCard.JCardIconAction
-import com.rafaelduransaez.core.components.jText.JTextTitle
+import com.rafaelduransaez.core.components.jFloatingActionButton.AddFAB
 import com.rafaelduransaez.core.designsystem.JasticTheme
-import com.rafaelduransaez.core.domain.extensions.negative
-import com.rafaelduransaez.core.domain.extensions.zero
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.invoke
 import com.rafaelduransaez.feature.myjastic.domain.model.JasticPointListItemUI
 import com.rafaelduransaez.feature.myjastic.presentation.R
-import com.rafaelduransaez.feature.myjastic.presentation.myJastic.Constants.FIRST_ITEM_INDEX
 import com.rafaelduransaez.feature.myjastic.presentation.myJastic.Constants.FIRST_ITEM_TO_SCROLL
-import com.rafaelduransaez.feature.myjastic.presentation.navigation.MyJasticRoutes
+import com.rafaelduransaez.feature.myjastic.presentation.navigation.JasticPointDetail
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 internal fun MyJasticScreen(
@@ -75,7 +64,7 @@ internal fun MyJasticScreen(
                         paddingValues = contentPadding,
                         showScrollToTopButton = showScrollToTopButton,
                         listState = listState,
-                        onJasticPointClicked = { onRouteTo(MyJasticRoutes.JasticPointDetail(it)) }
+                        onJasticPointClicked = { onRouteTo(JasticPointDetail(it)) }
                     )
                 }
             }
@@ -89,7 +78,7 @@ internal fun MyJasticScreen(
                 .padding(JasticTheme.size.large)
                 .align(Alignment.BottomEnd)
         ) {
-            onRouteTo(MyJasticRoutes.JasticPointDetail())
+            onRouteTo(JasticPointDetail())
         }
     }
 }

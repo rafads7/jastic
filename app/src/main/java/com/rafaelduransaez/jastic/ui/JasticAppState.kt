@@ -6,13 +6,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.rememberNavController
+import com.rafaelduransaez.core.domain.extensions.isFalse
 import com.rafaelduransaez.core.navigation.JasticNavigable
 import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.navigation.utils.navigateTo
+import com.rafaelduransaez.jastic.hasRouteInHierarchy
 import com.rafaelduransaez.jastic.navigation.TopLevelRoute
 import kotlinx.coroutines.CoroutineScope
 
@@ -41,7 +44,7 @@ class JasticAppState(
     val currentDestination: NavDestination?
         @Composable get() {
             val currentEntry =
-                navController.currentBackStackEntryFlow.collectAsState(initial = null)
+                navController.currentBackStackEntryFlow.collectAsStateWithLifecycle(null)
 
             return currentEntry.value?.destination.also { destination ->
                 if (destination != null) {
@@ -56,6 +59,11 @@ class JasticAppState(
         TopLevelRoute.SettingsRoute
     )
 
+    val bottomBarIsVisible: Boolean
+        @Composable get() = currentDestination?.hasRouteInHierarchy<NavigationGraphs.MapGraph>()
+            .isFalse()
+
+
     fun onTopLevelRouteClicked(route: NavigationGraphs) {
         with(navController) {
             navigate(route = route) {
@@ -68,7 +76,11 @@ class JasticAppState(
         }
     }
 
-    fun navigateTo(route: JasticNavigable, navData: Map<String, Any>, options: NavOptionsBuilder.() -> Unit) {
+    fun navigateTo(
+        route: JasticNavigable,
+        navData: Map<String, Any>,
+        options: NavOptionsBuilder.() -> Unit
+    ) {
         navController.navigateTo(route, navData, options)
     }
 }

@@ -1,6 +1,12 @@
 package com.rafaelduransaez.jastic.ui
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -20,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.NavHost
 import com.rafaelduransaez.core.components.common.ObserveAsEvent
 import com.rafaelduransaez.core.components.jIcon.BackNavigationIcon
 import com.rafaelduransaez.core.components.jIcon.JIcon
@@ -27,14 +34,20 @@ import com.rafaelduransaez.core.components.jSnackbar.SnackbarHandler
 import com.rafaelduransaez.core.components.jText.JTextLarge
 import com.rafaelduransaez.core.components.jText.JTextTitle
 import com.rafaelduransaez.core.designsystem.JasticTheme
-import com.rafaelduransaez.core.navigation.JasticNavigable
+import com.rafaelduransaez.core.domain.extensions.isFalse
+import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs
+import com.rafaelduransaez.core.permissions.OnPermissionNeeded
 import com.rafaelduransaez.core.permissions.PermissionsRequestHolder
 import com.rafaelduransaez.core.permissions.PermissionsRequestHolder.Companion.empty
 import com.rafaelduransaez.core.permissions.PermissionsRequestHolder.Companion.fromJasticPermission
 import com.rafaelduransaez.core.permissions.PermissionsRequester
+import com.rafaelduransaez.feature.map.presentation.navigation.mapNavGraph
+import com.rafaelduransaez.feature.myjastic.presentation.navigation.myJasticNavGraph
+import com.rafaelduransaez.feature.saved_destinations.presentation.navigation.savedDestinationsGraph
+import com.rafaelduransaez.feature.settings.presentation.navigation.settingsGraph
 import com.rafaelduransaez.jastic.R
-import com.rafaelduransaez.jastic.navigation.JasticAppRootNavGraph
+import com.rafaelduransaez.jastic.hasRouteInHierarchy
 import com.rafaelduransaez.jastic.navigation.TopLevelRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -44,6 +57,15 @@ import kotlinx.coroutines.launch
 fun JasticApp(appState: JasticAppState = rememberJasticAppState()) {
 
     val snackBarHostState = remember { SnackbarHostState() }
+    var requestPermissions by remember { mutableStateOf(PermissionsRequestHolder.empty()) }
+
+    PermissionsRequester(
+        permissions = requestPermissions.permissions,
+        coroutineScope = appState.coroutineScope,
+        onCancelRequest = { requestPermissions = PermissionsRequestHolder.empty() }
+    ) {
+        requestPermissions.onAllGranted()
+    }
 
     SnackbarHostHandler(snackBarHostState, appState.coroutineScope)
 
@@ -51,37 +73,55 @@ fun JasticApp(appState: JasticAppState = rememberJasticAppState()) {
         topBar = { JasticTopAppBar() },
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
         bottomBar = {
-            JasticBottomBar(
-                currentDestination = appState.currentDestination,
-                routes = appState.topLevelDestinations,
-                onBottomNavItemClicked = { appState.onTopLevelRouteClicked(it) }
-            )
+            AnimatedVisibility(appState.bottomBarIsVisible) {
+                JasticBottomBar(
+                    currentDestination = appState.currentDestination,
+                    routes = appState.topLevelDestinations,
+                    onBottomNavItemClicked = { appState.onTopLevelRouteClicked(it) }
+                )
+            }
         }
     ) { contentPadding ->
-
-        var requestPermissions by remember { mutableStateOf(PermissionsRequestHolder.empty()) }
-
-        PermissionsRequester(
-            permissions = requestPermissions.permissions,
-            coroutineScope = appState.coroutineScope,
-            onCancelRequest = { requestPermissions = PermissionsRequestHolder.empty() }
-        ) {
-            requestPermissions.onAllGranted()
-        }
-
-        JasticAppRootNavGraph(
+        JasticNavHost(
+            appState = appState,
             contentPadding = contentPadding,
-            navController = appState.navController,
             onRouteTo = { route, navData, options ->
                 appState.navigateTo(route, navData, options)
             },
             onPermissionsNeeded = { permission, onAllGranted ->
                 requestPermissions = PermissionsRequestHolder.fromJasticPermission(
-                    permission,
-                    onAllGranted
+                    permission, onAllGranted
                 )
             }
         )
+    }
+
+}
+
+
+@Composable
+fun JasticNavHost(
+    appState: JasticAppState,
+    contentPadding: PaddingValues,
+    onRouteTo: NavRouteTo,
+    onPermissionsNeeded: OnPermissionNeeded
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues = contentPadding)
+            .background(JasticTheme.colorScheme.onPrimary)
+    ) {
+        NavHost(
+            navController = appState.navController,
+            startDestination = NavigationGraphs.MyJasticGraph
+        ) {
+
+            myJasticNavGraph(onRouteTo, onPermissionsNeeded)
+            savedDestinationsGraph(onRouteTo, onPermissionsNeeded)
+            settingsGraph()
+            mapNavGraph(onRouteTo)
+        }
     }
 }
 
@@ -131,7 +171,7 @@ fun JasticBottomBar(
     modifier: Modifier = Modifier,
     routes: List<TopLevelRoute<out NavigationGraphs>>,
     onBottomNavItemClicked: (route: NavigationGraphs) -> Unit,
-    currentDestination: NavDestination?
+    currentDestination: NavDestination?,
 ) {
     NavigationBar(
         modifier = modifier,
@@ -141,12 +181,12 @@ fun JasticBottomBar(
 
         routes.forEach { item ->
             val isSelected =
-                currentDestination?.hierarchy?.any { it.hasRoute(item.route::class) } == true
+                currentDestination?.hierarchy?.any { it.hasRoute(item.navRoute::class) } == true
 
             NavigationBarItem(
                 label = { JTextLarge(textId = item.labelId) },
                 selected = isSelected,
-                onClick = { onBottomNavItemClicked(item.route) },
+                onClick = { onBottomNavItemClicked(item.navRoute) },
                 icon = {
                     currentDestination?.let {
                         JIcon(
@@ -165,8 +205,4 @@ fun JasticBottomBar(
             )
         }
     }
-}
-
-inline fun <reified T : JasticNavigable> NavDestination.hasRouteInHierarchy(): Boolean {
-    return this.hierarchy.any { it.hasRoute(T::class) }
 }
