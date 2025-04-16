@@ -75,6 +75,8 @@ class JasticPointDetailViewModel @Inject constructor(
                 with(_uiState.value.geofenceLocation) {
                     navigateTo(ToDestinationSelectionMap(latitude, longitude, radiusInMeters))
                 }
+
+            JasticPointDetailUserEvent.Back -> TODO()
         }
     }
 
@@ -195,6 +197,7 @@ data class JasticPointDetailUiState(
 }
 
 sealed interface JasticPointDetailUserEvent {
+    data object Back: JasticPointDetailUserEvent
     data object Save : JasticPointDetailUserEvent
     data object SaveAndGo : JasticPointDetailUserEvent
     data class DestinationSelected(val location: GeofenceLocation) : JasticPointDetailUserEvent

@@ -18,6 +18,8 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,8 +35,10 @@ import com.rafaelduransaez.core.components.jIcon.JIcon
 import com.rafaelduransaez.core.components.jSnackbar.SnackbarHandler
 import com.rafaelduransaez.core.components.jText.JTextLarge
 import com.rafaelduransaez.core.components.jText.JTextTitle
+import com.rafaelduransaez.core.components.jToolbar.JToolbarConfig
+import com.rafaelduransaez.core.components.jToolbar.LocalToolbarController
 import com.rafaelduransaez.core.designsystem.JasticTheme
-import com.rafaelduransaez.core.domain.extensions.isFalse
+import com.rafaelduransaez.core.designsystem.JasticTheme.colorScheme
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.permissions.OnPermissionNeeded
@@ -46,8 +50,6 @@ import com.rafaelduransaez.feature.map.presentation.navigation.mapNavGraph
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.myJasticNavGraph
 import com.rafaelduransaez.feature.saved_destinations.presentation.navigation.savedDestinationsGraph
 import com.rafaelduransaez.feature.settings.presentation.navigation.settingsGraph
-import com.rafaelduransaez.jastic.R
-import com.rafaelduransaez.jastic.hasRouteInHierarchy
 import com.rafaelduransaez.jastic.navigation.TopLevelRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -59,6 +61,10 @@ fun JasticApp(appState: JasticAppState = rememberJasticAppState()) {
     val snackBarHostState = remember { SnackbarHostState() }
     var requestPermissions by remember { mutableStateOf(PermissionsRequestHolder.empty()) }
 
+    LaunchedEffect(appState.currentDestination) {
+        appState.toolbarController.resetToolbarWhenNeeded()
+    }
+
     PermissionsRequester(
         permissions = requestPermissions.permissions,
         coroutineScope = appState.coroutineScope,
@@ -69,31 +75,33 @@ fun JasticApp(appState: JasticAppState = rememberJasticAppState()) {
 
     SnackbarHostHandler(snackBarHostState, appState.coroutineScope)
 
-    Scaffold(
-        topBar = { JasticTopAppBar() },
-        snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
-        bottomBar = {
-            AnimatedVisibility(appState.bottomBarIsVisible) {
-                JasticBottomBar(
-                    currentDestination = appState.currentDestination,
-                    routes = appState.topLevelDestinations,
-                    onBottomNavItemClicked = { appState.onTopLevelRouteClicked(it) }
-                )
+    CompositionLocalProvider(LocalToolbarController provides appState.toolbarController) {
+        Scaffold(
+            topBar = { JasticTopAppBar(appState.toolbarConfig) },
+            snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
+            bottomBar = {
+                AnimatedVisibility(appState.bottomBarIsVisible) {
+                    JasticBottomBar(
+                        currentDestination = appState.currentDestination,
+                        routes = appState.topLevelDestinations,
+                        onBottomNavItemClicked = { appState.onTopLevelRouteClicked(it) }
+                    )
+                }
             }
+        ) { contentPadding ->
+            JasticNavHost(
+                appState = appState,
+                contentPadding = contentPadding,
+                onRouteTo = { route, navData, options ->
+                    appState.navigateTo(route, navData, options)
+                },
+                onPermissionsNeeded = { permission, onAllGranted ->
+                    requestPermissions = PermissionsRequestHolder.fromJasticPermission(
+                        permission, onAllGranted
+                    )
+                }
+            )
         }
-    ) { contentPadding ->
-        JasticNavHost(
-            appState = appState,
-            contentPadding = contentPadding,
-            onRouteTo = { route, navData, options ->
-                appState.navigateTo(route, navData, options)
-            },
-            onPermissionsNeeded = { permission, onAllGranted ->
-                requestPermissions = PermissionsRequestHolder.fromJasticPermission(
-                    permission, onAllGranted
-                )
-            }
-        )
     }
 
 }
@@ -110,7 +118,7 @@ fun JasticNavHost(
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues = contentPadding)
-            .background(JasticTheme.colorScheme.onPrimary)
+            .background(colorScheme.onPrimary)
     ) {
         NavHost(
             navController = appState.navController,
@@ -150,17 +158,17 @@ private fun SnackbarHostHandler(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JasticTopAppBar(
-    showNavIcon: Boolean = false,
+    toolbarConfig: JToolbarConfig,
     onNavIconClick: () -> Unit = {}
 ) {
     TopAppBar(
         colors = topAppBarColors(
-            containerColor = JasticTheme.colorScheme.primaryContainer,
-            titleContentColor = JasticTheme.colorScheme.primary,
+            containerColor = colorScheme.primaryContainer,
+            titleContentColor = colorScheme.primary,
         ),
-        title = { JTextTitle(textId = R.string.app_name) },
+        title = { JTextTitle(textId = toolbarConfig.titleResId) },
         navigationIcon = {
-            if (showNavIcon)
+            if (toolbarConfig.navIcon != null)
                 BackNavigationIcon(onNavIconClick)
         }
     )
@@ -175,8 +183,8 @@ fun JasticBottomBar(
 ) {
     NavigationBar(
         modifier = modifier,
-        containerColor = JasticTheme.colorScheme.onPrimary,
-        contentColor = JasticTheme.colorScheme.primary
+        containerColor = colorScheme.onPrimary,
+        contentColor = colorScheme.primary
     ) {
 
         routes.forEach { item ->
@@ -196,11 +204,11 @@ fun JasticBottomBar(
                     }
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = JasticTheme.colorScheme.primary,
-                    selectedTextColor = JasticTheme.colorScheme.primary,
-                    indicatorColor = JasticTheme.colorScheme.primaryContainer,
-                    unselectedIconColor = JasticTheme.colorScheme.primary,
-                    unselectedTextColor = JasticTheme.colorScheme.primary
+                    selectedIconColor = colorScheme.primary,
+                    selectedTextColor = colorScheme.primary,
+                    indicatorColor = colorScheme.primaryContainer,
+                    unselectedIconColor = colorScheme.primary,
+                    unselectedTextColor = colorScheme.primary
                 )
             )
         }
