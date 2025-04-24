@@ -1,5 +1,6 @@
 package com.rafaelduransaez.feature.myjastic.presentation.jasticPoint
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -9,6 +10,7 @@ import com.rafaelduransaez.core.contacts.domain.Contact
 import com.rafaelduransaez.core.domain.extensions.empty
 import com.rafaelduransaez.core.domain.extensions.isPositive
 import com.rafaelduransaez.core.domain.extensions.zero
+import com.rafaelduransaez.core.navigation.Back
 import com.rafaelduransaez.feature.map.domain.model.GeofenceLocation
 import com.rafaelduransaez.feature.myjastic.domain.model.JasticPointUI
 import com.rafaelduransaez.feature.myjastic.domain.usecase.GetContactInfoUseCase
@@ -17,15 +19,25 @@ import com.rafaelduransaez.feature.myjastic.domain.usecase.SaveJasticPointUseCas
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.DestinationSavingOptions.Idle
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.DestinationSavingOptions.Update
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailNavState.ToDestinationSelectionMap
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailNavState.ToMyJasticList
 import com.rafaelduransaez.feature.myjastic.presentation.navigation.JasticPointDetail
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toJasticPointDetailUiState
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toJasticPointUI
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 @HiltViewModel
@@ -76,8 +88,48 @@ class JasticPointDetailViewModel @Inject constructor(
                     navigateTo(ToDestinationSelectionMap(latitude, longitude, radiusInMeters))
                 }
 
-            JasticPointDetailUserEvent.Back -> TODO()
+            JasticPointDetailUserEvent.Back -> navigateTo(ToMyJasticList)
         }
+    }
+
+    fun main() {
+        val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+            Log.e("TAG", "Caught $throwable")
+        }
+        val scope = CoroutineScope(Job())
+
+        scope.launch {
+            launch(exceptionHandler) {
+                throw RuntimeException()
+            }
+        }
+    }
+
+
+    private fun repeat(numberOfTimes: Int, block: () -> Unit) {
+        repeat(numberOfTimes) {
+            try {
+                block()
+            } catch (e: Exception) {
+                Log.e("TAG", "Error: ${e.message}")
+            }
+        }
+        block()
+    }
+
+    fun first() {
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            withTimeout(2000L) {
+                doSomeStuff()
+            }
+            _uiState.update { it.copy(isLoading = false) }
+        }
+    }
+
+    suspend fun doSomeStuff() {
+        //does some stuff that takes some time
     }
 
     private fun onDestinationSelected(selectedLocation: GeofenceLocation) {
@@ -130,7 +182,7 @@ class JasticPointDetailViewModel @Inject constructor(
 
     private fun onJasticPointSaved(jasticPointId: Long) {
         _uiState.update { it.copy(isLoading = false) }
-        navigateTo(JasticPointDetailNavState.ToMyJasticList)
+        navigateTo(ToMyJasticList)
     }
 
     private fun onJasticPointFailedToSaved(error: DatabaseError) {
@@ -197,7 +249,7 @@ data class JasticPointDetailUiState(
 }
 
 sealed interface JasticPointDetailUserEvent {
-    data object Back: JasticPointDetailUserEvent
+    data object Back : JasticPointDetailUserEvent
     data object Save : JasticPointDetailUserEvent
     data object SaveAndGo : JasticPointDetailUserEvent
     data class DestinationSelected(val location: GeofenceLocation) : JasticPointDetailUserEvent

@@ -14,12 +14,13 @@ import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.rememberNavController
 import com.rafaelduransaez.core.components.jToolbar.JToolbarConfig
 import com.rafaelduransaez.core.components.jToolbar.JToolbarController
-import com.rafaelduransaez.core.components.jToolbar.defaultToolbarConfig
 import com.rafaelduransaez.core.domain.extensions.isFalse
 import com.rafaelduransaez.core.navigation.JasticNavigable
 import com.rafaelduransaez.core.navigation.NavigationGraphs
-import com.rafaelduransaez.core.navigation.utils.navigateTo
+import com.rafaelduransaez.core.navigation.NavigationGraphs.MapGraph
+import com.rafaelduransaez.jastic.R
 import com.rafaelduransaez.jastic.hasRouteInHierarchy
+import com.rafaelduransaez.jastic.navigateTo
 import com.rafaelduransaez.jastic.navigation.TopLevelRoute
 import kotlinx.coroutines.CoroutineScope
 
@@ -44,6 +45,8 @@ class JasticAppState(
 ) {
 
     private val previousDestination = mutableStateOf<NavDestination?>(null)
+    private val defaultToolbarConfig = JToolbarConfig(R.string.app_name)
+    private val _toolbarConfig = mutableStateOf(defaultToolbarConfig)
 
     val currentDestination: NavDestination?
         @Composable get() {
@@ -64,10 +67,8 @@ class JasticAppState(
     )
 
     val bottomBarIsVisible: Boolean
-        @Composable get() = currentDestination?.hasRouteInHierarchy<NavigationGraphs.MapGraph>()
-            .isFalse()
+        @Composable get() = currentDestination?.hasRouteInHierarchy<MapGraph>().isFalse()
 
-    private val _toolbarConfig = mutableStateOf(defaultToolbarConfig)
     var toolbarConfig: JToolbarConfig by _toolbarConfig
         private set
 

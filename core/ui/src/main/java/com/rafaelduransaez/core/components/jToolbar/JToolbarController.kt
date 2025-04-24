@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.rafaelduransaez.core.components.R
 
 interface JToolbarController {
     fun setToolbar(config: JToolbarConfig)
@@ -18,7 +17,3 @@ data class JToolbarConfig(
     val actions: @Composable RowScope.() -> Unit = {}
 )
 
-val defaultToolbarConfig = JToolbarConfig(
-    titleResId = R.string.str_save,
-    actions = {}
-)

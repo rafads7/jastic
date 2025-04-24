@@ -157,10 +157,7 @@ private fun SnackbarHostHandler(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JasticTopAppBar(
-    toolbarConfig: JToolbarConfig,
-    onNavIconClick: () -> Unit = {}
-) {
+fun JasticTopAppBar(toolbarConfig: JToolbarConfig) {
     TopAppBar(
         colors = topAppBarColors(
             containerColor = colorScheme.primaryContainer,
@@ -169,7 +166,7 @@ fun JasticTopAppBar(
         title = { JTextTitle(textId = toolbarConfig.titleResId) },
         navigationIcon = {
             if (toolbarConfig.navIcon != null)
-                BackNavigationIcon(onNavIconClick)
+                BackNavigationIcon(toolbarConfig.onNavIconClicked)
         }
     )
 }
