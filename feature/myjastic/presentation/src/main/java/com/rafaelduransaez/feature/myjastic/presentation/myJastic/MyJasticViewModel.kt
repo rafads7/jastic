@@ -1,7 +1,7 @@
 package com.rafaelduransaez.feature.myjastic.presentation.myJastic
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rafaelduransaez.base.presentation.viewmodel.JasticViewModel
 import com.rafaelduransaez.core.base.models.DatabaseError
 import com.rafaelduransaez.feature.myjastic.domain.model.JasticPointListItemUI
 import com.rafaelduransaez.feature.myjastic.domain.usecase.GetJasticPointsListUseCase
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MyJasticViewModel @Inject constructor(
     private val getJasticPointsUseCase: GetJasticPointsListUseCase
-) : ViewModel() {
+) : JasticViewModel<MyJasticNavState>() {
 
     private val _uiState = MutableStateFlow<MyJasticUiState>(MyJasticUiState.Loading)
     val uiState = _uiState
@@ -58,3 +58,5 @@ sealed class MyJasticUiState {
     data object Loading : MyJasticUiState()
     data class ShowMyJasticPoints(val jasticPoints: List<JasticPointListItemUI>) : MyJasticUiState()
 }
+
+sealed interface MyJasticNavState

@@ -33,5 +33,5 @@ interface JasticPointDao {
     }
 
     @Query("DELETE FROM jastic_points")
-    fun clearAll(): Int
+    suspend fun clearAll(): Int
 }

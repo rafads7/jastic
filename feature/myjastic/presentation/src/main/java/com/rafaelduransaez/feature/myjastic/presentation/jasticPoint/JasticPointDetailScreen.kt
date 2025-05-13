@@ -32,6 +32,7 @@ import com.rafaelduransaez.core.components.jTextField.JOutlinedTextFieldWithIcon
 import com.rafaelduransaez.core.designsystem.JasticTheme
 import com.rafaelduransaez.core.navigation.Back
 import com.rafaelduransaez.core.navigation.NavRouteTo
+import com.rafaelduransaez.core.navigation.NavigationGraphs
 import com.rafaelduransaez.core.navigation.NavigationGraphs.MapGraph
 import com.rafaelduransaez.core.navigation.invoke
 import com.rafaelduransaez.core.permissions.JasticPermission

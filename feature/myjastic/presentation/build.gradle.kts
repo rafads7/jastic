@@ -46,8 +46,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:permissions"))
     implementation(project(":core:base:presentation"))
-
-    implementation(project(":core:navigation"))
+    api(project(":core:navigation"))
 
     implementation(project(":core:contacts:domain"))
     implementation(project(":core:contacts:di"))
@@ -66,9 +65,15 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
 
     //Testing
+    testImplementation(project(":core:base:test-utils"))
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.kotlinx.coroutines.core)
 
     //Compose
     implementation(libs.androidx.activity.compose)

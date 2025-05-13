@@ -31,11 +31,14 @@ fun NavHostController.navigateTo(
     //navData: JasticNavData,
     options: NavOptionsBuilder.() -> Unit
 ) {
-    navData.forEach { previousBackStackEntry?.savedStateHandle?.set(it.key, it.value)}
-    //previousBackStackEntry?.savedStateHandle?.set(KEY_DATA, navData)
 
     when (route) {
-        Back -> navigateUp()
+        Back -> {
+            navData.forEach { previousBackStackEntry?.savedStateHandle?.set(it.key, it.value)}
+            //previousBackStackEntry?.savedStateHandle?.set(KEY_DATA, navData)
+
+            navigateUp()
+        }
         else -> navigate(route, navOptions(options))
     }
 }

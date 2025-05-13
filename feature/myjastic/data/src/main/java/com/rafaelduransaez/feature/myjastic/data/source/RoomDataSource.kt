@@ -4,22 +4,27 @@ import com.rafaelduransaez.core.database.dao.JasticPointDao
 import com.rafaelduransaez.core.database.model.DestinationEntity
 import com.rafaelduransaez.core.database.model.JasticDestinationPoint
 import com.rafaelduransaez.core.database.model.JasticPointEntity
-import kotlinx.coroutines.flow.Flow
+import com.rafaelduransaez.core.database.util.safeDbCall
+import com.rafaelduransaez.core.database.util.safeDbFlowCall
+import com.rafaelduransaez.feature.myjastic.data.toJasticListItemUI
+import com.rafaelduransaez.feature.myjastic.data.toJasticPointUI
+import kotlinx.coroutines.flow.map
 
 class RoomDataSource(
     private val jasticDao: JasticPointDao
 ) : MyJasticLocalDataSource {
 
-    override fun getJasticPointDetail(jasticPointId: Long): Flow<JasticDestinationPoint> =
-        jasticDao.get(jasticPointId)
+    override fun getJasticPointDetail(jasticPointId: Long) = safeDbFlowCall {
+        jasticDao.get(jasticPointId).map { it.toJasticPointUI() }
+    }
 
-    override fun getJasticPoints(): Flow<List<JasticDestinationPoint>> =
-        jasticDao.getAll()
+    override fun getJasticPoints() = safeDbFlowCall {
+        jasticDao.getAll().map { it.map(JasticDestinationPoint::toJasticListItemUI) }
+    }
 
-    override suspend fun saveJasticPoint(jasticPoint: JasticPointEntity): Long =
-        jasticDao.upsert(jasticPoint)
-
-    override suspend fun saveJasticPointAndDestination(jasticPoint: JasticPointEntity, destinationEntity: DestinationEntity): Long =
-        jasticDao.upsert(jasticPoint, destinationEntity)
+    override suspend fun saveJasticPointAndDestination(
+        jasticPoint: JasticPointEntity,
+        destinationEntity: DestinationEntity
+    ) = safeDbCall { jasticDao.upsert(jasticPoint, destinationEntity) }
 
 }

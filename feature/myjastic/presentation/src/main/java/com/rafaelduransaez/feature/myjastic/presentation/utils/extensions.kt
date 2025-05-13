@@ -1,5 +1,6 @@
 package com.rafaelduransaez.feature.myjastic.presentation.utils
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import com.rafaelduransaez.core.domain.extensions.empty
 import com.rafaelduransaez.core.domain.extensions.zero
@@ -9,6 +10,7 @@ import com.rafaelduransaez.core.navigation.NavigationGraphs.MapGraph.NavKeys.KEY
 import com.rafaelduransaez.core.navigation.NavigationGraphs.MapGraph.NavKeys.KEY_LONGITUDE
 import com.rafaelduransaez.core.navigation.NavigationGraphs.MapGraph.NavKeys.KEY_RADIUS
 import com.rafaelduransaez.feature.map.domain.model.GeofenceLocation
+import kotlinx.coroutines.delay
 
 fun SavedStateHandle.toGeofenceLocation() =
     GeofenceLocation(

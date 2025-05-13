@@ -1,12 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.hiltAndroid)
-    alias(libs.plugins.ksp)
 }
 
 android {
-    namespace = "com.rafaelduransaez.myjastic.lib"
+    namespace = "com.rafaelduransaez.core.base.test_utils"
     compileSdk = 35
 
     defaultConfig {
@@ -35,23 +33,17 @@ android {
 }
 
 dependencies {
-    api(project(":feature:myjastic:presentation"))
-    implementation(project(":feature:myjastic:domain"))
-    implementation(project(":feature:myjastic:data"))
 
-    implementation(project(":core:database"))
+    api(project(":core:base:presentation"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    testImplementation(libs.junit)
+
+    implementation(libs.junit)
+    testImplementation(libs.mockk)
+    implementation(libs.kotlinx.coroutines.test)
+    implementation(libs.kotlinx.coroutines.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    //Navigation
-    implementation(libs.androidx.navigation.compose)
-
-    //Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
 }

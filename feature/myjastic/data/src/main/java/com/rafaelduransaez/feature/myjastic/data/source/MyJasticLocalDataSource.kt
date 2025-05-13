@@ -1,5 +1,7 @@
 package com.rafaelduransaez.feature.myjastic.data.source
 
+import com.rafaelduransaez.core.base.models.DatabaseError
+import com.rafaelduransaez.core.base.models.JasticResult
 import com.rafaelduransaez.core.database.model.DestinationEntity
 import com.rafaelduransaez.core.database.model.JasticDestinationPoint
 import com.rafaelduransaez.core.database.model.JasticPointEntity
@@ -9,11 +11,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface MyJasticLocalDataSource {
 
-    fun getJasticPointDetail(jasticPointId: Long): Flow<JasticDestinationPoint>
+    fun getJasticPointDetail(jasticPointId: Long): Flow<JasticResult<JasticPointUI, DatabaseError>>
 
-    fun getJasticPoints(): Flow<List<JasticDestinationPoint>>
+    fun getJasticPoints(): Flow<JasticResult<List<JasticPointListItemUI>, DatabaseError>>
 
-    suspend fun saveJasticPoint(jasticPoint: JasticPointEntity): Long
-
-    suspend fun saveJasticPointAndDestination(jasticPoint: JasticPointEntity, destinationEntity: DestinationEntity): Long
+    suspend fun saveJasticPointAndDestination(
+        jasticPoint: JasticPointEntity,
+        destinationEntity: DestinationEntity
+    ): JasticResult<Long, DatabaseError>
 }
