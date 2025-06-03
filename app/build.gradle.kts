@@ -69,16 +69,13 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:permissions"))
     implementation(project(":core:common"))
-
     implementation(project(":core:navigation"))
-
     implementation(project(":core:geofencing:data"))
 
     implementation(project(":feature:myjastic:lib"))
     implementation(project(":feature:saved-destinations:lib"))
-
-    implementation(project(":feature:map:presentation"))
-    implementation(project(":feature:settings:presentation"))
+    implementation(project(":feature:map:lib"))
+    implementation(project(":feature:settings:presentation")) //not implemented yet
 
     //Android
     implementation(libs.androidx.core.ktx)
@@ -118,4 +115,7 @@ dependencies {
     //Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+
+    //LeakCanary
+    debugImplementation (libs.leakcanary.android)
 }

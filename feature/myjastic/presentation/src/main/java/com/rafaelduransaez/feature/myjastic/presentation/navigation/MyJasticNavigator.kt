@@ -6,21 +6,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import androidx.navigation.toRoute
 import com.rafaelduransaez.core.components.jToolbar.JToolbarConfig
 import com.rafaelduransaez.core.components.jToolbar.LocalToolbarController
-import com.rafaelduransaez.core.navigation.JasticNavigable
 import com.rafaelduransaez.core.navigation.NavRouteTo
 import com.rafaelduransaez.core.navigation.NavigationGraphs.MyJasticGraph
 import com.rafaelduransaez.core.permissions.OnPermissionNeeded
 import com.rafaelduransaez.feature.myjastic.presentation.R
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailNavState
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailScreen
-import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.Back
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.DestinationSelected
 import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailViewModel
@@ -28,7 +24,6 @@ import com.rafaelduransaez.feature.myjastic.presentation.myJastic.MyJasticScreen
 import com.rafaelduransaez.feature.myjastic.presentation.myJastic.MyJasticViewModel
 import com.rafaelduransaez.feature.myjastic.presentation.utils.toGeofenceLocation
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 
 fun NavGraphBuilder.myJasticNavGraph(
     onRouteTo: NavRouteTo,

@@ -8,7 +8,7 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store
-/build
+/bu
 /captures
 .externalNativeBuild
 .cxx
@@ -29,3 +29,5 @@ secrets.properties
 /.idea/vcs.xml
 /.idea/appInsightsSettings.xml
 /.kotlin
+feature/myjastic/presentation/src/main/java/com/rafaelduransaez/feature/myjastic/presentation/jasticPoint/CoroutinesDraft.kt
+

@@ -99,7 +99,7 @@ internal fun JasticPointsList(
             verticalArrangement = Arrangement.spacedBy(JasticTheme.size.minimum),
             state = listState
         ) {
-            items(count = jasticPoints.size, key = { jasticPoints[it].alias }) { index ->
+            items(count = jasticPoints.size, key = { jasticPoints[it].id }) { index ->
                 JasticPointListItem(jasticPoints[index], onJasticPointClicked)
             }
         }

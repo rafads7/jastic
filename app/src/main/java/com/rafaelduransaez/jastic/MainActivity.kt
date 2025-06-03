@@ -11,8 +11,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-/*    @Inject
-    lateinit var navigator: JasticNavigator*/
+    /*    @Inject
+        lateinit var navigator: JasticNavigator*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

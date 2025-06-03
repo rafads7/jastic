@@ -37,6 +37,7 @@ android {
 dependencies {
 
     api(project(":feature:map:domain"))
+    api(project(":feature:map:presentation"))
     implementation(project(":feature:map:data"))
 
     implementation(project(":core:coroutines"))

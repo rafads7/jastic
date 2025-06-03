@@ -67,10 +67,7 @@ class JasticPointDetailViewModel @Inject constructor(
             is JasticPointDetailUserEvent.DestinationSavingOptionsChanged ->
                 _uiState.update { it.copy(destinationSavingOptions = event.state) }
 
-            JasticPointDetailUserEvent.DestinationIconClicked ->
-                with(_uiState.value.geofenceLocation) {
-                    navigateTo(ToDestinationSelectionMap(latitude, longitude, radiusInMeters))
-                }
+            JasticPointDetailUserEvent.DestinationIconClicked -> onDestinationIconClicked()
 
             JasticPointDetailUserEvent.Back -> navigateTo(ToMyJasticList)
         }
@@ -85,6 +82,12 @@ class JasticPointDetailViewModel @Inject constructor(
                 destinationSavingOptions = Update,
                 showDestinationSavingOptions = _uiState.value.destinationId.isPositive()
             )
+        }
+    }
+
+    private fun onDestinationIconClicked() {
+        with(_uiState.value.geofenceLocation) {
+            navigateTo(ToDestinationSelectionMap(latitude, longitude, radiusInMeters))
         }
     }
 

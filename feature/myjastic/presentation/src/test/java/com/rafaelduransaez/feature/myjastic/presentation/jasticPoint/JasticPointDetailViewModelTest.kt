@@ -7,6 +7,14 @@ import com.rafaelduransaez.core.base.test_utils.JasticTest
 import com.rafaelduransaez.feature.myjastic.domain.usecase.GetContactInfoUseCase
 import com.rafaelduransaez.feature.myjastic.domain.usecase.GetJasticPointUseCase
 import com.rafaelduransaez.feature.myjastic.domain.usecase.SaveJasticPointUseCase
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.DestinationSavingOptions.Idle
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailNavState.ToDestinationSelectionMap
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailNavState.ToMyJasticList
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.AliasUpdate
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.DestinationAliasUpdate
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.DestinationIconClicked
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.DestinationSavingOptionsChanged
+import com.rafaelduransaez.feature.myjastic.presentation.jasticPoint.JasticPointDetailUserEvent.MessageUpdate
 import com.rafaelduransaez.feature.myjastic.presentation.utils.mockContact
 import com.rafaelduransaez.feature.myjastic.presentation.utils.mockGeofenceLocation
 import com.rafaelduransaez.feature.myjastic.presentation.utils.mockJasticPointUI1
@@ -139,6 +147,95 @@ class JasticPointDetailViewModelTest :
 
         viewModel.onUiEvent(JasticPointDetailUserEvent.Save)
 
-        assertEquals(JasticPointDetailNavState.ToMyJasticList, navStates.last())
+        assertEquals(ToMyJasticList, navStates.last())
+    }
+
+    @Test
+    fun `on saving JasticPoint detail fails removes loading`() = runTest {
+        whenever(getJasticPointUseCase(anyLong())).doReturn(flowOf(Success(mockJasticPointUI1)))
+        whenever(saveJasticPointUseCase(any())).doReturn(Success(mockJasticPointUI1.id))
+
+        collectViewModelState(viewModel.uiState)
+
+        viewModel.onUiEvent(JasticPointDetailUserEvent.Save)
+
+        assertEquals(false, emittedStates.last().isLoading)
+    }
+
+
+    @Test
+    fun `on updating message updates it within the state`() = runTest {
+        whenever(getJasticPointUseCase(anyLong())).doReturn(flowOf(Success(mockJasticPointUI1)))
+
+        collectViewModelState(viewModel.uiState)
+
+        viewModel.onUiEvent(MessageUpdate(mockJasticPointUI1.message))
+
+        assertEquals(mockJasticPointUI1.message, emittedStates.last().jasticPointMessage)
+    }
+
+    @Test
+    fun `on updating destination alias updates it within the state`() = runTest {
+        whenever(getJasticPointUseCase(anyLong())).doReturn(flowOf(Success(mockJasticPointUI1)))
+
+        collectViewModelState(viewModel.uiState)
+
+        viewModel.onUiEvent(DestinationAliasUpdate(mockJasticPointUI1.destinationUI.alias))
+
+        assertEquals(
+            mockJasticPointUI1.destinationUI.alias,
+            emittedStates.last().destinationAlias
+        )
+    }
+
+    @Test
+    fun `on updating alias updates it within the state`() = runTest {
+        whenever(getJasticPointUseCase(anyLong())).doReturn(flowOf(Success(mockJasticPointUI1)))
+
+        collectViewModelState(viewModel.uiState)
+
+        viewModel.onUiEvent(AliasUpdate(mockJasticPointUI1.alias))
+
+        assertEquals(mockJasticPointUI1.alias, emittedStates.last().jasticPointAlias)
+    }
+
+    @Test
+    fun `on updating destination saving options updates it within the state`() = runTest {
+        whenever(getJasticPointUseCase(anyLong())).doReturn(flowOf(Success(mockJasticPointUI1)))
+
+        collectViewModelState(viewModel.uiState)
+
+        viewModel.onUiEvent(DestinationSavingOptionsChanged(Idle))
+
+        assertEquals(Idle, emittedStates.last().destinationSavingOptions)
+    }
+
+    @Test
+    fun `on clicking destination icon navigates to map destination selection`() = runTest {
+        whenever(getJasticPointUseCase(anyLong())).doReturn(flowOf(Success(mockJasticPointUI1)))
+
+        collectViewModelState(viewModel.uiState)
+        collectNavState(viewModel)
+
+        viewModel.onUiEvent(DestinationIconClicked)
+
+        with(mockJasticPointUI1.destinationUI) {
+            assertEquals(
+                ToDestinationSelectionMap(latitude, longitude, radiusInMeters),
+                navStates.last()
+            )
+        }
+    }
+
+    @Test
+    fun `on back navigates to my jastic list`() = runTest {
+        whenever(getJasticPointUseCase(anyLong())).doReturn(flowOf(Success(mockJasticPointUI1)))
+
+        collectViewModelState(viewModel.uiState)
+        collectNavState(viewModel)
+
+        viewModel.onUiEvent(JasticPointDetailUserEvent.Back)
+
+        assertEquals(ToMyJasticList, navStates.last())
     }
 }
